@@ -1,0 +1,75 @@
+package com.jcerdar.gestorfutbol.persistence.model;
+
+import java.sql.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "GF_CAMPANYA")
+public class Campanya {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "CAM_ID", nullable = false)
+    private Long id;
+
+    @Column(name = "CAM_ANY", nullable = false)
+    private Date any; 
+
+    @Column(name = "CAM_IMPORT", nullable = false)
+    private Long importSocis; 
+
+    @Column(name = "CAM_TITOL", nullable = false)
+    private String titol; 
+
+    @Column(name = "CAM_ACTIVA")
+    private Boolean activa;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Date getAny() {
+        return any;
+    }
+
+    public void setAny(Date any) {
+        this.any = any;
+    }
+
+    public Long getImportSocis() {
+        return importSocis;
+    }
+
+    public void setImportSocis(Long importSocis) {
+        this.importSocis = importSocis;
+    }
+
+    public String getTitol() {
+        return titol;
+    }
+
+    public void setTitol(String titol) {
+        this.titol = titol;
+    }
+
+    public Boolean getActiva() {
+        return activa;
+    }
+
+    public void setActiva(Boolean activa) {
+        this.activa = activa;
+    } 
+
+    
+
+}
