@@ -10,6 +10,8 @@ public class Filtre {
 
     private String userId;
 
+    private Long campanyaActiva;
+
     public int getPageNum() {
         return pageNum;
     }
@@ -42,4 +44,11 @@ public class Filtre {
         this.userId = userId;
     }
 
+    public Long getCampanyaActiva() {
+        return campanyaActiva;
+    }
+
+    public void setCampanyaActiva(Long campanyaActiva) {
+        this.campanyaActiva = campanyaActiva;
+    }
 }

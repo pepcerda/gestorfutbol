@@ -31,7 +31,7 @@ public class Patrocinador {
     private String nom; 
 
     @Column(name = "PAT_DONACIO", nullable = false)
-    private String donacio; 
+    private Long donacio;
 
     @Column(name = "PAT_DATADON", nullable = false)
     private Date dataDonacio;
@@ -68,11 +68,11 @@ public class Patrocinador {
         this.nom = nom;
     }
 
-    public String getDonacio() {
+    public Long getDonacio() {
         return donacio;
     }
 
-    public void setDonacio(String donacio) {
+    public void setDonacio(Long donacio) {
         this.donacio = donacio;
     }
 
