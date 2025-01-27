@@ -13,8 +13,6 @@ public class CampanyaDTO {
 
     private String titol;
 
-    private Boolean activa;
-
 
     public Long getId() {
         return id;
@@ -46,13 +44,5 @@ public class CampanyaDTO {
 
     public void setTitol(String titol) {
         this.titol = titol;
-    }
-
-    public Boolean getActiva() {
-        return activa;
-    }
-
-    public void setActiva(Boolean activa) {
-        this.activa = activa;
     }
 }

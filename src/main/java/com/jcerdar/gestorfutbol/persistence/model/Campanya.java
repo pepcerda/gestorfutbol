@@ -25,10 +25,7 @@ public class Campanya {
     private Long importSocis; 
 
     @Column(name = "CAM_TITOL", nullable = false)
-    private String titol; 
-
-    @Column(name = "CAM_ACTIVA")
-    private Boolean activa;
+    private String titol;
 
     public Long getId() {
         return id;
@@ -61,14 +58,6 @@ public class Campanya {
     public void setTitol(String titol) {
         this.titol = titol;
     }
-
-    public Boolean getActiva() {
-        return activa;
-    }
-
-    public void setActiva(Boolean activa) {
-        this.activa = activa;
-    } 
 
     
 

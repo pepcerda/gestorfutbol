@@ -20,14 +20,14 @@ public class GestorFutbolController {
     @Autowired
     private GestorFutbolService gestorFutbolService;
 
+    @GetMapping("/campanyas")
+    public ResponseEntity<List<CampanyaDTO>> listCampanyas() {
+        return ResponseEntity.ok(gestorFutbolService.listAllCampanyas());
+    }
+
     @PostMapping("/campanyas")
     public ResponseEntity<PaginaDTO<List<CampanyaDTO>>> listCampanyas(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listCampanyas(filtre));
-    }
-
-    @GetMapping("/campanya-activa")
-    public ResponseEntity<Long> getCampanyaActiva() {
-        return ResponseEntity.ok(gestorFutbolService.getCampanyaActivaId());
     }
 
     @PostMapping("/campanya")

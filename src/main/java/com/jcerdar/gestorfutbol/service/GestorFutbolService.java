@@ -12,7 +12,7 @@ public interface GestorFutbolService {
 
     PaginaDTO<List<CampanyaDTO>> listCampanyas(Filtre filtre);
 
-    Long getCampanyaActivaId();
+    List<CampanyaDTO> listAllCampanyas();
 
     Long saveCampanya(CampanyaDTO campanyaDTO);
 

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GestorFutbolServiceImpl implements GestorFutbolService{
@@ -69,23 +70,18 @@ public class GestorFutbolServiceImpl implements GestorFutbolService{
     }
 
     @Override
-    public Long getCampanyaActivaId() {
-        Campanya campanya = campanyaDao.findCampanyaByActivaIsTrue();
-        if(campanya != null) {
-            return campanya.getId();
+    public List<CampanyaDTO> listAllCampanyas() {
+        List<Campanya> campanyas = campanyaDao.findAll();
+        List<CampanyaDTO> campanyaDTOS = new ArrayList<>();
+        if(!campanyas.isEmpty()) {
+            campanyaDTOS = campanyas.stream().map(campanya -> modelMapper.map(campanya, CampanyaDTO.class)).collect(Collectors.toList());
         }
-        return null;
+        return campanyaDTOS;
     }
 
     @Override
     public Long saveCampanya(CampanyaDTO campanyaDTO) {
         Campanya campanya = modelMapper.map(campanyaDTO, Campanya.class);
-        Long campanyaActiva = getCampanyaActivaId();
-        if(campanyaActiva != null && campanyaDTO.getActiva()) {
-            Campanya campanya1 = campanyaDao.findById(campanyaActiva).orElse(null);
-            campanya1.setActiva(false);
-            campanyaDao.save(campanya1);
-        }
         campanya = campanyaDao.save(campanya);
         return campanya.getId();
     }

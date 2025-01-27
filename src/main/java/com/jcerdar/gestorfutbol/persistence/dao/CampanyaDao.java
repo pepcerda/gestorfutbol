@@ -6,6 +6,4 @@ import com.jcerdar.gestorfutbol.persistence.model.Campanya;
 
 public interface CampanyaDao extends JpaRepository<Campanya, Long> {
 
-    Campanya findCampanyaByActivaIsTrue();
-
 }
