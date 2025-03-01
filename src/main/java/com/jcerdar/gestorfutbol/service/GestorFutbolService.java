@@ -30,4 +30,6 @@ public interface GestorFutbolService {
 
     void deletePatrocinador(Long id);
 
+    String getReceipt(Long id);
+
 }

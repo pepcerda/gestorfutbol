@@ -85,5 +85,10 @@ public class GestorFutbolController {
         }
     }
 
+    @GetMapping("/patrocinador/rebut/{id}")
+    public ResponseEntity<String> getReceipt(@PathVariable Long id) {
+        return ResponseEntity.ok(gestorFutbolService.getReceipt(id));
+    }
+
 
 }

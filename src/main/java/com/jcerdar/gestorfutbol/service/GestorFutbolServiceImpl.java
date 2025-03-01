@@ -11,6 +11,7 @@ import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
 import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
 import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
 import com.jcerdar.gestorfutbol.service.model.SociDTO;
+import com.jcerdar.gestorfutbol.service.util.PdfUtil;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -140,6 +141,17 @@ public class GestorFutbolServiceImpl implements GestorFutbolService{
     @Override
     public void deletePatrocinador(Long id) {
         patrocinadorDao.deleteById(id);
+    }
+
+    @Override
+    public String getReceipt(Long id) {
+        Patrocinador patrocinador = patrocinadorDao.findById(id).orElse(null);
+        if(patrocinador != null) {
+            PatrocinadorDTO patrocinadorDTO = modelMapper.map(patrocinador, PatrocinadorDTO.class);
+            return PdfUtil.generatePdf(patrocinadorDTO);
+        } else {
+            return "";
+        }
     }
 
     private Soci jSociMapper(SociDTO sociDTO) {

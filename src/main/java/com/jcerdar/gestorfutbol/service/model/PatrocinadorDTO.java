@@ -18,6 +18,20 @@ public class PatrocinadorDTO {
 
     private Date dataDonacio;
 
+    public PatrocinadorDTO() {
+
+    }
+
+    // Constructor
+    public PatrocinadorDTO(Long id, Long campanya, String cif, String nom, Long donacio, Date dataDonacio) {
+        this.id = id;
+        this.campanya = campanya;
+        this.cif = cif;
+        this.nom = nom;
+        this.donacio = donacio;
+        this.dataDonacio = dataDonacio;
+    }
+
     public Long getId() {
         return id;
     }
