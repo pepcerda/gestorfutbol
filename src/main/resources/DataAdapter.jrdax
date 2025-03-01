@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beanDataAdapter class="net.sf.jasperreports.data.bean.BeanDataAdapterImpl">
+	<name>PatrocinadorAdapter</name>
+	<factoryClass>com.jcerdar.gestorfutbol.service.util.PatrocinadorFactory</factoryClass>
+	<methodName>getPatrocinadores</methodName>
+	<useFieldDescription>false</useFieldDescription>
+</beanDataAdapter>

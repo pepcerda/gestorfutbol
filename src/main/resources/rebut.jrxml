@@ -1,0 +1,50 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="rebut" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="977ac2de-f3d5-4b92-b9a7-3a811553bc40">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="src\main\resources\DataAdapter.jrdax"/>
+	<field name="dataDonacio" class="java.util.Date"/>
+	<field name="nom" class="java.lang.String"/>
+	<field name="cif" class="java.lang.String"/>
+	<field name="donacio" class="java.lang.Long"/>
+	<background/>
+	<title height="90" splitType="Stretch">
+		<element kind="image" uuid="e0d2db46-fcb9-4997-9814-4da3ff14c684" x="20" y="8" width="70" height="82">
+			<expression><![CDATA["logo.jpg"]]></expression>
+		</element>
+		<element kind="staticText" uuid="0ac11139-3d5c-41b7-9174-ebfae39ea8ad" x="152" y="34" width="250" height="30" fontName="Noto Sans" fontSize="19.0">
+			<text><![CDATA[ATHLETIC CLUB MONTUÏRI]]></text>
+		</element>
+	</title>
+	<pageHeader height="53" splitType="Stretch">
+		<element kind="staticText" uuid="565e0b67-dad9-44f4-becd-e94523a7023a" x="20" y="10" width="100" height="20" fontName="Noto Sans">
+			<text><![CDATA[Rebut de donatiu]]></text>
+		</element>
+		<element kind="staticText" uuid="d00952f0-367c-46d5-bfe2-7559609cd54e" x="390" y="13" width="60" height="15" fontName="Noto Sans">
+			<text><![CDATA[Montuïri, a ]]></text>
+		</element>
+		<element kind="textField" uuid="09b3b6ef-831a-4b76-932a-8907ccef8602" x="450" y="13" width="90" height="14" fontName="Noto Sans" linkType="None" linkTarget="Self">
+			<expression><![CDATA[$F{dataDonacio}]]></expression>
+		</element>
+	</pageHeader>
+	<detail>
+		<band height="152" splitType="Stretch">
+			<element kind="textField" uuid="566552f3-0286-43f7-bfe9-d3457b53b46c" x="20" y="20" width="520" height="50" fontName="Noto Sans">
+				<expression><![CDATA["L'Athletic Club Montuïri confirma que va rebre de " + $F{nom} + " amb DNI/NIF " + $F{cif} + ", la quantitat de " + $F{donacio} + "€, en concepte de donatiu per la temporada "]]></expression>
+			</element>
+			<element kind="staticText" uuid="ec2564a8-bf09-4f27-aed3-4af69da404ba" x="20" y="70" width="100" height="30" fontName="Noto Sans">
+				<text><![CDATA[El club i president: ]]></text>
+			</element>
+			<element kind="staticText" uuid="7188dc78-1bc1-4b1a-a667-db5b061c2818" x="20" y="125" width="110" height="22" fontName="Noto Sans">
+				<text><![CDATA[Athletic Club Montuïri]]></text>
+			</element>
+			<element kind="staticText" uuid="3c8cad31-cc27-432e-b1ff-44b873eee177" x="380" y="70" width="100" height="30" fontName="Noto Sans">
+				<text><![CDATA[Donador]]></text>
+			</element>
+			<element kind="staticText" uuid="bcfa66ec-e764-4c88-9838-ebd29611f987" x="380" y="125" width="110" height="22" fontName="Noto Sans">
+				<text><![CDATA[Nom i firma]]></text>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>
