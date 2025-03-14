@@ -16,6 +16,7 @@ import com.itextpdf.kernel.geom.Rectangle;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.ByteArrayOutputStream;
@@ -34,10 +35,11 @@ public class PdfUtil {
     public static String generatePdf(PatrocinadorDTO data) {
         try {
             // Obtener el templatePath desde resources
-            ClassPathResource resource = new ClassPathResource("rebut.jrxml");
+            ClassPathResource resource = new ClassPathResource("rebut.jasper");
 
             // Compilar el archivo .jrxml
-            JasperReport jasperReport = JasperCompileManager.compileReport(resource.getInputStream());
+            InputStream inputStream = resource.getInputStream();
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(inputStream);
 
             // Crear la fuente de datos con un único DTO
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(Collections.singletonList(data));
