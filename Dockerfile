@@ -16,7 +16,7 @@ WORKDIR /app
 COPY target/gestorfutbol-0.0.1.jar app.jar
 
 # Exponer el puerto en el que la aplicación se ejecutará
-EXPOSE 8080
+EXPOSE 80
 
 # Comando para ejecutar la aplicación con la propiedad java.awt.headless
 ENTRYPOINT ["java", "-Djava.awt.headless=true", "-jar", "app.jar"]

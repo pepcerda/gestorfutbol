@@ -40,6 +40,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.setAllowedOrigins(Arrays.asList("http://localhost"));
+        configuration.addAllowedOrigin("https://front.jcerdardev.es");
         configuration.setAllowedMethods(Arrays.asList("GET","POST","DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
