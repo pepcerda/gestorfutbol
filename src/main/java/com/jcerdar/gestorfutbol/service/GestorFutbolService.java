@@ -1,10 +1,7 @@
 package com.jcerdar.gestorfutbol.service;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
-import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
-import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
-import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
-import com.jcerdar.gestorfutbol.service.model.SociDTO;
+import com.jcerdar.gestorfutbol.service.model.*;
 
 import java.util.List;
 
@@ -31,5 +28,21 @@ public interface GestorFutbolService {
     void deletePatrocinador(Long id);
 
     String getReceipt(Long id);
+
+    List<RolDirectiuDTO> listRolsDirectiu();
+
+    PaginaDTO<List<DirectiuDTO>> listDirectius(Filtre filtre);
+
+    Long saveDirectiu(DirectiuDTO directiuDTO);
+
+    void deleteDirectiu(Long id);
+
+    void baixaDirectiva(BaixaDTO baixaDTO);
+
+    Long saveDirectiva(DirectivaDTO directivaDTO);
+
+    DirectivaDTO listDirectiva();
+
+    Boolean checkDirectiva();
 
 }

@@ -1,10 +1,7 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
 import com.jcerdar.gestorfutbol.service.GestorFutbolService;
-import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
-import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
-import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
-import com.jcerdar.gestorfutbol.service.model.SociDTO;
+import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("gestor-futbol/api/v1")
 public class GestorFutbolController {
 
@@ -89,5 +87,54 @@ public class GestorFutbolController {
         return ResponseEntity.ok(gestorFutbolService.getReceipt(id));
     }
 
+    @GetMapping("/rols-directius")
+    public ResponseEntity<List<RolDirectiuDTO>> listRolsDirectius() {
+        return ResponseEntity.ok(gestorFutbolService.listRolsDirectiu());
+    }
+
+    @PostMapping("/directius")
+    public ResponseEntity<PaginaDTO<List<DirectiuDTO>>> listDirectius(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listDirectius(filtre));
+    }
+
+    @PostMapping("/directiu")
+    public ResponseEntity<Long> saveDirectiu(@RequestBody DirectiuDTO directiuDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveDirectiu(directiuDTO));
+    }
+
+    @DeleteMapping("/directiu/{id}")
+    public ResponseEntity<String> deleteDirectiu(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteDirectiu(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/check-directiva")
+    public ResponseEntity<Boolean> checkDirectiva() {
+        return ResponseEntity.ok(gestorFutbolService.checkDirectiva());
+    }
+
+    @GetMapping("/directiva")
+    public ResponseEntity<DirectivaDTO> listDirectiva() {
+        return ResponseEntity.ok(gestorFutbolService.listDirectiva());
+    }
+
+    @PostMapping("/directiva")
+    public ResponseEntity<Long> saveDirectiva(@RequestBody DirectivaDTO directivaDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveDirectiva(directivaDTO));
+    }
+
+    @PostMapping("/directiva-baixa")
+    public ResponseEntity<String> baixaDirectiva(@RequestBody BaixaDTO baixaDTO) {
+        try {
+            gestorFutbolService.baixaDirectiva(baixaDTO);
+            return ResponseEntity.ok("Direcitva donada de baixa correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
