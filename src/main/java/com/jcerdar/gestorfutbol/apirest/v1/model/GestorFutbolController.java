@@ -137,4 +137,9 @@ public class GestorFutbolController {
         }
     }
 
+    @GetMapping("/directiva-historic")
+    public ResponseEntity<List<DirectivaDTO>> listHistoricDirectiva() {
+        return ResponseEntity.ok(gestorFutbolService.listHistoricDirectiva());
+    }
+
 }

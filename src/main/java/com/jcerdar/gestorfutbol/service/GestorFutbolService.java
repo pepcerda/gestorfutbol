@@ -45,4 +45,6 @@ public interface GestorFutbolService {
 
     Boolean checkDirectiva();
 
+    List<DirectivaDTO> listHistoricDirectiva();
+
 }

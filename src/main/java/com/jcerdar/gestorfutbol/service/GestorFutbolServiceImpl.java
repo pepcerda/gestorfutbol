@@ -100,6 +100,17 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public void deleteCampanya(Long id) {
+        //Revisam previament que no tengui ni socis ni patrocinadors donats d'alta
+        List<Soci> socis = sociDao.findAllByCampanyaId(id);
+        if(socis.isEmpty()) {
+            socis.forEach(s -> sociDao.deleteById(s.getId()));
+        }
+
+        List<Patrocinador> patrocinadors = patrocinadorDao.findAllByCampanyaId(id);
+        if(patrocinadors.isEmpty()) {
+            patrocinadors.forEach(p -> patrocinadorDao.deleteById(p.getId()));
+        }
+
         campanyaDao.deleteById(id);
     }
 
@@ -232,6 +243,14 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     public Boolean checkDirectiva() {
         return directivaDao.count() > 0;
+    }
+
+    @Override
+    public List<DirectivaDTO> listHistoricDirectiva() {
+        List<Directiva> directivas = directivaDao.findAllByOrderByDataAltaAsc();
+        List<DirectivaDTO> directivaDTOS = new ArrayList<>();
+        directivas.forEach(d -> directivaDTOS.add(modelMapper.map(d, DirectivaDTO.class)));
+        return directivaDTOS;
     }
 
     private Soci jSociMapper(SociDTO sociDTO) {
