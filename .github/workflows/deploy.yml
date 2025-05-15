@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main  # Adjust this if your main branch is named differently
+    workflow_dispatch:  # Permite ejecución manual desde GitHub
 jobs:
   build:
     runs-on: ubuntu-latest
