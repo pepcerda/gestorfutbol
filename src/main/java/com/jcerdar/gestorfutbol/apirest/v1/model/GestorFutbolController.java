@@ -142,4 +142,13 @@ public class GestorFutbolController {
         return ResponseEntity.ok(gestorFutbolService.listHistoricDirectiva());
     }
 
+    @GetMapping("/configuracio")
+    public ResponseEntity<ConfiguracioDTO> getConfiguracio() {
+        return ResponseEntity.ok(gestorFutbolService.getConfiguracio());
+    }
+
+    @PostMapping("/configuracio")
+    public ResponseEntity<Long> saveConfiguracio(@RequestBody ConfiguracioDTO configuracioDTO) {
+        return  ResponseEntity.ok(gestorFutbolService.saveConfiguracio(configuracioDTO));
+    }
 }

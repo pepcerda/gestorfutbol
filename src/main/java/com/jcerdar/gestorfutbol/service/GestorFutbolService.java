@@ -47,4 +47,8 @@ public interface GestorFutbolService {
 
     List<DirectivaDTO> listHistoricDirectiva();
 
+    ConfiguracioDTO getConfiguracio();
+
+    Long saveConfiguracio(ConfiguracioDTO configuracioDTO);
+
 }

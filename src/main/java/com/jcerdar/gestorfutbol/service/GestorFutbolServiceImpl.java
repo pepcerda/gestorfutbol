@@ -40,6 +40,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private DirectivaDao directivaDao;
 
     @Autowired
+    private ConfiguracioDao configuracioDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @PostConstruct
@@ -251,6 +254,21 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         List<DirectivaDTO> directivaDTOS = new ArrayList<>();
         directivas.forEach(d -> directivaDTOS.add(modelMapper.map(d, DirectivaDTO.class)));
         return directivaDTOS;
+    }
+
+    @Override
+    public ConfiguracioDTO getConfiguracio() {
+        Configuracio configuracio = configuracioDao.findById(1l)
+                .orElseThrow(() -> new IllegalStateException("No se encontró configuración con ID 1"));
+        ConfiguracioDTO config = modelMapper.map(configuracio, ConfiguracioDTO.class);
+        return config;
+    }
+
+    @Override
+    public Long saveConfiguracio(ConfiguracioDTO configuracioDTO) {
+        Configuracio configuracio = modelMapper.map(configuracioDTO, Configuracio.class);
+            configuracioDao.save(configuracio);
+        return configuracio.getId();
     }
 
     private Soci jSociMapper(SociDTO sociDTO) {
