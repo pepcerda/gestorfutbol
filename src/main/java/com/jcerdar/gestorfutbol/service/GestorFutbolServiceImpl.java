@@ -12,8 +12,11 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +48,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private MediaService mediaService; 
+
     @PostConstruct
     public void init() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -69,6 +75,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<DirectivaDTO, Directiva> jDirectivaMapper = modelMapper.createTypeMap(DirectivaDTO.class, Directiva.class);
         jDirectivaMapper.addMappings(mapper -> mapper.skip(Directiva::setDirectius));
 
+        TypeMap<ConfiguracioDTO, Configuracio> jConfiguracioMapper = modelMapper.createTypeMap(ConfiguracioDTO.class, Configuracio.class);
+        jConfiguracioMapper.addMappings(mapper -> mapper.skip(Configuracio::setLogo));
     }
 
     @Override
@@ -265,9 +273,16 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
+    public String getLogo() {
+        Configuracio configuracio = configuracioDao.findById(1l)
+                .orElseThrow(() -> new IllegalStateException("No se encontró configuración con ID 1"));
+        return configuracio.getLogo(); 
+    }
+
+    @Override
     public Long saveConfiguracio(ConfiguracioDTO configuracioDTO) {
-        Configuracio configuracio = modelMapper.map(configuracioDTO, Configuracio.class);
-            configuracioDao.save(configuracio);
+        Configuracio configuracio = jConfiguracioMapper(configuracioDTO); 
+        configuracioDao.save(configuracio);
         return configuracio.getId();
     }
 
@@ -310,5 +325,18 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         directiva.setDirectius(directius);
 
         return directiva;
+    }
+
+    private Configuracio jConfiguracioMapper(ConfiguracioDTO configuracioDTO) {
+        Configuracio configuracio = modelMapper.map(configuracioDTO, Configuracio.class); 
+        try {
+            if (configuracioDTO.getLogoBase64() != null && !configuracioDTO.getLogoBase64().isEmpty()) {
+                String logoUrl = mediaService.guardarLogoBase64(configuracioDTO.getLogoBase64());
+                configuracio.setLogo(logoUrl);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return configuracio; 
     }
 }

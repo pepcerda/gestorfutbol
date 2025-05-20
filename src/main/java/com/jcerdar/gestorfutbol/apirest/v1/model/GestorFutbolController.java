@@ -1,6 +1,7 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
 import com.jcerdar.gestorfutbol.service.GestorFutbolService;
+import com.jcerdar.gestorfutbol.service.MediaService;
 import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,9 @@ public class GestorFutbolController {
 
     @Autowired
     private GestorFutbolService gestorFutbolService;
+
+    @Autowired
+    private MediaService mediaService; 
 
     @GetMapping("/campanyas")
     public ResponseEntity<List<CampanyaDTO>> listCampanyas() {
@@ -145,6 +149,11 @@ public class GestorFutbolController {
     @GetMapping("/configuracio")
     public ResponseEntity<ConfiguracioDTO> getConfiguracio() {
         return ResponseEntity.ok(gestorFutbolService.getConfiguracio());
+    }
+
+    @GetMapping("/logo")
+    public ResponseEntity<String> getLogo() {
+        return ResponseEntity.ok(gestorFutbolService.getLogo()); 
     }
 
     @PostMapping("/configuracio")

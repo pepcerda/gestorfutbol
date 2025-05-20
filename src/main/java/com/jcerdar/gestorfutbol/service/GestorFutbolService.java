@@ -49,6 +49,8 @@ public interface GestorFutbolService {
 
     ConfiguracioDTO getConfiguracio();
 
+    String getLogo(); 
+
     Long saveConfiguracio(ConfiguracioDTO configuracioDTO);
 
 }

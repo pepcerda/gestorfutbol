@@ -10,6 +10,8 @@ public class ConfiguracioDTO {
 
     private String colorPrincipal;
 
+    private String logoBase64;
+
     public Long getId() {
         return id;
     }
@@ -33,7 +35,7 @@ public class ConfiguracioDTO {
     public void setNom(String nom) {
         this.nom = nom;
     }
-
+    
     public String getColorPrincipal() {
         return colorPrincipal;
     }
@@ -41,4 +43,14 @@ public class ConfiguracioDTO {
     public void setColorPrincipal(String colorPrincipal) {
         this.colorPrincipal = colorPrincipal;
     }
+
+    public String getLogoBase64() {
+        return logoBase64;
+    }
+
+    public void setLogoBase64(String logoBase64) {
+        this.logoBase64 = logoBase64;
+    }
+
+    
 }

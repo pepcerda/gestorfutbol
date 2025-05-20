@@ -21,6 +21,9 @@ public class Configuracio {
     @Column(name = "CONF_COL")
     private String colorPrincipal;
 
+    @Column(name = "CONF_LOGO")
+    private String logo;
+
     public Long getId() {
         return id;
     }
@@ -52,4 +55,13 @@ public class Configuracio {
     public void setColorPrincipal(String colorPrincipal) {
         this.colorPrincipal = colorPrincipal;
     }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
 }
