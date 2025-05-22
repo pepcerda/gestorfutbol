@@ -25,15 +25,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/h2-console/**").permitAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/gestor-futbol/public/**", "/h2-console/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer((oauth2) -> oauth2
-                        .jwt(Customizer.withDefaults())
-
-                ).csrf().disable()  // Desactivar CSRF para la consola H2
-                .headers().frameOptions().disable();  ;
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions().disable());
         return http.build();
     }
 

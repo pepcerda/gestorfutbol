@@ -12,8 +12,6 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -273,15 +271,28 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public String getLogo() {
+    public ConfiguracioGeneralDTO getConfiguracioGeneral() {
         Configuracio configuracio = configuracioDao.findById(1l)
-                .orElseThrow(() -> new IllegalStateException("No se encontró configuración con ID 1"));
-        return configuracio.getLogo(); 
+                .orElse(null);
+
+        if(configuracio != null) {
+            ConfiguracioGeneralDTO configuracioGeneralDTO = new ConfiguracioGeneralDTO();
+            configuracioGeneralDTO.setNom(configuracio.getNom());
+            configuracioGeneralDTO.setLogo(configuracio.getLogo());
+            configuracioGeneralDTO.setColorPrincipal(configuracio.getColorPrincipal());
+            configuracioGeneralDTO.setColorFons1(configuracio.getColorFons1());
+            configuracioGeneralDTO.setColorFons2(configuracio.getColorFons2());
+            return configuracioGeneralDTO;
+        } else {
+            return null;
+        }
+
     }
 
     @Override
     public Long saveConfiguracio(ConfiguracioDTO configuracioDTO) {
-        Configuracio configuracio = jConfiguracioMapper(configuracioDTO); 
+        Configuracio configuracio = configuracioDao.findById(1l).orElse(null);
+        configuracio = jConfiguracioMapper(configuracioDTO);
         configuracioDao.save(configuracio);
         return configuracio.getId();
     }
@@ -330,8 +341,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private Configuracio jConfiguracioMapper(ConfiguracioDTO configuracioDTO) {
         Configuracio configuracio = modelMapper.map(configuracioDTO, Configuracio.class); 
         try {
-            if (configuracioDTO.getLogoBase64() != null && !configuracioDTO.getLogoBase64().isEmpty()) {
-                String logoUrl = mediaService.guardarLogoBase64(configuracioDTO.getLogoBase64());
+            if (configuracioDTO.getLogo() != null && !configuracioDTO.getLogo().isEmpty()) {
+                String logoUrl = mediaService.guardarLogoBase64(configuracioDTO.getLogo());
                 configuracio.setLogo(logoUrl);
             }
         } catch (IOException e) {

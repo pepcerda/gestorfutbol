@@ -151,9 +151,9 @@ public class GestorFutbolController {
         return ResponseEntity.ok(gestorFutbolService.getConfiguracio());
     }
 
-    @GetMapping("/logo")
-    public ResponseEntity<String> getLogo() {
-        return ResponseEntity.ok(gestorFutbolService.getLogo()); 
+    @GetMapping("/config-general")
+    public ResponseEntity<ConfiguracioGeneralDTO> getLogo() {
+        return ResponseEntity.ok(gestorFutbolService.getConfiguracioGeneral());
     }
 
     @PostMapping("/configuracio")

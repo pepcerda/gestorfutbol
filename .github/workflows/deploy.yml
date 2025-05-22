@@ -48,8 +48,8 @@ jobs:
             aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
             cd /opt/docker
             docker pull $IMAGE
-            docker-compose stop frontend
-            docker-compose up -d --no-deps frontend
+            docker-compose stop backend
+            docker-compose up -d --no-deps backend
           EOF
 
 #     - name: Deploy to Amazon ECS

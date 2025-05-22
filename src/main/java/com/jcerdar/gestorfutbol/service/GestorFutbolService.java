@@ -49,7 +49,7 @@ public interface GestorFutbolService {
 
     ConfiguracioDTO getConfiguracio();
 
-    String getLogo(); 
+    ConfiguracioGeneralDTO getConfiguracioGeneral();
 
     Long saveConfiguracio(ConfiguracioDTO configuracioDTO);
 

@@ -24,6 +24,12 @@ public class Configuracio {
     @Column(name = "CONF_LOGO")
     private String logo;
 
+    @Column(name = "CONF_CLF1")
+    private String colorFons1;
+
+    @Column(name = "CONF_CLF2")
+    private String colorFons2;
+
     public Long getId() {
         return id;
     }
@@ -64,4 +70,19 @@ public class Configuracio {
         this.logo = logo;
     }
 
+    public String getColorFons1() {
+        return colorFons1;
+    }
+
+    public void setColorFons1(String colorFons1) {
+        this.colorFons1 = colorFons1;
+    }
+
+    public String getColorFons2() {
+        return colorFons2;
+    }
+
+    public void setColorFons2(String colorFons2) {
+        this.colorFons2 = colorFons2;
+    }
 }

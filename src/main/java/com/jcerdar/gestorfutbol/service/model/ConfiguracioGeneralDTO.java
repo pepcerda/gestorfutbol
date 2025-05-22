@@ -1,35 +1,23 @@
 package com.jcerdar.gestorfutbol.service.model;
 
-public class ConfiguracioDTO {
+public class ConfiguracioGeneralDTO {
 
-    private Long id;
-
-    private String cif;
+    private String logo;
 
     private String nom;
 
     private String colorPrincipal;
 
-    private String logo;
-
     private String colorFons1;
 
     private String colorFons2;
 
-    public Long getId() {
-        return id;
+    public String getLogo() {
+        return logo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCif() {
-        return cif;
-    }
-
-    public void setCif(String cif) {
-        this.cif = cif;
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 
     public String getNom() {
@@ -39,21 +27,13 @@ public class ConfiguracioDTO {
     public void setNom(String nom) {
         this.nom = nom;
     }
-    
+
     public String getColorPrincipal() {
         return colorPrincipal;
     }
 
     public void setColorPrincipal(String colorPrincipal) {
         this.colorPrincipal = colorPrincipal;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
     }
 
     public String getColorFons1() {
