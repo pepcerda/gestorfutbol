@@ -36,6 +36,9 @@ public class Patrocinador {
     @Column(name = "PAT_DATADON", nullable = false)
     private Date dataDonacio;
 
+    @Column(name = "PAT_OBS", length = 1023)
+    private String observacio;
+
     public Long getId() {
         return id;
     }
@@ -82,10 +85,13 @@ public class Patrocinador {
 
     public void setDataDonacio(Date dataDonacio) {
         this.dataDonacio = dataDonacio;
-    } 
+    }
 
-    
+    public String getObservacio() {
+        return observacio;
+    }
 
-
-
+    public void setObservacio(String observacio) {
+        this.observacio = observacio;
+    }
 }

@@ -1,5 +1,8 @@
-name: Deploy to Amazon ECS
+name: Deploy to EC2 instance
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:  # Permite ejecución manual desde GitHub
 jobs:
   build:

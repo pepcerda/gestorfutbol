@@ -18,18 +18,21 @@ public class PatrocinadorDTO {
 
     private Date dataDonacio;
 
+    private String observacio;
+
     public PatrocinadorDTO() {
 
     }
 
     // Constructor
-    public PatrocinadorDTO(Long id, Long campanya, String cif, String nom, Long donacio, Date dataDonacio) {
+    public PatrocinadorDTO(Long id, Long campanya, String cif, String nom, Long donacio, Date dataDonacio, String observacio) {
         this.id = id;
         this.campanya = campanya;
         this.cif = cif;
         this.nom = nom;
         this.donacio = donacio;
         this.dataDonacio = dataDonacio;
+        this.observacio = observacio;
     }
 
     public Long getId() {
@@ -78,5 +81,13 @@ public class PatrocinadorDTO {
 
     public void setDataDonacio(Date dataDonacio) {
         this.dataDonacio = dataDonacio;
+    }
+
+    public String getObservacio() {
+        return observacio;
+    }
+
+    public void setObservacio(String observacio) {
+        this.observacio = observacio;
     }
 }
