@@ -160,4 +160,24 @@ public class GestorFutbolController {
     public ResponseEntity<Long> saveConfiguracio(@RequestBody ConfiguracioDTO configuracioDTO) {
         return  ResponseEntity.ok(gestorFutbolService.saveConfiguracio(configuracioDTO));
     }
+
+    @PostMapping("/factures")
+    public ResponseEntity<PaginaDTO<List<CaixaFixaDTO>>> listCaixaFixa(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listFactures(filtre));
+    }
+
+    @PostMapping("/factura")
+    public ResponseEntity<Long> saveFactura(@RequestBody CaixaFixaDTO caixaFixaDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveCaixaFixa(caixaFixaDTO));
+    }
+
+    @DeleteMapping("/factura/{id}")
+    public ResponseEntity<String> deleteFactura(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteCaixaFixa(id);
+            return ResponseEntity.ok("Eliminada correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
 }

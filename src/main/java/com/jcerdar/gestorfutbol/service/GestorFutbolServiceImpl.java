@@ -44,6 +44,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private ConfiguracioDao configuracioDao;
 
     @Autowired
+    private CaixaFixaDao caixaFixaDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -75,6 +78,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<ConfiguracioDTO, Configuracio> jConfiguracioMapper = modelMapper.createTypeMap(ConfiguracioDTO.class, Configuracio.class);
         jConfiguracioMapper.addMappings(mapper -> mapper.skip(Configuracio::setLogo));
+
+        TypeMap<CaixaFixaDTO, CaixaFixa> jCaixaFixaMapper = modelMapper.createTypeMap(CaixaFixaDTO.class, CaixaFixa.class);
+        jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setFactura));
     }
 
     @Override
@@ -297,6 +303,32 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         return configuracio.getId();
     }
 
+    @Override
+    public PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre) {
+        Page<CaixaFixa> caixaFixas = caixaFixaDao.findAllByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        PaginaDTO<List<CaixaFixaDTO>> paginaDTO = new PaginaDTO<>();
+        List<CaixaFixaDTO> caixaFixaDTOS = new ArrayList<>();
+        if (caixaFixas.getTotalElements() > 0) {
+            caixaFixaDTOS = caixaFixas.map(c -> modelMapper.map(c, CaixaFixaDTO.class)).getContent();
+            paginaDTO.setTotal(caixaFixas.getTotalElements());
+            paginaDTO.setResult(caixaFixaDTOS);
+        }
+        return paginaDTO;
+    }
+
+    @Override
+    public Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO) {
+        CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO);
+        caixaFixa = caixaFixaDao.save(caixaFixa);
+        return caixaFixa.getId();
+    }
+
+    @Override
+    public void deleteCaixaFixa(Long id) {
+        caixaFixaDao.deleteById(id);
+        //TODO: No eliminamos el fichero asociado a la fila de BBDD.
+    }
+
     private Soci jSociMapper(SociDTO sociDTO) {
         Soci soci = modelMapper.map(sociDTO, Soci.class);
 
@@ -350,4 +382,19 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         }
         return configuracio; 
     }
+
+    private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO) {
+        CaixaFixa caixaFixa = modelMapper.map(caixaFixaDTO, CaixaFixa.class);
+        try {
+            if (caixaFixaDTO.getFactura() != null && !caixaFixaDTO.getFactura().isEmpty()) {
+                String facturaUrl = mediaService.guardarDespesaB64(caixaFixaDTO.getFactura());
+                caixaFixa.setFactura(facturaUrl);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return caixaFixa;
+    }
+
+
 }

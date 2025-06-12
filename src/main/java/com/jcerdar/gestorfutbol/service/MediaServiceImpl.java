@@ -15,6 +15,9 @@ public class MediaServiceImpl implements MediaService {
     @Value("${app.logo.upload-dir}")
     private String logoDir;
 
+    @Value("${app.caixafixa.upload-dir}")
+    private String caixaFixaDir;
+
     @Value("${app.logo.access-url}")
     private String accessUrl;
 
@@ -36,6 +39,38 @@ public class MediaServiceImpl implements MediaService {
         }
 
         // Retornar la URL relativa o absoluta del logo
+        return accessUrl + filename;
+    }
+
+    @Override
+    public String guardarDespesaB64(String base64Data) throws IOException {
+        if (base64Data == null || base64Data.isEmpty())
+            return null;
+
+        // Separar encabezado y datos
+        String[] parts = base64Data.split(",");
+        String metadata = parts.length > 1 ? parts[0] : "";
+        String base64File = parts.length > 1 ? parts[1] : parts[0];
+
+        // Determinar tipo MIME y extensión
+        String extension = ".bin"; // valor por defecto
+        if (metadata.contains("image/png")) extension = ".png";
+        else if (metadata.contains("image/jpeg")) extension = ".jpg";
+        else if (metadata.contains("image/gif")) extension = ".gif";
+        else if (metadata.contains("application/pdf")) extension = ".pdf";
+        else if (metadata.contains("application/msword")) extension = ".doc";
+        else if (metadata.contains("application/vnd.openxmlformats-officedocument.wordprocessingml.document")) extension = ".docx";
+        else if (metadata.contains("text/plain")) extension = ".txt";
+        // Puedes agregar más tipos según lo necesites
+        byte[] fileBytes = Base64.getDecoder().decode(base64File);
+
+        String filename = UUID.randomUUID().toString() + extension;
+        File outputFile = new File(caixaFixaDir + filename);
+
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(fileBytes);
+        }
+
         return accessUrl + filename;
     }
 

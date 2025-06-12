@@ -53,4 +53,9 @@ public interface GestorFutbolService {
 
     Long saveConfiguracio(ConfiguracioDTO configuracioDTO);
 
+    PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre);
+
+    Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO);
+
+    void deleteCaixaFixa(Long id);
 }

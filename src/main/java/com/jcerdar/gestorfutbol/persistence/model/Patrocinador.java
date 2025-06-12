@@ -36,8 +36,12 @@ public class Patrocinador {
     @Column(name = "PAT_DATADON", nullable = false)
     private Date dataDonacio;
 
-    @Column(name = "PAT_OBS", length = 1023)
+    @Column(name = "PAT_OBS", length = 1024)
     private String observacio;
+
+    //Estat pagament. Possibles valors "P" (Pagat) o "D" (Pendent pagament)
+    @Column(name = "PAT_ESTPAG", length = 1, nullable = false)
+    private String estatPagament;
 
     public Long getId() {
         return id;
@@ -93,5 +97,13 @@ public class Patrocinador {
 
     public void setObservacio(String observacio) {
         this.observacio = observacio;
+    }
+
+    public String getEstatPagament() {
+        return estatPagament;
+    }
+
+    public void setEstatPagament(String estatPagament) {
+        this.estatPagament = estatPagament;
     }
 }
