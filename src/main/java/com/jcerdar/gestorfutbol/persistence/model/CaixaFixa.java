@@ -21,7 +21,7 @@ public class CaixaFixa {
     @Column(name = "CF_LLIN1")
     private String llinatge1;
 
-    @Column(name = "CF_LLIN1")
+    @Column(name = "CF_LLIN2")
     private String llinatge2;
 
     @Column(name = "CF_DESP", nullable = false)
