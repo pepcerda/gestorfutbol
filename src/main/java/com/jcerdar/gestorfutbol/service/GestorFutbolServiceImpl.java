@@ -12,6 +12,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -85,7 +86,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<CampanyaDTO>> listCampanyas(Filtre filtre) {
-        Page<Campanya> campanyas = campanyaDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Campanya> campanyas = campanyaDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize(), Sort.by("any").ascending()));
         PaginaDTO<List<CampanyaDTO>> paginaDTO = new PaginaDTO<>();
         List<CampanyaDTO> campanyaDTOS = new ArrayList<>();
         if (campanyas.getTotalElements() > 0) {
@@ -98,7 +99,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<CampanyaDTO> listAllCampanyas() {
-        List<Campanya> campanyas = campanyaDao.findAll();
+        List<Campanya> campanyas = campanyaDao.findAll(Sort.by("any").ascending());
         List<CampanyaDTO> campanyaDTOS = new ArrayList<>();
         if (!campanyas.isEmpty()) {
             campanyaDTOS = campanyas.stream().map(campanya -> modelMapper.map(campanya, CampanyaDTO.class)).collect(Collectors.toList());
