@@ -80,8 +80,12 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<ConfiguracioDTO, Configuracio> jConfiguracioMapper = modelMapper.createTypeMap(ConfiguracioDTO.class, Configuracio.class);
         jConfiguracioMapper.addMappings(mapper -> mapper.skip(Configuracio::setLogo));
 
+        TypeMap<CaixaFixa, CaixaFixaDTO> caixaFixaMapper = modelMapper.createTypeMap(CaixaFixa.class, CaixaFixaDTO.class);
+        caixaFixaMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), CaixaFixaDTO::setCampanya));
+
         TypeMap<CaixaFixaDTO, CaixaFixa> jCaixaFixaMapper = modelMapper.createTypeMap(CaixaFixaDTO.class, CaixaFixa.class);
         jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setFactura));
+        jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setCampanya));
     }
 
     @Override
@@ -133,7 +137,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public PaginaDTO<List<SociDTO>> listSocis(Filtre filtre) {
 
-        Page<Soci> socis = sociDao.findAllByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Soci> socis = sociDao.findAllByCampanyaOrderById(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<SociDTO>> paginaDTO = new PaginaDTO<>();
         List<SociDTO> sociDTOS = new ArrayList<>();
         if (socis.getTotalElements() > 0) {
@@ -158,7 +162,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<PatrocinadorDTO>> listPatrocinador(Filtre filtre) {
-        Page<Patrocinador> patrocinadors = patrocinadorDao.findAllByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Patrocinador> patrocinadors = patrocinadorDao.findAllByCampanyaOrderById(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<PatrocinadorDTO>> paginaDTO = new PaginaDTO<>();
         List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
         if (patrocinadors.getTotalElements() > 0) {
@@ -306,7 +310,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre) {
-        Page<CaixaFixa> caixaFixas = caixaFixaDao.findAllByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<CaixaFixa> caixaFixas = caixaFixaDao.findAllByCampanyaOrderById(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<CaixaFixaDTO>> paginaDTO = new PaginaDTO<>();
         List<CaixaFixaDTO> caixaFixaDTOS = new ArrayList<>();
         if (caixaFixas.getTotalElements() > 0) {
@@ -319,9 +323,21 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO) {
-        CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO);
-        caixaFixa = caixaFixaDao.save(caixaFixa);
-        return caixaFixa.getId();
+        if(caixaFixaDTO.getId() != null) {
+            CaixaFixa caixaFixa = caixaFixaDao.findById(caixaFixaDTO.getId()).orElse(null);
+            caixaFixa.setDespesa(caixaFixaDTO.getDespesa());
+            caixaFixa.setNom(caixaFixaDTO.getNom());
+            caixaFixa.setLlinatge1(caixaFixaDTO.getLlinatge1());
+            caixaFixa.setLlinatge2(caixaFixaDTO.getLlinatge2());
+            caixaFixa.setObservacio(caixaFixaDTO.getObservacio());
+            caixaFixa.setEstat(caixaFixaDTO.getEstat());
+            caixaFixaDao.save(caixaFixa);
+            return caixaFixa.getId();
+        }  else {
+            CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO);
+            caixaFixa = caixaFixaDao.save(caixaFixa);
+            return caixaFixa.getId();
+        }
     }
 
     @Override
@@ -386,6 +402,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO) {
         CaixaFixa caixaFixa = modelMapper.map(caixaFixaDTO, CaixaFixa.class);
+
+        Campanya campanya = campanyaDao.findById(caixaFixaDTO.getCampanya()).orElse(null);
+        caixaFixa.setCampanya(campanya);
         try {
             if (caixaFixaDTO.getFactura() != null && !caixaFixaDTO.getFactura().isEmpty()) {
                 String facturaUrl = mediaService.guardarDespesaB64(caixaFixaDTO.getFactura());

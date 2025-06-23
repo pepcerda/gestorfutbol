@@ -9,3 +9,6 @@ VALUES ('Tresorer');
 INSERT INTO GF_ROLDIR (RDI_ROL)
 VALUES ('Vocal');
 
+/*INSERT INTO GF_CONFIG (CONF_ID, CONF_CIF, CONF_NOM, CONF_COL, CONF_CLF1, CONF_CLF2)
+VALUES (1, 'G57861692', 'Athletic Club Montuïri', '#000000', '#ee4f4f', '#e8d1d1');*/
+

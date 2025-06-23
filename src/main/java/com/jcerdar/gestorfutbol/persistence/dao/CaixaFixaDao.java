@@ -11,5 +11,5 @@ import org.springframework.data.repository.query.Param;
 public interface CaixaFixaDao extends JpaRepository<CaixaFixa, Long> {
 
     @Query("select c from CaixaFixa c where c.campanya.id = :idCampanya")
-    Page<CaixaFixa> findAllByCampanya(@Param("idCampanya") Long idCampanya, Pageable pageable);
+    Page<CaixaFixa> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
 }

@@ -7,7 +7,7 @@ public class CaixaFixaDTO {
 
     private Long id;
 
-    private Campanya campanya;
+    private Long campanya;
 
     private String nom;
 
@@ -31,11 +31,11 @@ public class CaixaFixaDTO {
         this.id = id;
     }
 
-    public Campanya getCampanya() {
+    public Long getCampanya() {
         return campanya;
     }
 
-    public void setCampanya(Campanya campanya) {
+    public void setCampanya(Long campanya) {
         this.campanya = campanya;
     }
 
