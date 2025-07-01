@@ -43,6 +43,9 @@ public class Patrocinador {
     @Column(name = "PAT_ESTPAG", length = 1, nullable = false)
     private String estatPagament;
 
+    @Column(name = "PAT_LOGO")
+    private String logo;
+
     public Long getId() {
         return id;
     }
@@ -105,5 +108,13 @@ public class Patrocinador {
 
     public void setEstatPagament(String estatPagament) {
         this.estatPagament = estatPagament;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

@@ -86,6 +86,11 @@ public class GestorFutbolController {
         }
     }
 
+    @PostMapping("/duplica-patrocinador/{id}")
+    public ResponseEntity<Long> duplicaPatrocinador(@PathVariable Long id, @RequestBody PatrocinadorDTO patrocinadorDTO) {
+        return ResponseEntity.ok(gestorFutbolService.duplicarPatrocinador(patrocinadorDTO, id));
+    }
+
     @GetMapping("/patrocinador/rebut/{id}")
     public ResponseEntity<String> getReceipt(@PathVariable Long id) {
         return ResponseEntity.ok(gestorFutbolService.getReceipt(id));

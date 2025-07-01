@@ -21,6 +21,27 @@ public class MediaServiceImpl implements MediaService {
     @Value("${app.logo.access-url}")
     private String accessUrl;
 
+
+    @Override
+    public Boolean checkBase64(String base64Data) {
+        if (base64Data == null || base64Data.isEmpty()) {
+            return false;
+        }
+
+        try {
+            // Si tiene encabezado tipo "data:image/png;base64,...", lo quitamos
+            String[] parts = base64Data.split(",");
+            String base64Content = parts.length > 1 ? parts[1] : parts[0];
+
+            // Intentamos decodificar
+            Base64.getDecoder().decode(base64Content);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+
     public String guardarLogoBase64(String base64Data) throws IOException {
         if (base64Data == null || base64Data.isEmpty())
             return null;

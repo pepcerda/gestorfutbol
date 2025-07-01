@@ -22,6 +22,8 @@ public class PatrocinadorDTO {
 
     private String estatPagament;
 
+    private String logo;
+
     public PatrocinadorDTO() {
 
     }
@@ -100,5 +102,13 @@ public class PatrocinadorDTO {
 
     public void setEstatPagament(String estatPagament) {
         this.estatPagament = estatPagament;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

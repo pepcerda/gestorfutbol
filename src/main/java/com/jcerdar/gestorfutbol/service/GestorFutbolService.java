@@ -1,6 +1,7 @@
 package com.jcerdar.gestorfutbol.service;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
+import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
 import com.jcerdar.gestorfutbol.service.model.*;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface GestorFutbolService {
     Long savePatrocinador(PatrocinadorDTO patrocinadorDTO);
 
     void deletePatrocinador(Long id);
+
+    Long duplicarPatrocinador(PatrocinadorDTO patrocinadorDTO, Long idCampanya);
 
     String getReceipt(Long id);
 

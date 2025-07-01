@@ -6,6 +6,7 @@ import com.jcerdar.gestorfutbol.persistence.model.*;
 import com.jcerdar.gestorfutbol.service.model.*;
 import com.jcerdar.gestorfutbol.service.util.PdfUtil;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -64,6 +65,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<PatrocinadorDTO, Patrocinador> jPatrociniMapper = modelMapper.createTypeMap(PatrocinadorDTO.class, Patrocinador.class);
         jPatrociniMapper.addMappings(mapper -> mapper.skip(Patrocinador::setCampanya));
+
+        modelMapper.typeMap(Patrocinador.class, Patrocinador.class).addMappings(mapper -> mapper.skip(Patrocinador::setId));
 
         TypeMap<Patrocinador, PatrocinadorDTO> patrocinadorMapper = modelMapper.createTypeMap(Patrocinador.class, PatrocinadorDTO.class);
         patrocinadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), PatrocinadorDTO::setCampanya));
@@ -183,6 +186,16 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public void deletePatrocinador(Long id) {
         patrocinadorDao.deleteById(id);
+    }
+
+    @Override
+    public Long duplicarPatrocinador(PatrocinadorDTO patrocinadorDTO, Long idCampanya) {
+        Campanya campanya = campanyaDao.findById(idCampanya).orElseThrow(() -> new EntityNotFoundException("Campanya no trobada"));
+        Patrocinador original = patrocinadorDao.findById(patrocinadorDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Patrocinador no trobat"));
+        Patrocinador patrocinadorNou = modelMapper.map(original, Patrocinador.class);
+        patrocinadorNou.setCampanya(campanya);
+        patrocinadorNou = patrocinadorDao.save(patrocinadorNou);
+        return patrocinadorNou.getId();
     }
 
     @Override
@@ -361,6 +374,17 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         Campanya campanya = campanyaDao.findById(patrocinadorDTO.getCampanya()).orElse(null);
         patrocinador.setCampanya(campanya);
 
+        try {
+            if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && mediaService.checkBase64(patrocinadorDTO.getLogo())) {
+                String logoUrl = mediaService.guardarLogoBase64(patrocinadorDTO.getLogo());
+                patrocinador.setLogo(logoUrl);
+            } else if(patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && !mediaService.checkBase64(patrocinadorDTO.getLogo())){
+                patrocinador.setLogo(patrocinadorDTO.getLogo());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return patrocinador;
     }
 
@@ -415,6 +439,5 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         }
         return caixaFixa;
     }
-
 
 }
