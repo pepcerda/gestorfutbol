@@ -7,6 +7,7 @@ import com.jcerdar.gestorfutbol.service.model.*;
 import com.jcerdar.gestorfutbol.service.util.PdfUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
@@ -165,7 +166,19 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<PatrocinadorDTO>> listPatrocinador(Filtre filtre) {
-        Page<Patrocinador> patrocinadors = patrocinadorDao.findAllByCampanyaOrderById(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltros(filtre);
+        PaginaDTO<List<PatrocinadorDTO>> paginaDTO = new PaginaDTO<>();
+        List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
+        if (patrocinadors.getTotalElements() > 0) {
+            patrocinadorDTOS = patrocinadors.map(patr -> modelMapper.map(patr, PatrocinadorDTO.class)).getContent();
+            paginaDTO.setTotal(patrocinadors.getTotalElements());
+            paginaDTO.setResult(patrocinadorDTOS);
+        }
+        return paginaDTO;
+    }
+
+    public PaginaDTO<List<PatrocinadorDTO>> listPatrocinador1(Filtre filtre) {
+        Page<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltros(filtre);
         PaginaDTO<List<PatrocinadorDTO>> paginaDTO = new PaginaDTO<>();
         List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
         if (patrocinadors.getTotalElements() > 0) {

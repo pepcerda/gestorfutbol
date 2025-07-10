@@ -10,9 +10,9 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PatrocinadorDao extends JpaRepository<Patrocinador, Long> {
+public interface PatrocinadorDao extends JpaRepository<Patrocinador, Long>, PatrocinadorCustomDao  {
 
-    @Query("select c from Patrocinador c where c.campanya.id = :idCampanya")
+    @Query("select c from Patrocinador c where c.campanya.id = :idCampanya order by c.campanya.id asc")
     Page<Patrocinador> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
 
     List<Patrocinador> findAllByCampanyaId(Long campanyaId);

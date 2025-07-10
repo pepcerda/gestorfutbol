@@ -1,5 +1,7 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
+import java.util.Map;
+
 public class Filtre {
 
     private int pageNum = 1;
@@ -11,6 +13,12 @@ public class Filtre {
     private String userId;
 
     private Long campanyaActiva;
+
+    private String sortField;
+
+    private Integer sortOrder;
+
+    private Map<String, ValorFiltre> filters;
 
     public int getPageNum() {
         return pageNum;
@@ -50,5 +58,29 @@ public class Filtre {
 
     public void setCampanyaActiva(Long campanyaActiva) {
         this.campanyaActiva = campanyaActiva;
+    }
+
+    public String getSortField() {
+        return sortField;
+    }
+
+    public void setSortField(String sortField) {
+        this.sortField = sortField;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public Map<String, ValorFiltre> getFilters() {
+        return filters;
+    }
+
+    public void setFilters(Map<String, ValorFiltre> filters) {
+        this.filters = filters;
     }
 }
