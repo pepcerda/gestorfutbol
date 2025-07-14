@@ -44,7 +44,7 @@ public class PatrocinadorCustomDaoImpl implements PatrocinadorCustomDao{
         }
 
         TypedQuery<Patrocinador> typedQuery = entityManager.createQuery(query);
-        int pageNum = Math.max(filtre.getPageNum() - 1, 0);
+        int pageNum = filtre.getPageNum();
         typedQuery.setFirstResult(pageNum * filtre.getPageSize());
         typedQuery.setMaxResults(filtre.getPageSize());
         List<Patrocinador> resultList = typedQuery.getResultList();
