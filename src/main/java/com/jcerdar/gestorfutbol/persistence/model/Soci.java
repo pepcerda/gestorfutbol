@@ -22,6 +22,10 @@ public class Soci {
     @JoinColumn(name = "SOC_CAM", nullable = false)
     private Campanya campanya;
 
+    @ManyToOne
+    @JoinColumn(name = "SOC_TIP", nullable = false)
+    private TipoSoci tipoSoci;
+
     //Estat pagament. Possibles valors "P" (Pagat) o "D" (Pendent pagament)
     @Column(name = "SOC_ESTPAG", length = 1, nullable = false)
     private String estatPagament; 
@@ -33,10 +37,7 @@ public class Soci {
     private String llinatge1; 
 
     @Column(name = "SOC_LLIN2")
-    private String llinatge2; 
-
-    @Column(name = "SOC_PATROC", nullable = false)
-    private Boolean patrocinador; 
+    private String llinatge2;
 
     public Long getId() {
         return id;
@@ -78,22 +79,19 @@ public class Soci {
         this.llinatge2 = llinatge2;
     }
 
-    public Boolean getPatrocinador() {
-        return patrocinador;
-    }
-
-    public void setPatrocinador(Boolean patrocinador) {
-        this.patrocinador = patrocinador;
-    }
-
     public Campanya getCampanya() {
         return campanya;
     }
 
     public void setCampanya(Campanya campanya) {
         this.campanya = campanya;
-    } 
+    }
 
-    
+    public TipoSoci getTipoSoci() {
+        return tipoSoci;
+    }
 
+    public void setTipoSoci(TipoSoci tipoSoci) {
+        this.tipoSoci = tipoSoci;
+    }
 }

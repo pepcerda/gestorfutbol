@@ -19,10 +19,7 @@ public class Campanya {
     private Long id;
 
     @Column(name = "CAM_ANY", nullable = false)
-    private Date any; 
-
-    @Column(name = "CAM_IMPORT", nullable = false)
-    private Long importSocis; 
+    private Date any;
 
     @Column(name = "CAM_TITOL", nullable = false)
     private String titol;
@@ -41,14 +38,6 @@ public class Campanya {
 
     public void setAny(Date any) {
         this.any = any;
-    }
-
-    public Long getImportSocis() {
-        return importSocis;
-    }
-
-    public void setImportSocis(Long importSocis) {
-        this.importSocis = importSocis;
     }
 
     public String getTitol() {

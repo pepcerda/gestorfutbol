@@ -9,8 +9,6 @@ public class CampanyaDTO {
 
     private Date any;
 
-    private Long importSocis;
-
     private String titol;
 
 
@@ -28,14 +26,6 @@ public class CampanyaDTO {
 
     public void setAny(Date any) {
         this.any = any;
-    }
-
-    public Long getImportSocis() {
-        return importSocis;
-    }
-
-    public void setImportSocis(Long importSocis) {
-        this.importSocis = importSocis;
     }
 
     public String getTitol() {

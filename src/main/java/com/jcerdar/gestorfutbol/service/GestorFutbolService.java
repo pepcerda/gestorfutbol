@@ -18,11 +18,15 @@ public interface GestorFutbolService {
 
     PaginaDTO<List<SociDTO>> listSocis(Filtre filtre);
 
+    List<SociDTO> listAllSocis(Filtre filtre);
+
     Long saveSoci(SociDTO sociDTO);
 
     void deleteSoci(Long id);
 
     PaginaDTO<List<PatrocinadorDTO>> listPatrocinador(Filtre filtre);
+
+    List<PatrocinadorDTO> listAllPatrocinadors(Filtre filtre);
 
     Long savePatrocinador(PatrocinadorDTO patrocinadorDTO);
 
@@ -61,4 +65,15 @@ public interface GestorFutbolService {
     Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO);
 
     void deleteCaixaFixa(Long id);
+
+    PaginaDTO<List<TipoSociDTO>> listTipoSocis(Filtre filtre);
+
+    List<TipoSociDTO> listAllTipoSocis(Filtre filtre);
+
+    Long saveTipoSoci(TipoSociDTO tipoSociDTO);
+
+    void deleteTipoSoci(Long id);
+
+
+
 }

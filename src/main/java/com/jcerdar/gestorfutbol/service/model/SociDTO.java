@@ -6,6 +6,8 @@ public class SociDTO {
 
     private Long campanya;
 
+    private TipoSociDTO tipoSoci;
+
     //Estat pagament. Possibles valors "P" (Pagat) o "D" (Pendent pagament)
     private String estatPagament;
 
@@ -14,8 +16,6 @@ public class SociDTO {
     private String llinatge1;
 
     private String llinatge2;
-
-    private Boolean patrocinador;
 
     public Long getId() {
         return id;
@@ -31,6 +31,14 @@ public class SociDTO {
 
     public void setCampanya(Long campanya) {
         this.campanya = campanya;
+    }
+
+    public TipoSociDTO getTipoSoci() {
+        return tipoSoci;
+    }
+
+    public void setTipoSoci(TipoSociDTO tipoSociDTO) {
+        this.tipoSoci = tipoSociDTO;
     }
 
     public String getEstatPagament() {
@@ -63,13 +71,5 @@ public class SociDTO {
 
     public void setLlinatge2(String llinatge2) {
         this.llinatge2 = llinatge2;
-    }
-
-    public Boolean getPatrocinador() {
-        return patrocinador;
-    }
-
-    public void setPatrocinador(Boolean patrocinador) {
-        this.patrocinador = patrocinador;
     }
 }

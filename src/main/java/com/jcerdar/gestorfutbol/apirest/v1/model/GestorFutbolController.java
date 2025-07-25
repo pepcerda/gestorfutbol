@@ -51,6 +51,13 @@ public class GestorFutbolController {
         return ResponseEntity.ok(gestorFutbolService.listSocis(filtre));
     }
 
+    @GetMapping("/socis/{idCampanya}")
+    public ResponseEntity<List<SociDTO>> listAllSocis(@PathVariable Long idCampanya) {
+        Filtre filtre = new Filtre();
+        filtre.setCampanyaActiva(idCampanya);
+        return ResponseEntity.ok(gestorFutbolService.listAllSocis(filtre));
+    }
+
     @PostMapping("/soci")
     public ResponseEntity<Long> saveSoci(@RequestBody SociDTO sociDTO) {
         return ResponseEntity.ok(gestorFutbolService.saveSoci(sociDTO));
@@ -69,6 +76,13 @@ public class GestorFutbolController {
     @PostMapping("/patrocinadors")
     public ResponseEntity<PaginaDTO<List<PatrocinadorDTO>>> listPatrocinadors(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listPatrocinador(filtre));
+    }
+
+    @GetMapping("/patrocinadors/{idCampanya}")
+    public ResponseEntity<List<PatrocinadorDTO>> listAllPatrocinadors(@PathVariable Long idCampanya) {
+        Filtre filtre = new Filtre();
+        filtre.setCampanyaActiva(idCampanya);
+        return ResponseEntity.ok(gestorFutbolService.listAllPatrocinadors(filtre));
     }
 
     @PostMapping("/patrocinador")
@@ -183,6 +197,33 @@ public class GestorFutbolController {
             return ResponseEntity.ok("Eliminada correctament");
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/tipo-socis")
+    public ResponseEntity<PaginaDTO<List<TipoSociDTO>>> listTipoSocis(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listTipoSocis(filtre));
+    }
+
+    @GetMapping("/tipo-socis/{idCampanya}")
+    public ResponseEntity<List<TipoSociDTO>> listAllTipoSocis(@PathVariable Long idCampanya) {
+        Filtre filtre = new Filtre();
+        filtre.setCampanyaActiva(idCampanya);
+        return ResponseEntity.ok(gestorFutbolService.listAllTipoSocis(filtre));
+    }
+
+    @PostMapping("/tipo-soci")
+    public ResponseEntity<Long> saveTipoSoci(@RequestBody TipoSociDTO tipoSociDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveTipoSoci(tipoSociDTO));
+    }
+
+    @DeleteMapping("/tipo-soci/{id}")
+    public ResponseEntity<String> deleteTipoSoci(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteTipoSoci(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
         }
     }
 }
