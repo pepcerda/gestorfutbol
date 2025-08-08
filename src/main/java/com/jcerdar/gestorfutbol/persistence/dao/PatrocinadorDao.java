@@ -16,4 +16,12 @@ public interface PatrocinadorDao extends JpaRepository<Patrocinador, Long>, Patr
     Page<Patrocinador> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
 
     List<Patrocinador> findAllByCampanyaId(Long campanyaId);
+
+    @Query("SELECT SUM(p.donacio) FROM Patrocinador p WHERE p.estatPagament = :estatPagament AND p.campanya.id = :campanyaId")
+    Long sumaDonacionsPerEstatICampanya(@Param("campanyaId") Long campanyaId, @Param("estatPagament") String estatPagament);
+
+
+    @Query("SELECT SUM(p.donacio) FROM Patrocinador p WHERE p.campanya.id = :campanyaId")
+    Long sumaDonacionsPerCampanya(@Param("campanyaId") Long campanyaId);
+
 }

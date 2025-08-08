@@ -16,4 +16,23 @@ public interface SociDao extends JpaRepository<Soci, Long> {
 
     List<Soci> findAllByCampanyaId(Long campanyaId);
 
+
+    @Query("""
+        SELECT SUM(ts.cuota)
+        FROM Soci s
+        JOIN s.tipoSoci ts
+        WHERE s.campanya.id = :campanyaId
+          AND s.estatPagament = :estatPagament
+    """)
+    Long totalRecaudacioPerCampanyaIEstat(@Param("campanyaId") Long campanyaId,
+                                          @Param("estatPagament") String estatPagament);
+
+    @Query("""
+        SELECT SUM(ts.cuota)
+        FROM Soci s
+        JOIN s.tipoSoci ts
+        WHERE s.campanya.id = :campanyaId
+    """)
+    Long totalRecaudacioPerCampanya(@Param("campanyaId") Long campanyaId);
+
 }

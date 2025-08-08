@@ -2,6 +2,8 @@ package com.jcerdar.gestorfutbol.persistence.model;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "GF_CAIXAFIXA")
 public class CaixaFixa {
@@ -24,8 +26,8 @@ public class CaixaFixa {
     @Column(name = "CF_LLIN2")
     private String llinatge2;
 
-    @Column(name = "CF_DESP", nullable = false)
-    private Long despesa;
+    @Column(name = "CF_DESP", nullable = false, precision = 15, scale = 2)
+    private BigDecimal despesa;
 
     @Column(name = "CF_OBS", length = 1024)
     private String observacio;
@@ -76,11 +78,11 @@ public class CaixaFixa {
         this.llinatge2 = llinatge2;
     }
 
-    public Long getDespesa() {
+    public BigDecimal getDespesa() {
         return despesa;
     }
 
-    public void setDespesa(Long despesa) {
+    public void setDespesa(BigDecimal despesa) {
         this.despesa = despesa;
     }
 

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("gestor-futbol/api/v1")
-public class GestorFutbolController {
+public class GestorFutbolController extends BaseController{
 
     @Autowired
     private GestorFutbolService gestorFutbolService;

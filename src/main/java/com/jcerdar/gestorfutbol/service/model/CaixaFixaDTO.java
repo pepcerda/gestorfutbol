@@ -2,6 +2,8 @@ package com.jcerdar.gestorfutbol.service.model;
 
 import com.jcerdar.gestorfutbol.persistence.model.Campanya;
 
+import java.math.BigDecimal;
+
 
 public class CaixaFixaDTO {
 
@@ -15,7 +17,7 @@ public class CaixaFixaDTO {
 
     private String llinatge2;
 
-    private Long despesa;
+    private BigDecimal despesa;
 
     private String observacio;
 
@@ -63,11 +65,11 @@ public class CaixaFixaDTO {
         this.llinatge2 = llinatge2;
     }
 
-    public Long getDespesa() {
+    public BigDecimal getDespesa() {
         return despesa;
     }
 
-    public void setDespesa(Long despesa) {
+    public void setDespesa(BigDecimal despesa) {
         this.despesa = despesa;
     }
 
