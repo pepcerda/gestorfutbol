@@ -1,8 +1,12 @@
 package com.jcerdar.gestorfutbol.service;
 
 
+import com.jcerdar.gestorfutbol.persistence.dao.CaixaFixaDao;
 import com.jcerdar.gestorfutbol.persistence.dao.PatrocinadorDao;
 import com.jcerdar.gestorfutbol.persistence.dao.SociDao;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +18,9 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
 
     @Autowired
     private PatrocinadorDao patrocinadorDao;
+
+    @Autowired
+    private CaixaFixaDao caixaFixaDao;
 
 
     @Override
@@ -44,5 +51,29 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
     @Override
     public Long totalImportPatrocinadorsPerCampanyaiEstatNoPagat(Long idCampanya) {
         return patrocinadorDao.sumaDonacionsPerEstatICampanya(idCampanya, "D");
+    }
+
+    @Override
+    public ExplotacioPatrocinadorsDTO getDadesExplotacioPatrocinis(Long idCampanya) {
+        ExplotacioPatrocinadorsDTO explotacioPatrocinadorsDTO = new ExplotacioPatrocinadorsDTO();
+        explotacioPatrocinadorsDTO.setTotalRecaptat(patrocinadorDao.sumaDonacionsPerEstatICampanya(idCampanya, "P"));
+        explotacioPatrocinadorsDTO.setPrevisioRecaptacio(patrocinadorDao.sumaDonacionsPerCampanya(idCampanya));
+        return explotacioPatrocinadorsDTO;
+    }
+
+    @Override
+    public ExplotacioSocisDTO getDadesExplotacioSocis(Long idCampanya) {
+        ExplotacioSocisDTO explotacioSocisDTO = new ExplotacioSocisDTO();
+        explotacioSocisDTO.setTotalRecaptat(sociDao.totalRecaudacioPerCampanyaIEstat(idCampanya, "P"));
+        explotacioSocisDTO.setPrevisioRecaptacio(sociDao.totalRecaudacioPerCampanya(idCampanya));
+        return explotacioSocisDTO;
+    }
+
+    @Override
+    public ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya) {
+        ExplotacioFacturesDTO explotacioFacturesDTO = new ExplotacioFacturesDTO();
+        explotacioFacturesDTO.setTotalPagat(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "P"));
+        explotacioFacturesDTO.setPendentPagar(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "D"));
+        return explotacioFacturesDTO;
     }
 }

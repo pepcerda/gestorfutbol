@@ -1,6 +1,9 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
 import com.jcerdar.gestorfutbol.service.ExplotacioDadesService;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -44,6 +47,21 @@ public class ExplotacioDadesController extends BaseController {
     @GetMapping("/total-patrocinis-no-pagat/{idCampanya}")
     ResponseEntity<Long> getTotalImportPatrocinisPerCampanyaiEstatNoPagat(@PathVariable Long idCampanya) {
         return ResponseEntity.ok(explotacioDadesService.totalImportPatrocinadorsPerCampanyaiEstatNoPagat(idCampanya));
+    }
+
+    @GetMapping("/explotacio-patrocinis/{idCampanya}")
+    ResponseEntity<ExplotacioPatrocinadorsDTO> getDadesExplotacioPatrocinis(@PathVariable Long idCampanya) {
+        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioPatrocinis(idCampanya));
+    }
+
+    @GetMapping("/explotacio-socis/{idCampanya}")
+    ResponseEntity<ExplotacioSocisDTO> getDadesExplotacioSocis(@PathVariable Long idCampanya) {
+        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioSocis(idCampanya));
+    }
+
+    @GetMapping("/explotacio-factures/{idCampanya}")
+    ResponseEntity<ExplotacioFacturesDTO> getDadesExplotacioFactures(@PathVariable Long idCampanya) {
+        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioFactures(idCampanya));
     }
 
 }
