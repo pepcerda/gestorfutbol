@@ -32,7 +32,7 @@ import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
 
 public class PdfUtil {
 
-    public static String generatePdf(PatrocinadorDTO data) {
+    public static String generatePdf(PatrocinadorDTO data, String titolCampanya) {
         try {
             // Obtener el templatePath desde resources
             ClassPathResource resource = new ClassPathResource("rebut.jasper");
@@ -46,6 +46,7 @@ public class PdfUtil {
 
             // Parámetros adicionales (si los hay)
             Map<String, Object> parameters = new HashMap<>();
+            parameters.put("campanyaTitol", titolCampanya);
 
             // Llenar el informe
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);

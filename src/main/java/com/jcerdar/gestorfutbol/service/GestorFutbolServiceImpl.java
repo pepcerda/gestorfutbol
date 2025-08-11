@@ -280,7 +280,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         Patrocinador patrocinador = patrocinadorDao.findById(id).orElse(null);
         if (patrocinador != null) {
             PatrocinadorDTO patrocinadorDTO = modelMapper.map(patrocinador, PatrocinadorDTO.class);
-            return PdfUtil.generatePdf(patrocinadorDTO);
+            return PdfUtil.generatePdf(patrocinadorDTO, patrocinador.getCampanya().getTitol());
         } else {
             return "";
         }
