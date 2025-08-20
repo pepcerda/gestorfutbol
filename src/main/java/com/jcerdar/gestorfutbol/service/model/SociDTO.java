@@ -17,6 +17,8 @@ public class SociDTO {
 
     private String llinatge2;
 
+    private Integer idSoci;
+
     public Long getId() {
         return id;
     }
@@ -71,5 +73,13 @@ public class SociDTO {
 
     public void setLlinatge2(String llinatge2) {
         this.llinatge2 = llinatge2;
+    }
+
+    public Integer getIdSoci() {
+        return idSoci;
+    }
+
+    public void setIdSoci(Integer idSoci) {
+        this.idSoci = idSoci;
     }
 }

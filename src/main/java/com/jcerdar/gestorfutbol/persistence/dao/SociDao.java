@@ -16,6 +16,9 @@ public interface SociDao extends JpaRepository<Soci, Long> {
 
     List<Soci> findAllByCampanyaId(Long campanyaId);
 
+    @Query("SELECT COALESCE(MAX(s.idSoci), 0) FROM Soci s WHERE s.campanya.id = :campanyaId")
+    Integer findMaxIdSociByCampanya(@Param("campanyaId") Long campanyaId);
+
 
     @Query("""
         SELECT SUM(ts.cuota)

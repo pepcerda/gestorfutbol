@@ -39,6 +39,9 @@ public class Soci {
     @Column(name = "SOC_LLIN2")
     private String llinatge2;
 
+    @Column(name = "SOC_NUM", nullable = false)
+    private Integer idSoci;
+
     public Long getId() {
         return id;
     }
@@ -93,5 +96,13 @@ public class Soci {
 
     public void setTipoSoci(TipoSoci tipoSoci) {
         this.tipoSoci = tipoSoci;
+    }
+
+    public Integer getIdSoci() {
+        return idSoci;
+    }
+
+    public void setIdSoci(Integer idSoci) {
+        this.idSoci = idSoci;
     }
 }

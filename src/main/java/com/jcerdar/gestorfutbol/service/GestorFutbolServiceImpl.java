@@ -8,6 +8,7 @@ import com.jcerdar.gestorfutbol.service.util.PdfUtil;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.config.Configuration;
@@ -63,23 +64,29 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     public void init() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        Converter<Long, Campanya> toCampanya = ctx -> {
+            Campanya campanya = campanyaDao.findById(ctx.getSource()).orElse(null);
+            return campanya;
+        };
+
         TypeMap<TipoSociDTO, TipoSoci> jTipoSociMapper = modelMapper.createTypeMap(TipoSociDTO.class, TipoSoci.class);
-        jTipoSociMapper.addMappings(mapper -> mapper.skip(TipoSoci::setCampanya));
+        jTipoSociMapper.addMappings(mapper -> mapper.using(toCampanya).map(TipoSociDTO::getCampanya, TipoSoci::setCampanya));
 
         TypeMap<TipoSoci, TipoSociDTO> tipoSociMapper = modelMapper.createTypeMap(TipoSoci.class, TipoSociDTO.class);
         tipoSociMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), TipoSociDTO::setCampanya));
 
         TypeMap<SociDTO, Soci> jSociMapper = modelMapper.createTypeMap(SociDTO.class, Soci.class);
-        jSociMapper.addMappings(mapper -> mapper.skip(Soci::setCampanya));
+        jSociMapper.addMappings(mapper -> {
+            mapper.using(toCampanya).map(SociDTO::getCampanya, Soci::setCampanya);
+        });
 
         TypeMap<Soci, SociDTO> sociMapper = modelMapper.createTypeMap(Soci.class, SociDTO.class);
         sociMapper.addMappings(mapper -> {
             mapper.map(src -> src.getCampanya().getId(), SociDTO::setCampanya);
         });
 
-
         TypeMap<PatrocinadorDTO, Patrocinador> jPatrociniMapper = modelMapper.createTypeMap(PatrocinadorDTO.class, Patrocinador.class);
-        jPatrociniMapper.addMappings(mapper -> mapper.skip(Patrocinador::setCampanya));
+        jPatrociniMapper.addMappings(mapper -> mapper.using(toCampanya).map(PatrocinadorDTO::getCampanya, Patrocinador::setCampanya));
 
         modelMapper.typeMap(Patrocinador.class, Patrocinador.class).addMappings(mapper -> mapper.skip(Patrocinador::setId));
 
@@ -103,7 +110,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<CaixaFixaDTO, CaixaFixa> jCaixaFixaMapper = modelMapper.createTypeMap(CaixaFixaDTO.class, CaixaFixa.class);
         jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setFactura));
-        jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setCampanya));
+        jCaixaFixaMapper.addMappings(mapper -> mapper.using(toCampanya).map(CaixaFixaDTO::getCampanya, CaixaFixa::setCampanya));
 
 
     }
@@ -165,18 +172,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         List<SociDTO> sociDTOS = new ArrayList<>();
 
         if (socis.getTotalElements() > 0) {
-            sociDTOS = socis.map(soci -> {
-                SociDTO sociDTO = new SociDTO();
-                TipoSociDTO tipoSociDTO = modelMapper.map(soci.getTipoSoci(), TipoSociDTO.class);
-                sociDTO.setId(soci.getId());
-                sociDTO.setCampanya(soci.getCampanya().getId());
-                sociDTO.setEstatPagament(soci.getEstatPagament());
-                sociDTO.setNom(soci.getNom());
-                sociDTO.setTipoSoci(tipoSociDTO);
-                sociDTO.setLlinatge1(soci.getLlinatge1());
-                sociDTO.setLlinatge2(soci.getLlinatge2());
-                return sociDTO;
-            }).getContent();
+            sociDTOS = socis.map(soci -> modelMapper.map(soci, SociDTO.class)).getContent();
             paginaDTO.setTotal(socis.getTotalElements());
             paginaDTO.setResult(sociDTOS);
         }
@@ -189,18 +185,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         List<SociDTO> sociDTOS = new ArrayList<>();
 
         if (!socis.isEmpty()) {
-            sociDTOS = socis.stream().map(soci -> {
-                SociDTO sociDTO = new SociDTO();
-                TipoSociDTO tipoSociDTO = modelMapper.map(soci.getTipoSoci(), TipoSociDTO.class);
-                sociDTO.setId(soci.getId());
-                sociDTO.setCampanya(soci.getCampanya().getId());
-                sociDTO.setEstatPagament(soci.getEstatPagament());
-                sociDTO.setNom(soci.getNom());
-                sociDTO.setTipoSoci(tipoSociDTO);
-                sociDTO.setLlinatge1(soci.getLlinatge1());
-                sociDTO.setLlinatge2(soci.getLlinatge2());
-                return sociDTO;
-            }).collect(Collectors.toList());
+            sociDTOS = socis.stream().map(soci -> modelMapper.map(soci, SociDTO.class)).collect(Collectors.toList());
         }
         return sociDTOS;
     }
@@ -208,7 +193,11 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long saveSoci(SociDTO sociDTO) {
-        Soci soci = jSociMapper(sociDTO);
+        if (sociDTO.getId() == null) {
+            Integer lastIdSoci = sociDao.findMaxIdSociByCampanya(sociDTO.getCampanya());
+            sociDTO.setIdSoci(lastIdSoci + 1);
+        }
+        Soci soci = modelMapper.map(sociDTO, Soci.class);
         soci = sociDao.save(soci);
         return soci.getId();
     }
@@ -255,7 +244,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long savePatrocinador(PatrocinadorDTO patrocinadorDTO) {
-        Patrocinador patrocinador = jPatrocinadorMapper(patrocinadorDTO);
+        Patrocinador patrocinador = modelMapper.map(patrocinadorDTO, Patrocinador.class);
         patrocinador = patrocinadorDao.save(patrocinador);
         return patrocinador.getId();
     }
@@ -438,7 +427,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<TipoSociDTO>> listTipoSocis(Filtre filtre) {
-        Page<TipoSoci> tipoSocis = tipoSociDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<TipoSoci> tipoSocis = tipoSociDao.findByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<TipoSociDTO>> paginaDTO = new PaginaDTO<>();
         List<TipoSociDTO> tipoSociDTOS = new ArrayList<>();
         if (tipoSocis.getTotalElements() > 0) {
@@ -543,8 +532,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO) {
         CaixaFixa caixaFixa = modelMapper.map(caixaFixaDTO, CaixaFixa.class);
 
-        Campanya campanya = campanyaDao.findById(caixaFixaDTO.getCampanya()).orElse(null);
-        caixaFixa.setCampanya(campanya);
         try {
             if (caixaFixaDTO.getFactura() != null && !caixaFixaDTO.getFactura().isEmpty()) {
                 String facturaUrl = mediaService.guardarDespesaB64(caixaFixaDTO.getFactura());

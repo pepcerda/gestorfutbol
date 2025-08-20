@@ -1,6 +1,5 @@
 package com.jcerdar.gestorfutbol.persistence.dao;
 
-import com.jcerdar.gestorfutbol.persistence.model.Soci;
 import com.jcerdar.gestorfutbol.persistence.model.TipoSoci;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +13,8 @@ public interface TipoSociDao extends JpaRepository<TipoSoci, Long> {
 
     @Query("select c from TipoSoci c where c.campanya.id = :idCampanya")
     List<TipoSoci> findAllByCampanya(@Param("idCampanya") Long idCampanya);
+
+    @Query("select c from TipoSoci c where c.campanya.id = :idCampanya")
+    Page<TipoSoci> findByCampanya(@Param("idCampanya") Long idCampanya, Pageable pageable);
 
 }
