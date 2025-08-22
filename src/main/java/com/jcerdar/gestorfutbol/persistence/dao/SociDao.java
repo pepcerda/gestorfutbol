@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface SociDao extends JpaRepository<Soci, Long> {
 
-    @Query("select c from Soci c where c.campanya.id = :idCampanya")
+    @Query("select c from Soci c where c.campanya.id = :idCampanya order by c.id asc")
     Page<Soci> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
 
     List<Soci> findAllByCampanyaId(Long campanyaId);

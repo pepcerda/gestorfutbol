@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 public interface CaixaFixaDao extends JpaRepository<CaixaFixa, Long> {
 
-    @Query("select c from CaixaFixa c where c.campanya.id = :idCampanya")
+    @Query("select c from CaixaFixa c where c.campanya.id = :idCampanya order by c.id asc")
     Page<CaixaFixa> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
 
     @Query("SELECT SUM(p.despesa) FROM CaixaFixa p WHERE p.estat = :estat AND p.campanya.id = :campanyaId")

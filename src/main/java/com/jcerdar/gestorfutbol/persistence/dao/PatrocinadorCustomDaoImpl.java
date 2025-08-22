@@ -41,6 +41,9 @@ public class PatrocinadorCustomDaoImpl implements PatrocinadorCustomDao{
             query.orderBy(filtre.getSortOrder() != null && filtre.getSortOrder() == 1
                     ? cb.asc(sortPath)
                     : cb.desc(sortPath));
+        } else {
+            // Ordenación por defecto: campo 'id' ascendente
+            query.orderBy(cb.asc(root.get("id")));
         }
 
         TypedQuery<Patrocinador> typedQuery = entityManager.createQuery(query);
