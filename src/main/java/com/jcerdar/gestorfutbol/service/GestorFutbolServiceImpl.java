@@ -86,6 +86,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         });
 
         TypeMap<PatrocinadorDTO, Patrocinador> jPatrociniMapper = modelMapper.createTypeMap(PatrocinadorDTO.class, Patrocinador.class);
+        jPatrociniMapper.addMappings(mapper -> mapper.skip(Patrocinador::setLogo));
         jPatrociniMapper.addMappings(mapper -> mapper.using(toCampanya).map(PatrocinadorDTO::getCampanya, Patrocinador::setCampanya));
 
         modelMapper.typeMap(Patrocinador.class, Patrocinador.class).addMappings(mapper -> mapper.skip(Patrocinador::setId));
@@ -163,10 +164,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<SociDTO>> listSocis(Filtre filtre) {
-        Page<Soci> socis = sociDao.findAllByCampanyaOrderById(
-                filtre.getCampanyaActiva(),
-                PageRequest.of(filtre.getPageNum(), filtre.getPageSize())
-        );
+        Page<Soci> socis = sociDao.buscarConFiltros(filtre);
 
         PaginaDTO<List<SociDTO>> paginaDTO = new PaginaDTO<>();
         List<SociDTO> sociDTOS = new ArrayList<>();
@@ -181,7 +179,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<SociDTO> listAllSocis(Filtre filtre) {
-        List<Soci> socis = sociDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        List<Soci> socis = sociDao.buscarConFiltrosAll(filtre);
         List<SociDTO> sociDTOS = new ArrayList<>();
 
         if (!socis.isEmpty()) {
@@ -222,7 +220,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<PatrocinadorDTO> listAllPatrocinadors(Filtre filtre) {
-        List<Patrocinador> patrocinadors = patrocinadorDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        List<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltrosAll(filtre);
         List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
         if (!patrocinadors.isEmpty()) {
             patrocinadorDTOS = patrocinadors.stream().map(patr -> modelMapper.map(patr, PatrocinadorDTO.class)).collect(Collectors.toList());
@@ -244,7 +242,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long savePatrocinador(PatrocinadorDTO patrocinadorDTO) {
-        Patrocinador patrocinador = modelMapper.map(patrocinadorDTO, Patrocinador.class);
+        Patrocinador patrocinador = jPatrocinadorMapper(patrocinadorDTO);
         patrocinador = patrocinadorDao.save(patrocinador);
         return patrocinador.getId();
     }
@@ -475,9 +473,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     private Patrocinador jPatrocinadorMapper(PatrocinadorDTO patrocinadorDTO) {
         Patrocinador patrocinador = modelMapper.map(patrocinadorDTO, Patrocinador.class);
-
-        Campanya campanya = campanyaDao.findById(patrocinadorDTO.getCampanya()).orElse(null);
-        patrocinador.setCampanya(campanya);
 
         try {
             if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && mediaService.checkBase64(patrocinadorDTO.getLogo())) {

@@ -2,7 +2,8 @@ package com.jcerdar.gestorfutbol.persistence.dao;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.apirest.v1.model.ValorFiltre;
-import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
+import com.jcerdar.gestorfutbol.persistence.model.Soci;
+import com.jcerdar.gestorfutbol.persistence.model.Soci;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -17,18 +18,18 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class PatrocinadorCustomDaoImpl implements PatrocinadorCustomDao{
+public class SociCustomDaoImpl implements SociCustomDao{
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
-    public Page<Patrocinador> buscarConFiltros(Filtre filtre) {
+    public Page<Soci> buscarConFiltros(Filtre filtre) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         // MAIN QUERY
-        CriteriaQuery<Patrocinador> query = cb.createQuery(Patrocinador.class);
-        Root<Patrocinador> root = query.from(Patrocinador.class);
+        CriteriaQuery<Soci> query = cb.createQuery(Soci.class);
+        Root<Soci> root = query.from(Soci.class);
         List<Predicate> predicates = construirPredicats(filtre, root, cb);
         query.where(predicates.toArray(new Predicate[0]));
 
@@ -46,15 +47,15 @@ public class PatrocinadorCustomDaoImpl implements PatrocinadorCustomDao{
             query.orderBy(cb.asc(root.get("id")));
         }
 
-        TypedQuery<Patrocinador> typedQuery = entityManager.createQuery(query);
+        TypedQuery<Soci> typedQuery = entityManager.createQuery(query);
         int pageNum = filtre.getPageNum();
         typedQuery.setFirstResult(pageNum * filtre.getPageSize());
         typedQuery.setMaxResults(filtre.getPageSize());
-        List<Patrocinador> resultList = typedQuery.getResultList();
+        List<Soci> resultList = typedQuery.getResultList();
 
         // COUNT QUERY
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<Patrocinador> countRoot = countQuery.from(Patrocinador.class);
+        Root<Soci> countRoot = countQuery.from(Soci.class);
         List<Predicate> countPredicates = construirPredicats(filtre, countRoot, cb);
         countQuery.select(cb.count(countRoot)).where(countPredicates.toArray(new Predicate[0]));
         Long total = entityManager.createQuery(countQuery).getSingleResult();
@@ -63,12 +64,12 @@ public class PatrocinadorCustomDaoImpl implements PatrocinadorCustomDao{
     }
 
     @Override
-    public List<Patrocinador> buscarConFiltrosAll(Filtre filtre) {
+    public List<Soci> buscarConFiltrosAll(Filtre filtre) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
 
         // MAIN QUERY
-        CriteriaQuery<Patrocinador> query = cb.createQuery(Patrocinador.class);
-        Root<Patrocinador> root = query.from(Patrocinador.class);
+        CriteriaQuery<Soci> query = cb.createQuery(Soci.class);
+        Root<Soci> root = query.from(Soci.class);
         List<Predicate> predicates = construirPredicats(filtre, root, cb);
         query.where(predicates.toArray(new Predicate[0]));
 
@@ -86,16 +87,17 @@ public class PatrocinadorCustomDaoImpl implements PatrocinadorCustomDao{
             query.orderBy(cb.asc(root.get("id")));
         }
 
-        TypedQuery<Patrocinador> typedQuery = entityManager.createQuery(query);
+        TypedQuery<Soci> typedQuery = entityManager.createQuery(query);
         int pageNum = filtre.getPageNum();
         typedQuery.setFirstResult(pageNum * filtre.getPageSize());
         typedQuery.setMaxResults(filtre.getPageSize());
-        List<Patrocinador> resultList = typedQuery.getResultList();
+        List<Soci> resultList = typedQuery.getResultList();
+
 
         return resultList;
     }
 
-    private List<Predicate> construirPredicats(Filtre filtre, Root<Patrocinador> root, CriteriaBuilder cb) {
+    private List<Predicate> construirPredicats(Filtre filtre, Root<Soci> root, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (filtre.getCampanyaActiva() != null) {

@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface SociDao extends JpaRepository<Soci, Long> {
+public interface SociDao extends JpaRepository<Soci, Long>, SociCustomDao {
 
     @Query("select c from Soci c where c.campanya.id = :idCampanya order by c.id asc")
     Page<Soci> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);

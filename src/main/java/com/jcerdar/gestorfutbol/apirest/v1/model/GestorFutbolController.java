@@ -51,10 +51,8 @@ public class GestorFutbolController extends BaseController{
         return ResponseEntity.ok(gestorFutbolService.listSocis(filtre));
     }
 
-    @GetMapping("/socis/{idCampanya}")
-    public ResponseEntity<List<SociDTO>> listAllSocis(@PathVariable Long idCampanya) {
-        Filtre filtre = new Filtre();
-        filtre.setCampanyaActiva(idCampanya);
+    @PostMapping("/all-socis")
+    public ResponseEntity<List<SociDTO>> listAllSocis(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listAllSocis(filtre));
     }
 
@@ -78,10 +76,8 @@ public class GestorFutbolController extends BaseController{
         return ResponseEntity.ok(gestorFutbolService.listPatrocinador(filtre));
     }
 
-    @GetMapping("/patrocinadors/{idCampanya}")
-    public ResponseEntity<List<PatrocinadorDTO>> listAllPatrocinadors(@PathVariable Long idCampanya) {
-        Filtre filtre = new Filtre();
-        filtre.setCampanyaActiva(idCampanya);
+    @PostMapping("/all-patrocinadors")
+    public ResponseEntity<List<PatrocinadorDTO>> listAllPatrocinadors(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listAllPatrocinadors(filtre));
     }
 
