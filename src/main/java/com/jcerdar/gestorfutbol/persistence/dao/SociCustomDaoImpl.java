@@ -121,7 +121,13 @@ public class SociCustomDaoImpl implements SociCustomDao{
 
                     switch (matchMode) {
                         case "contains" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase() + "%"));
-                        case "equals" -> predicates.add(cb.equal(path, value));
+                        case "equals" -> {
+                            if(field.equals("tipoSoci")) {
+                                predicates.add(cb.equal(path.get("id"), Long.valueOf(value)));
+                            } else {
+                                predicates.add(cb.equal(path, value));
+                            }
+                        }
                         case "startsWith" -> predicates.add(cb.like(cb.lower(path), value.toLowerCase() + "%"));
                         case "endsWith" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase()));
                     }

@@ -6,6 +6,8 @@ public class ExplotacioPatrocinadorsDTO {
 
     private Long totalRecaptat;
 
+    private Long totalPatrocinadors;
+
     public Long getPrevisioRecaptacio() {
         return previsioRecaptacio;
     }
@@ -20,5 +22,13 @@ public class ExplotacioPatrocinadorsDTO {
 
     public void setTotalRecaptat(Long totalRecaptat) {
         this.totalRecaptat = totalRecaptat;
+    }
+
+    public Long getTotalPatrocinadors() {
+        return totalPatrocinadors;
+    }
+
+    public void setTotalPatrocinadors(Long totalPatrocinadors) {
+        this.totalPatrocinadors = totalPatrocinadors;
     }
 }

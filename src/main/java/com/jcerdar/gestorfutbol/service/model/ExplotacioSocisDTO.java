@@ -6,6 +6,8 @@ public class ExplotacioSocisDTO {
 
     private Long previsioRecaptacio;
 
+    private Long totalSocis;
+
 
     public Long getTotalRecaptat() {
         return totalRecaptat;
@@ -21,5 +23,13 @@ public class ExplotacioSocisDTO {
 
     public void setPrevisioRecaptacio(Long previsioRecaptacio) {
         this.previsioRecaptacio = previsioRecaptacio;
+    }
+
+    public Long getTotalSocis() {
+        return totalSocis;
+    }
+
+    public void setTotalSocis(Long totalSocis) {
+        this.totalSocis = totalSocis;
     }
 }

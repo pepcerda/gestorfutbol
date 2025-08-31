@@ -58,6 +58,7 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         ExplotacioPatrocinadorsDTO explotacioPatrocinadorsDTO = new ExplotacioPatrocinadorsDTO();
         explotacioPatrocinadorsDTO.setTotalRecaptat(patrocinadorDao.sumaDonacionsPerEstatICampanya(idCampanya, "P"));
         explotacioPatrocinadorsDTO.setPrevisioRecaptacio(patrocinadorDao.sumaDonacionsPerCampanya(idCampanya));
+        explotacioPatrocinadorsDTO.setTotalPatrocinadors(patrocinadorDao.countPatrocinadorsByCampanya(idCampanya));
         return explotacioPatrocinadorsDTO;
     }
 
@@ -66,6 +67,7 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         ExplotacioSocisDTO explotacioSocisDTO = new ExplotacioSocisDTO();
         explotacioSocisDTO.setTotalRecaptat(sociDao.totalRecaudacioPerCampanyaIEstat(idCampanya, "P"));
         explotacioSocisDTO.setPrevisioRecaptacio(sociDao.totalRecaudacioPerCampanya(idCampanya));
+        explotacioSocisDTO.setTotalSocis(sociDao.countSocisByCampanya(idCampanya));
         return explotacioSocisDTO;
     }
 

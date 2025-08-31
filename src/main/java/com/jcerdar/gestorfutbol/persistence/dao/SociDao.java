@@ -38,4 +38,7 @@ public interface SociDao extends JpaRepository<Soci, Long>, SociCustomDao {
     """)
     Long totalRecaudacioPerCampanya(@Param("campanyaId") Long campanyaId);
 
+    @Query("SELECT COUNT(s) FROM Soci s WHERE s.campanya.id = :campanyaId")
+    Long countSocisByCampanya(@Param("campanyaId") Long campanyaId);
+
 }

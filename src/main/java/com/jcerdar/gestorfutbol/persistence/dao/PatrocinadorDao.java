@@ -24,4 +24,7 @@ public interface PatrocinadorDao extends JpaRepository<Patrocinador, Long>, Patr
     @Query("SELECT SUM(p.donacio) FROM Patrocinador p WHERE p.campanya.id = :campanyaId")
     Long sumaDonacionsPerCampanya(@Param("campanyaId") Long campanyaId);
 
+    @Query("SELECT COUNT(p) FROM Patrocinador p WHERE p.campanya.id = :campanyaId")
+    Long countPatrocinadorsByCampanya(@Param("campanyaId") Long campanyaId);
+
 }
