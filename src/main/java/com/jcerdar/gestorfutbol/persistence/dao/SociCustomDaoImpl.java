@@ -90,7 +90,6 @@ public class SociCustomDaoImpl implements SociCustomDao{
         TypedQuery<Soci> typedQuery = entityManager.createQuery(query);
         int pageNum = filtre.getPageNum();
         typedQuery.setFirstResult(pageNum * filtre.getPageSize());
-        typedQuery.setMaxResults(filtre.getPageSize());
         List<Soci> resultList = typedQuery.getResultList();
 
 
