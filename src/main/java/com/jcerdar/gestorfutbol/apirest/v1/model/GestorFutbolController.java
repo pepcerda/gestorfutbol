@@ -1,14 +1,18 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
+import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.GestorFutbolService;
 import com.jcerdar.gestorfutbol.service.MediaService;
 import com.jcerdar.gestorfutbol.service.model.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -222,4 +226,76 @@ public class GestorFutbolController extends BaseController{
             return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping("/entrenadors")
+    public ResponseEntity<List<EntrenadorDTO>> listEntrenadors(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listAllEntrenadors(filtre));
+    }
+
+    @PostMapping("/entrenador")
+    public ResponseEntity<Long> saveEntrenador(@RequestBody EntrenadorDTO entrenadorDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveEntrenador(entrenadorDTO));
+    }
+
+    @DeleteMapping("/entrenador/{id}")
+    public ResponseEntity<String> deleteEntrenador(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteEntrenador(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e) {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/delegats")
+    public ResponseEntity<List<DelegatDTO>> listDelegats(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listAllDelegats(filtre));
+    }
+
+    @PostMapping("/delegat")
+    public ResponseEntity<Long> saveDelegat(@RequestBody DelegatDTO delegatDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveDelegat(delegatDTO));
+    }
+
+    @DeleteMapping("/delegat/{id}")
+    public ResponseEntity<String> deleteDelegat(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteDelegat(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e) {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/jugadors")
+    public ResponseEntity<List<JugadorDTO>> listJugadors(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listAllJugadors(filtre));
+    }
+
+    @PostMapping("/jugador")
+    public ResponseEntity<Long> saveJugador(@RequestBody JugadorDTO jugadorDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveJugador(jugadorDTO));
+    }
+
+    @DeleteMapping("/jugador/{id}")
+    public ResponseEntity<String> deleteJugador(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteJugador(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e) {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/posicions")
+    public ResponseEntity<List<Map<String, String>>> getPosicions() {
+        return ResponseEntity.ok(List.of(Posicio.values()).stream()
+            .map(posicio -> Map.of(
+                "valor", posicio.getValor(),
+                "descripcion", posicio.getDescripcion(),
+                "name", posicio.name()
+            ))
+            .collect(Collectors.toList()));
+    }
+
 }

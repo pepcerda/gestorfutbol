@@ -1,17 +1,13 @@
 package com.jcerdar.gestorfutbol.service;
 
-import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
-import com.jcerdar.gestorfutbol.persistence.dao.*;
-import com.jcerdar.gestorfutbol.persistence.model.*;
-import com.jcerdar.gestorfutbol.service.model.*;
-import com.jcerdar.gestorfutbol.service.util.PdfUtil;
-import jakarta.annotation.PostConstruct;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
-import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +15,52 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
+import com.jcerdar.gestorfutbol.persistence.dao.CaixaFixaDao;
+import com.jcerdar.gestorfutbol.persistence.dao.CampanyaDao;
+import com.jcerdar.gestorfutbol.persistence.dao.ConfiguracioDao;
+import com.jcerdar.gestorfutbol.persistence.dao.DelegatDao;
+import com.jcerdar.gestorfutbol.persistence.dao.DirectiuDao;
+import com.jcerdar.gestorfutbol.persistence.dao.DirectivaDao;
+import com.jcerdar.gestorfutbol.persistence.dao.EntrenadorDao;
+import com.jcerdar.gestorfutbol.persistence.dao.JugadorDao;
+import com.jcerdar.gestorfutbol.persistence.dao.PatrocinadorDao;
+import com.jcerdar.gestorfutbol.persistence.dao.RolDirectiuDao;
+import com.jcerdar.gestorfutbol.persistence.dao.SociDao;
+import com.jcerdar.gestorfutbol.persistence.dao.TipoSociDao;
+import com.jcerdar.gestorfutbol.persistence.model.CaixaFixa;
+import com.jcerdar.gestorfutbol.persistence.model.Campanya;
+import com.jcerdar.gestorfutbol.persistence.model.Configuracio;
+import com.jcerdar.gestorfutbol.persistence.model.Delegat;
+import com.jcerdar.gestorfutbol.persistence.model.Directiu;
+import com.jcerdar.gestorfutbol.persistence.model.Directiva;
+import com.jcerdar.gestorfutbol.persistence.model.Entrenador;
+import com.jcerdar.gestorfutbol.persistence.model.Jugador;
+import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
+import com.jcerdar.gestorfutbol.persistence.model.RolDirectiu;
+import com.jcerdar.gestorfutbol.persistence.model.Soci;
+import com.jcerdar.gestorfutbol.persistence.model.TipoSoci;
+import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
+import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
+import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
+import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
+import com.jcerdar.gestorfutbol.service.model.ConfiguracioDTO;
+import com.jcerdar.gestorfutbol.service.model.ConfiguracioGeneralDTO;
+import com.jcerdar.gestorfutbol.service.model.DelegatDTO;
+import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
+import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
+import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
+import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
+import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
+import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
+import com.jcerdar.gestorfutbol.service.model.PosicioDTO;
+import com.jcerdar.gestorfutbol.service.model.RolDirectiuDTO;
+import com.jcerdar.gestorfutbol.service.model.SociDTO;
+import com.jcerdar.gestorfutbol.service.model.TipoSociDTO;
+import com.jcerdar.gestorfutbol.service.util.PdfUtil;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class GestorFutbolServiceImpl implements GestorFutbolService {
@@ -55,6 +93,15 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private TipoSociDao tipoSociDao;
 
     @Autowired
+    private JugadorDao jugadorDao;
+
+    @Autowired
+    private EntrenadorDao entrenadorDao;
+
+    @Autowired
+    private DelegatDao delegatDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -67,6 +114,24 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         Converter<Long, Campanya> toCampanya = ctx -> {
             Campanya campanya = campanyaDao.findById(ctx.getSource()).orElse(null);
             return campanya;
+        };
+
+        Converter<Posicio, PosicioDTO> toPosicio = pos -> {
+            PosicioDTO posicio = new PosicioDTO();
+            if (pos.getSource() != null) {
+                posicio.setValor(pos.getSource().getValor());
+                posicio.setDescripcion(pos.getSource().getDescripcion());
+                posicio.setName(pos.getSource().name());
+            }
+            return posicio;
+        };
+
+        Converter<PosicioDTO, Posicio> toPosicioEntity = pos -> {
+            if (pos.getSource() != null) {
+                return Posicio.valueOf(pos.getSource().getName());
+            } else {
+                return null;
+            }
         };
 
         TypeMap<TipoSociDTO, TipoSoci> jTipoSociMapper = modelMapper.createTypeMap(TipoSociDTO.class, TipoSoci.class);
@@ -113,6 +178,24 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setFactura));
         jCaixaFixaMapper.addMappings(mapper -> mapper.using(toCampanya).map(CaixaFixaDTO::getCampanya, CaixaFixa::setCampanya));
 
+        TypeMap<JugadorDTO, Jugador> jJugadorMapper = modelMapper.createTypeMap(JugadorDTO.class, Jugador.class);
+        jJugadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(JugadorDTO::getCampanya, Jugador::setCampanya));
+        jJugadorMapper.addMappings(mapper -> mapper.using(toPosicioEntity).map(JugadorDTO::getPosicio, Jugador::setPosicio));
+
+        TypeMap<Jugador, JugadorDTO> jugadorMapper = modelMapper.createTypeMap(Jugador.class, JugadorDTO.class);
+        jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), JugadorDTO::setCampanya));
+
+        TypeMap<EntrenadorDTO, Entrenador> jEntrenadorMapper = modelMapper.createTypeMap(EntrenadorDTO.class, Entrenador.class);
+        jEntrenadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(EntrenadorDTO::getCampanya, Entrenador::setCampanya));
+
+        TypeMap<Entrenador, EntrenadorDTO> entrenadorMapper = modelMapper.createTypeMap(Entrenador.class, EntrenadorDTO.class);
+        entrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), EntrenadorDTO::setCampanya));
+
+        TypeMap<DelegatDTO, Delegat> jDelegatMapper = modelMapper.createTypeMap(DelegatDTO.class, Delegat.class);
+        jDelegatMapper.addMappings(mapper -> mapper.using(toCampanya).map(DelegatDTO::getCampanya, Delegat::setCampanya));
+
+        TypeMap<Delegat, DelegatDTO> delegatMapper = modelMapper.createTypeMap(Delegat.class, DelegatDTO.class);
+        delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), DelegatDTO::setCampanya));
 
     }
 
@@ -457,6 +540,69 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public void deleteTipoSoci(Long id) {
         tipoSociDao.deleteById(id);
+    }
+
+    @Override
+    public Long saveJugador(JugadorDTO jugadorDTO) {
+        Jugador jugador = modelMapper.map(jugadorDTO, Jugador.class);
+        return jugadorDao.save(jugador).getId();
+    }
+
+    @Override
+    public void deleteJugador(Long id) {
+        jugadorDao.deleteById(id);
+    }
+
+    @Override
+    public List<JugadorDTO> listAllJugadors(Filtre filtre) {
+        List<Jugador> jugadors = jugadorDao.findAllByCampanya(filtre.getCampanyaActiva());
+        List<JugadorDTO> jugadorDTOS = new ArrayList<>();
+        if (!jugadors.isEmpty()) {
+            jugadorDTOS = jugadors.stream().map(jugador -> modelMapper.map(jugador, JugadorDTO.class)).collect(Collectors.toList());
+        }
+        return jugadorDTOS;
+    }
+
+    @Override
+    public Long saveEntrenador(EntrenadorDTO entrenadorDTO) {
+        Entrenador entrenador = modelMapper.map(entrenadorDTO, Entrenador.class);
+        return entrenadorDao.save(entrenador).getId();
+    }
+
+    @Override
+    public void deleteEntrenador(Long id) {
+        entrenadorDao.deleteById(id);
+    }
+
+    @Override
+    public List<EntrenadorDTO> listAllEntrenadors(Filtre filtre) {
+        List<Entrenador> entrenadors = entrenadorDao.findAllByCampanya(filtre.getCampanyaActiva());
+        List<EntrenadorDTO> entrenadorDTOS = new ArrayList<>();
+        if (!entrenadors.isEmpty()) {
+            entrenadorDTOS = entrenadors.stream().map(c -> modelMapper.map(c, EntrenadorDTO.class)).collect(Collectors.toList());
+        }
+        return entrenadorDTOS;
+    }
+
+    @Override
+    public List<DelegatDTO> listAllDelegats(Filtre filtre) {
+        List<Delegat> delegats = delegatDao.findAllByCampanya(filtre.getCampanyaActiva());
+        List<DelegatDTO> delegatDTOS = new ArrayList<>();
+        if (!delegats.isEmpty()) {
+            delegatDTOS = delegats.stream().map(c -> modelMapper.map(c, DelegatDTO.class)).collect(Collectors.toList());
+        }
+        return delegatDTOS;
+    }
+
+    @Override
+    public Long saveDelegat(DelegatDTO delegatDTO) {
+        Delegat delegat = modelMapper.map(delegatDTO, Delegat.class);
+        return delegatDao.save(delegat).getId();
+    }
+
+    @Override
+    public void deleteDelegat(Long id) {
+        delegatDao.deleteById(id);
     }
 
     private Soci jSociMapper(SociDTO sociDTO) {

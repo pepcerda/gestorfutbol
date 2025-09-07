@@ -1,6 +1,4 @@
 package com.jcerdar.gestorfutbol.service.model;
-import com.jcerdar.gestorfutbol.persistence.model.Campanya;
-
 import java.util.Date;
 
 

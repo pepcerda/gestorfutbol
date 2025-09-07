@@ -1,10 +1,23 @@
 package com.jcerdar.gestorfutbol.service;
 
-import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
-import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
-import com.jcerdar.gestorfutbol.service.model.*;
-
 import java.util.List;
+
+import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
+import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
+import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
+import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
+import com.jcerdar.gestorfutbol.service.model.ConfiguracioDTO;
+import com.jcerdar.gestorfutbol.service.model.ConfiguracioGeneralDTO;
+import com.jcerdar.gestorfutbol.service.model.DelegatDTO;
+import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
+import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
+import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
+import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
+import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
+import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
+import com.jcerdar.gestorfutbol.service.model.RolDirectiuDTO;
+import com.jcerdar.gestorfutbol.service.model.SociDTO;
+import com.jcerdar.gestorfutbol.service.model.TipoSociDTO;
 
 public interface GestorFutbolService {
 
@@ -74,6 +87,21 @@ public interface GestorFutbolService {
 
     void deleteTipoSoci(Long id);
 
+    Long saveJugador(JugadorDTO jugadorDTO);
 
+    void deleteJugador(Long id);
 
+    List<JugadorDTO> listAllJugadors(Filtre filtre);
+
+    Long saveEntrenador(EntrenadorDTO entrenadorDTO);
+
+    void deleteEntrenador(Long id);
+
+    List<EntrenadorDTO> listAllEntrenadors(Filtre filtre);
+
+    List<DelegatDTO> listAllDelegats(Filtre filtre);
+
+    Long saveDelegat(DelegatDTO delegatDTO);
+
+    void deleteDelegat(Long id);
 }
