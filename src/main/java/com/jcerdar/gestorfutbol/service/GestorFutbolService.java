@@ -13,6 +13,8 @@ import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
 import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
 import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
 import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
+import com.jcerdar.gestorfutbol.service.model.MensualitatDTO;
+import com.jcerdar.gestorfutbol.service.model.NominaDTO;
 import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
 import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
 import com.jcerdar.gestorfutbol.service.model.RolDirectiuDTO;
@@ -104,4 +106,15 @@ public interface GestorFutbolService {
     Long saveDelegat(DelegatDTO delegatDTO);
 
     void deleteDelegat(Long id);
+
+    Long saveNomina(NominaDTO nominaDTO);
+
+    void deleteNomina(Long id);
+
+    Long saveMensualitat(MensualitatDTO mensualitatDTO);
+
+    void deleteMensualitat(Long id);
+
+    List<MensualitatDTO> listAllMensualitats(Filtre filtre);
+    
 }

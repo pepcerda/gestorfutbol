@@ -2,6 +2,7 @@ package com.jcerdar.gestorfutbol.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,9 @@ import com.jcerdar.gestorfutbol.persistence.dao.DirectiuDao;
 import com.jcerdar.gestorfutbol.persistence.dao.DirectivaDao;
 import com.jcerdar.gestorfutbol.persistence.dao.EntrenadorDao;
 import com.jcerdar.gestorfutbol.persistence.dao.JugadorDao;
+import com.jcerdar.gestorfutbol.persistence.dao.MembrePlantillaDao;
+import com.jcerdar.gestorfutbol.persistence.dao.MensualitatDao;
+import com.jcerdar.gestorfutbol.persistence.dao.NominaDao;
 import com.jcerdar.gestorfutbol.persistence.dao.PatrocinadorDao;
 import com.jcerdar.gestorfutbol.persistence.dao.RolDirectiuDao;
 import com.jcerdar.gestorfutbol.persistence.dao.SociDao;
@@ -36,6 +40,9 @@ import com.jcerdar.gestorfutbol.persistence.model.Directiu;
 import com.jcerdar.gestorfutbol.persistence.model.Directiva;
 import com.jcerdar.gestorfutbol.persistence.model.Entrenador;
 import com.jcerdar.gestorfutbol.persistence.model.Jugador;
+import com.jcerdar.gestorfutbol.persistence.model.MembrePlantilla;
+import com.jcerdar.gestorfutbol.persistence.model.Mensualitat;
+import com.jcerdar.gestorfutbol.persistence.model.Nomina;
 import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
 import com.jcerdar.gestorfutbol.persistence.model.RolDirectiu;
 import com.jcerdar.gestorfutbol.persistence.model.Soci;
@@ -51,6 +58,8 @@ import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
 import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
 import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
 import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
+import com.jcerdar.gestorfutbol.service.model.MensualitatDTO;
+import com.jcerdar.gestorfutbol.service.model.NominaDTO;
 import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
 import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
 import com.jcerdar.gestorfutbol.service.model.PosicioDTO;
@@ -102,6 +111,15 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private DelegatDao delegatDao;
 
     @Autowired
+    private MembrePlantillaDao membrePlantillaDao;  
+
+    @Autowired
+    private MensualitatDao mensualitatDao;
+
+    @Autowired
+    private NominaDao nominaDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -114,6 +132,16 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         Converter<Long, Campanya> toCampanya = ctx -> {
             Campanya campanya = campanyaDao.findById(ctx.getSource()).orElse(null);
             return campanya;
+        };
+
+        Converter<Long, Mensualitat> toMensualitat = ctx -> {
+            Mensualitat mensualitat = mensualitatDao.findById(ctx.getSource()).orElse(null);
+            return mensualitat;
+        };
+
+        Converter<Long, MembrePlantilla> toMembrePlantilla = ctx -> {
+            MembrePlantilla membrePlantilla = membrePlantillaDao.findById(ctx.getSource()).orElse(null);
+            return membrePlantilla;
         };
 
         Converter<Posicio, PosicioDTO> toPosicio = pos -> {
@@ -197,6 +225,14 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<Delegat, DelegatDTO> delegatMapper = modelMapper.createTypeMap(Delegat.class, DelegatDTO.class);
         delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), DelegatDTO::setCampanya));
 
+        TypeMap<NominaDTO, Nomina> jNominaMapper = modelMapper.createTypeMap(NominaDTO.class, Nomina.class);
+        jNominaMapper.addMappings(mapper -> mapper.using(toMembrePlantilla).map(NominaDTO::getMembre, Nomina::setMembre));
+        jNominaMapper.addMappings(mapper -> mapper.using(toMensualitat).map(NominaDTO::getMensualitat, Nomina::setMensualitat));
+
+        TypeMap<Nomina, NominaDTO> nominaMapper = modelMapper.createTypeMap(Nomina.class, NominaDTO.class);
+        nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMembre().getId(), NominaDTO::setMembre));
+        nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMensualitat().getId(), NominaDTO::setMensualitat));
+
     }
 
     @Override
@@ -226,6 +262,33 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     public Long saveCampanya(CampanyaDTO campanyaDTO) {
         Campanya campanya = modelMapper.map(campanyaDTO, Campanya.class);
         campanya = campanyaDao.save(campanya);
+
+        // --- Generación automática de mensualidades ---
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(campanyaDTO.getAny()); 
+        Integer anyInici = cal.get(Calendar.YEAR);
+        Integer anyFi = anyInici + 1;
+
+        List<Mensualitat> mensualitats = new ArrayList<>();
+
+        for(int mes = 7; mes <= 12; mes++) { // De juliol a desembre
+            Mensualitat mensualitat = new Mensualitat();
+            mensualitat.setCampanya(campanya);
+            mensualitat.setAny(anyInici);
+            mensualitat.setMes(mes);
+            mensualitats.add(mensualitat);
+        }
+
+        for(int mes = 1; mes <= 6; mes++) { // De gener a juny
+            Mensualitat mensualitat = new Mensualitat();
+            mensualitat.setCampanya(campanya);
+            mensualitat.setAny(anyFi);
+            mensualitat.setMes(mes);
+            mensualitats.add(mensualitat);
+        }
+
+        mensualitatDao.saveAll(mensualitats);
+
         return campanya.getId();
     }
 
@@ -605,6 +668,35 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         delegatDao.deleteById(id);
     }
 
+    @Override
+    public Long saveNomina(NominaDTO nominaDTO) {
+        Nomina nomina = modelMapper.map(nominaDTO, Nomina.class);
+        return nominaDao.save(nomina).getId();
+    }
+
+    @Override
+    public void deleteNomina(Long id) {
+        nominaDao.deleteById(id);
+    }
+
+    @Override
+    public Long saveMensualitat(MensualitatDTO mensualitatDTO) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveMensualitat'");
+    }
+
+    @Override
+    public void deleteMensualitat(Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteMensualitat'");
+    }
+
+    @Override
+    public List<MensualitatDTO> listAllMensualitats(Filtre filtre) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'listAllMensualitats'");
+    }
+
     private Soci jSociMapper(SociDTO sociDTO) {
         Soci soci = modelMapper.map(sociDTO, Soci.class);
 
@@ -692,5 +784,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         return tipoSoci;
     }
+
+    
 
 }
