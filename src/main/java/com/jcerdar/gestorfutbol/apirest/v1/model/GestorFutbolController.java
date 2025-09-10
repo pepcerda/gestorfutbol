@@ -1,18 +1,42 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
-import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
-import com.jcerdar.gestorfutbol.service.GestorFutbolService;
-import com.jcerdar.gestorfutbol.service.MediaService;
-import com.jcerdar.gestorfutbol.service.model.*;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
+import com.jcerdar.gestorfutbol.service.GestorFutbolService;
+import com.jcerdar.gestorfutbol.service.MediaService;
+import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
+import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
+import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
+import com.jcerdar.gestorfutbol.service.model.ConfiguracioDTO;
+import com.jcerdar.gestorfutbol.service.model.ConfiguracioGeneralDTO;
+import com.jcerdar.gestorfutbol.service.model.DelegatDTO;
+import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
+import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
+import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
+import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
+import com.jcerdar.gestorfutbol.service.model.MensualitatDTO;
+import com.jcerdar.gestorfutbol.service.model.NominaDTO;
+import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
+import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
+import com.jcerdar.gestorfutbol.service.model.RolDirectiuDTO;
+import com.jcerdar.gestorfutbol.service.model.SociDTO;
+import com.jcerdar.gestorfutbol.service.model.TipoSociDTO;
 
 
 @RestController
@@ -186,8 +210,8 @@ public class GestorFutbolController extends BaseController{
     }
 
     @PostMapping("/factura")
-    public ResponseEntity<Long> saveFactura(@RequestBody CaixaFixaDTO caixaFixaDTO) {
-        return ResponseEntity.ok(gestorFutbolService.saveCaixaFixa(caixaFixaDTO));
+    public ResponseEntity<Long> saveFactura(@RequestPart("caixaFixa") CaixaFixaDTO caixaFixaDTO, @RequestPart(value = "file", required = false) MultipartFile file) {
+        return ResponseEntity.ok(gestorFutbolService.saveCaixaFixa(caixaFixaDTO, file));
     }
 
     @DeleteMapping("/factura/{id}")
@@ -296,6 +320,41 @@ public class GestorFutbolController extends BaseController{
                 "name", posicio.name()
             ))
             .collect(Collectors.toList()));
+    }
+
+    @PostMapping("/mensualitats")
+    public ResponseEntity<List<MensualitatDTO>> listAllMensualitats(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listAllMensualitats(filtre));
+    }
+
+    @PostMapping("/mensualitat")
+    public ResponseEntity<Long> saveMensualitat(@RequestBody MensualitatDTO mensualitatDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveMensualitat(mensualitatDTO));
+    }
+
+    @DeleteMapping("/mensualitat/{id}")
+    public ResponseEntity<String> deleteMensualitat(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteMensualitat(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/nomina")
+    public ResponseEntity<Long> saveNomina(@RequestBody NominaDTO nominaDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveNomina(nominaDTO));
+    }
+
+    @DeleteMapping("/nomina/{id}")
+    public ResponseEntity<String> deleteNomina(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteNomina(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
     }
 
 }

@@ -41,7 +41,7 @@ public class Mensualitat {
     @Column(name = "MEN_MES", nullable = false)
     private Integer mes;  // 1 = gener, 12 = desembre
 
-    @OneToMany(mappedBy = "NOM_MEN", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "mensualitat", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Nomina> nomines = new ArrayList<>();
 
     public Long getId() {

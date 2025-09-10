@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MediaServiceImpl implements MediaService {
@@ -92,6 +93,46 @@ public class MediaServiceImpl implements MediaService {
             fos.write(fileBytes);
         }
 
+        return accessUrl + filename;
+    }
+
+    @Override
+    public String guardarDespesaMultipart(MultipartFile fitxer) throws IOException {
+        if (fitxer == null || fitxer.isEmpty()) {
+            return null;
+        }
+
+        // Determinar extensión del fichero
+        String originalFilename = fitxer.getOriginalFilename();
+        String extension = "";
+
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        } else {
+            // fallback por si no tiene extensión
+            String contentType = fitxer.getContentType();
+            if ("image/png".equals(contentType)) extension = ".png";
+            else if ("image/jpeg".equals(contentType)) extension = ".jpg";
+            else if ("image/gif".equals(contentType)) extension = ".gif";
+            else if ("application/pdf".equals(contentType)) extension = ".pdf";
+            else if ("application/msword".equals(contentType)) extension = ".doc";
+            else if ("application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(contentType)) extension = ".docx";
+            else if ("text/plain".equals(contentType)) extension = ".txt";
+            else extension = ".bin"; // por defecto
+        }
+
+        // Crear nombre único
+        String filename = UUID.randomUUID().toString() + extension;
+
+        // Ruta de guardado (asumiendo que caixaFixaDir ya está definida en tu servicio)
+        File outputFile = new File(caixaFixaDir + filename);
+
+        // Guardar en disco
+        try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+            fos.write(fitxer.getBytes());
+        }
+
+        // Devolver la URL de acceso (ejemplo: http://servidor/static/...)
         return accessUrl + filename;
     }
 

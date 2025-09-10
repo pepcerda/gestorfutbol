@@ -2,6 +2,8 @@ package com.jcerdar.gestorfutbol.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
 import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
@@ -77,7 +79,7 @@ public interface GestorFutbolService {
 
     PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre);
 
-    Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO);
+    Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO, MultipartFile fitxer);
 
     void deleteCaixaFixa(Long id);
 

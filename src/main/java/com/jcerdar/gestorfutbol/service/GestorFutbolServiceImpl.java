@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.persistence.dao.CaixaFixaDao;
@@ -545,22 +546,10 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO) {
-        if (caixaFixaDTO.getId() != null) {
-            CaixaFixa caixaFixa = caixaFixaDao.findById(caixaFixaDTO.getId()).orElse(null);
-            caixaFixa.setDespesa(caixaFixaDTO.getDespesa());
-            caixaFixa.setNom(caixaFixaDTO.getNom());
-            caixaFixa.setLlinatge1(caixaFixaDTO.getLlinatge1());
-            caixaFixa.setLlinatge2(caixaFixaDTO.getLlinatge2());
-            caixaFixa.setObservacio(caixaFixaDTO.getObservacio());
-            caixaFixa.setEstat(caixaFixaDTO.getEstat());
-            caixaFixaDao.save(caixaFixa);
-            return caixaFixa.getId();
-        } else {
-            CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO);
+    public Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO, MultipartFile fitxer) {
+            CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO, fitxer);
             caixaFixa = caixaFixaDao.save(caixaFixa);
             return caixaFixa.getId();
-        }
     }
 
     @Override
@@ -681,20 +670,23 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long saveMensualitat(MensualitatDTO mensualitatDTO) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'saveMensualitat'");
+        Mensualitat mensualitat = modelMapper.map(mensualitatDTO, Mensualitat.class);
+        return mensualitatDao.save(mensualitat).getId();
     }
 
     @Override
     public void deleteMensualitat(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteMensualitat'");
+        mensualitatDao.deleteById(id);
     }
 
     @Override
     public List<MensualitatDTO> listAllMensualitats(Filtre filtre) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'listAllMensualitats'");
+        List<Mensualitat> mensualitats = mensualitatDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        List<MensualitatDTO> mensualitatDTOS = new ArrayList<>();
+        if (!mensualitats.isEmpty()) {
+            mensualitatDTOS = mensualitats.stream().map(c -> modelMapper.map(c, MensualitatDTO.class)).collect(Collectors.toList());
+        }
+        return mensualitatDTOS;
     }
 
     private Soci jSociMapper(SociDTO sociDTO) {
@@ -762,13 +754,15 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         return configuracio;
     }
 
-    private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO) {
+    private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO, MultipartFile file) {
         CaixaFixa caixaFixa = modelMapper.map(caixaFixaDTO, CaixaFixa.class);
 
         try {
-            if (caixaFixaDTO.getFactura() != null && !caixaFixaDTO.getFactura().isEmpty()) {
-                String facturaUrl = mediaService.guardarDespesaB64(caixaFixaDTO.getFactura());
+            if (file != null && !file.isEmpty()) {
+                String facturaUrl = mediaService.guardarDespesaMultipart(file);
                 caixaFixa.setFactura(facturaUrl);
+            } else {
+                caixaFixa.setFactura(caixaFixaDTO.getFactura());
             }
         } catch (IOException e) {
             e.printStackTrace();
