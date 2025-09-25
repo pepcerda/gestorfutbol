@@ -3,13 +3,11 @@ package com.jcerdar.gestorfutbol.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jcerdar.gestorfutbol.persistence.model.Campanya;
-
 public class MensualitatDTO {
 
     private Long id;
 
-    private Campanya campanya;
+    private Long campanya;
 
     private Integer any;
 
@@ -25,11 +23,11 @@ public class MensualitatDTO {
         this.id = id;
     }
 
-    public Campanya getCampanya() {
+    public Long getCampanya() {
         return campanya;
     }
 
-    public void setCampanya(Campanya campanya) {
+    public void setCampanya(Long campanya) {
         this.campanya = campanya;
     }
 

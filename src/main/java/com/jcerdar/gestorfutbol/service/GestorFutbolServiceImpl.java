@@ -42,6 +42,7 @@ import com.jcerdar.gestorfutbol.persistence.model.Directiva;
 import com.jcerdar.gestorfutbol.persistence.model.Entrenador;
 import com.jcerdar.gestorfutbol.persistence.model.Jugador;
 import com.jcerdar.gestorfutbol.persistence.model.MembrePlantilla;
+import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.persistence.model.Mensualitat;
 import com.jcerdar.gestorfutbol.persistence.model.Nomina;
 import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
@@ -112,7 +113,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private DelegatDao delegatDao;
 
     @Autowired
-    private MembrePlantillaDao membrePlantillaDao;  
+    private MembrePlantillaDao membrePlantillaDao;
 
     @Autowired
     private MensualitatDao mensualitatDao;
@@ -212,6 +213,20 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         jJugadorMapper.addMappings(mapper -> mapper.using(toPosicioEntity).map(JugadorDTO::getPosicio, Jugador::setPosicio));
 
         TypeMap<Jugador, JugadorDTO> jugadorMapper = modelMapper.createTypeMap(Jugador.class, JugadorDTO.class);
+        jugadorMapper.setPostConverter(ctx -> {
+            Jugador source = ctx.getSource();
+            JugadorDTO destination = ctx.getDestination();
+
+            if (source.getPosicio() != null) {
+                PosicioDTO dto = new PosicioDTO();
+                dto.setValor(source.getPosicio().getValor());
+                dto.setDescripcion(source.getPosicio().getDescripcion());
+                dto.setName(source.getPosicio().name());
+                destination.setPosicio(dto);
+            }
+
+            return destination;
+        });
         jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), JugadorDTO::setCampanya));
 
         TypeMap<EntrenadorDTO, Entrenador> jEntrenadorMapper = modelMapper.createTypeMap(EntrenadorDTO.class, Entrenador.class);
@@ -226,6 +241,12 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<Delegat, DelegatDTO> delegatMapper = modelMapper.createTypeMap(Delegat.class, DelegatDTO.class);
         delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), DelegatDTO::setCampanya));
 
+        TypeMap<MensualitatDTO, Mensualitat> jMensualitatMapper = modelMapper.createTypeMap(MensualitatDTO.class, Mensualitat.class);
+        jMensualitatMapper.addMappings(mapper -> mapper.using(toCampanya).map(MensualitatDTO::getCampanya, Mensualitat::setCampanya));
+
+        TypeMap<Mensualitat, MensualitatDTO> mensualitatMapper = modelMapper.createTypeMap(Mensualitat.class, MensualitatDTO.class);
+        mensualitatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MensualitatDTO::setCampanya));
+
         TypeMap<NominaDTO, Nomina> jNominaMapper = modelMapper.createTypeMap(NominaDTO.class, Nomina.class);
         jNominaMapper.addMappings(mapper -> mapper.using(toMembrePlantilla).map(NominaDTO::getMembre, Nomina::setMembre));
         jNominaMapper.addMappings(mapper -> mapper.using(toMensualitat).map(NominaDTO::getMensualitat, Nomina::setMensualitat));
@@ -233,6 +254,15 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<Nomina, NominaDTO> nominaMapper = modelMapper.createTypeMap(Nomina.class, NominaDTO.class);
         nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMembre().getId(), NominaDTO::setMembre));
         nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMensualitat().getId(), NominaDTO::setMensualitat));
+
+        TypeMap<Jugador, MembrePlantillaDTO> membrePlantillaJugadorMapper = modelMapper.createTypeMap(Jugador.class, MembrePlantillaDTO.class);
+        membrePlantillaJugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
+
+        TypeMap<Entrenador, MembrePlantillaDTO> membrePlantillaEntrenadorMapper = modelMapper.createTypeMap(Entrenador.class, MembrePlantillaDTO.class);
+        membrePlantillaEntrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
+
+        TypeMap<Delegat, MembrePlantillaDTO> membrePlantillaDelegatMapper = modelMapper.createTypeMap(Delegat.class, MembrePlantillaDTO.class);
+        membrePlantillaDelegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
 
     }
 
@@ -266,13 +296,13 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         // --- Generación automática de mensualidades ---
         Calendar cal = Calendar.getInstance();
-        cal.setTime(campanyaDTO.getAny()); 
+        cal.setTime(campanyaDTO.getAny());
         Integer anyInici = cal.get(Calendar.YEAR);
         Integer anyFi = anyInici + 1;
 
         List<Mensualitat> mensualitats = new ArrayList<>();
 
-        for(int mes = 7; mes <= 12; mes++) { // De juliol a desembre
+        for (int mes = 7; mes <= 12; mes++) { // De juliol a desembre
             Mensualitat mensualitat = new Mensualitat();
             mensualitat.setCampanya(campanya);
             mensualitat.setAny(anyInici);
@@ -280,7 +310,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             mensualitats.add(mensualitat);
         }
 
-        for(int mes = 1; mes <= 6; mes++) { // De gener a juny
+        for (int mes = 1; mes <= 6; mes++) { // De gener a juny
             Mensualitat mensualitat = new Mensualitat();
             mensualitat.setCampanya(campanya);
             mensualitat.setAny(anyFi);
@@ -547,9 +577,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO, MultipartFile fitxer) {
-            CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO, fitxer);
-            caixaFixa = caixaFixaDao.save(caixaFixa);
-            return caixaFixa.getId();
+        CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO, fitxer);
+        caixaFixa = caixaFixaDao.save(caixaFixa);
+        return caixaFixa.getId();
     }
 
     @Override
@@ -592,6 +622,16 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public void deleteTipoSoci(Long id) {
         tipoSociDao.deleteById(id);
+    }
+
+    @Override
+    public List<MembrePlantillaDTO> listAllMembresPlantilla(Filtre filtre) {
+        List<MembrePlantilla> membres = membrePlantillaDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        List<MembrePlantillaDTO> membreDTOS = new ArrayList<>();
+        if (!membres.isEmpty()) {
+            membreDTOS = membres.stream().map(c -> modelMapper.map(c, MembrePlantillaDTO.class)).collect(Collectors.toList());
+        }
+        return membreDTOS;
     }
 
     @Override
@@ -779,6 +819,5 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         return tipoSoci;
     }
 
-    
 
 }

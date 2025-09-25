@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
+import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
 import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
 import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
@@ -90,6 +91,8 @@ public interface GestorFutbolService {
     Long saveTipoSoci(TipoSociDTO tipoSociDTO);
 
     void deleteTipoSoci(Long id);
+
+    List<MembrePlantillaDTO> listAllMembresPlantilla(Filtre filtre);
 
     Long saveJugador(JugadorDTO jugadorDTO);
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.GestorFutbolService;
 import com.jcerdar.gestorfutbol.service.MediaService;
@@ -291,6 +292,11 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
+    @PostMapping("/membres-plantilla")
+    public ResponseEntity<List<MembrePlantillaDTO>> listMembresPlantilla(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listAllMembresPlantilla(filtre));
+    }
+    
     @PostMapping("/jugadors")
     public ResponseEntity<List<JugadorDTO>> listJugadors(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listAllJugadors(filtre));
