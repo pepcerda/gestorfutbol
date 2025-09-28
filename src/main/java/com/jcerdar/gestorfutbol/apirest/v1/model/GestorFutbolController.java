@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jcerdar.gestorfutbol.persistence.model.type.EstatPagament;
 import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.GestorFutbolService;
@@ -324,6 +325,15 @@ public class GestorFutbolController extends BaseController{
                 "valor", posicio.getValor(),
                 "descripcion", posicio.getDescripcion(),
                 "name", posicio.name()
+            ))
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/estats-pagament")
+    public ResponseEntity<List<Map<String, String>>> getEstatsPagament() {
+        return ResponseEntity.ok(List.of(EstatPagament.values()).stream()
+            .map(e -> Map.of(
+                "valor", e.name()
             ))
             .collect(Collectors.toList()));
     }
