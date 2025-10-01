@@ -10,4 +10,6 @@ public interface MembrePlantillaDao extends JpaRepository<MembrePlantilla, Long>
 
     List<MembrePlantilla> findAllByCampanyaId(Long idCampanya);
 
+    List<MembrePlantilla> findAllByCampanyaIdAndIdIn(Long idCampanya, List<Long> ids);
+
 }

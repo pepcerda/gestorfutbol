@@ -42,7 +42,6 @@ import com.jcerdar.gestorfutbol.persistence.model.Directiva;
 import com.jcerdar.gestorfutbol.persistence.model.Entrenador;
 import com.jcerdar.gestorfutbol.persistence.model.Jugador;
 import com.jcerdar.gestorfutbol.persistence.model.MembrePlantilla;
-import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.persistence.model.Mensualitat;
 import com.jcerdar.gestorfutbol.persistence.model.Nomina;
 import com.jcerdar.gestorfutbol.persistence.model.Patrocinador;
@@ -60,6 +59,7 @@ import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
 import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
 import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
 import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
+import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.service.model.MensualitatDTO;
 import com.jcerdar.gestorfutbol.service.model.NominaDTO;
 import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
@@ -626,7 +626,13 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<MembrePlantillaDTO> listAllMembresPlantilla(Filtre filtre) {
-        List<MembrePlantilla> membres = membrePlantillaDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        List<Long> idsFiltrats = filtre.getIds();
+        List<MembrePlantilla> membres;
+        if (idsFiltrats != null && !idsFiltrats.isEmpty()) {
+            membres = membrePlantillaDao.findAllByCampanyaIdAndIdIn(filtre.getCampanyaActiva(), idsFiltrats);
+        } else {
+            membres = membrePlantillaDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        }
         List<MembrePlantillaDTO> membreDTOS = new ArrayList<>();
         if (!membres.isEmpty()) {
             membreDTOS = membres.stream().map(c -> modelMapper.map(c, MembrePlantillaDTO.class)).collect(Collectors.toList());

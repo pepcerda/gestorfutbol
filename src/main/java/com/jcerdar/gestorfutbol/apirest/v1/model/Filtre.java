@@ -1,5 +1,6 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
+import java.util.List;
 import java.util.Map;
 
 public class Filtre {
@@ -19,6 +20,8 @@ public class Filtre {
     private Integer sortOrder;
 
     private Map<String, ValorFiltre> filters;
+
+    private List<Long> ids;
 
     public int getPageNum() {
         return pageNum;
@@ -83,4 +86,12 @@ public class Filtre {
     public void setFilters(Map<String, ValorFiltre> filters) {
         this.filters = filters;
     }
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }   
 }
