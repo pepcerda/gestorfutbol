@@ -8,6 +8,8 @@ public class ExplotacioFacturesDTO {
 
     private BigDecimal pendentPagar;
 
+    private BigDecimal totalFactures;
+
     public BigDecimal getTotalPagat() {
         return totalPagat;
     }
@@ -22,5 +24,13 @@ public class ExplotacioFacturesDTO {
 
     public void setPendentPagar(BigDecimal pendentPagar) {
         this.pendentPagar = pendentPagar;
+    }
+
+    public BigDecimal getTotalFactures() {
+        return totalFactures;
+    }
+
+    public void setTotalFactures(BigDecimal totalFactures) {
+        this.totalFactures = totalFactures;
     }
 }

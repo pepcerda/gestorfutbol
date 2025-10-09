@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 
-public interface CaixaFixaDao extends JpaRepository<CaixaFixa, Long> {
+public interface CaixaFixaDao extends JpaRepository<CaixaFixa, Long>, CaixaFixaCustomDao {
 
     @Query("select c from CaixaFixa c where c.campanya.id = :idCampanya order by c.id asc")
     Page<CaixaFixa> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
@@ -20,4 +20,9 @@ public interface CaixaFixaDao extends JpaRepository<CaixaFixa, Long> {
 
     @Query("SELECT SUM(p.despesa) FROM CaixaFixa p WHERE p.campanya.id = :campanyaId")
     BigDecimal sumaFacturesPerCampanya(@Param("campanyaId") Long campanyaId);
+
+    @Query("SELECT COUNT(p) FROM CaixaFixa p WHERE p.campanya.id = :campanyaId")
+    Long countFacturesByCampanya(@Param("campanyaId") Long campanyaId);
+
+
 }

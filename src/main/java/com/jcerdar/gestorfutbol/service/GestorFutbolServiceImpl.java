@@ -564,7 +564,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre) {
-        Page<CaixaFixa> caixaFixas = caixaFixaDao.findAllByCampanyaOrderById(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<CaixaFixa> caixaFixas = caixaFixaDao.buscarConFiltros(filtre);
         PaginaDTO<List<CaixaFixaDTO>> paginaDTO = new PaginaDTO<>();
         List<CaixaFixaDTO> caixaFixaDTOS = new ArrayList<>();
         if (caixaFixas.getTotalElements() > 0) {

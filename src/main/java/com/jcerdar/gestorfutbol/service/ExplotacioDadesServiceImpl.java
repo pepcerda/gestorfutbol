@@ -76,6 +76,7 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         ExplotacioFacturesDTO explotacioFacturesDTO = new ExplotacioFacturesDTO();
         explotacioFacturesDTO.setTotalPagat(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "P"));
         explotacioFacturesDTO.setPendentPagar(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "D"));
+        explotacioFacturesDTO.setTotalFactures(caixaFixaDao.sumaFacturesPerCampanya(idCampanya));
         return explotacioFacturesDTO;
     }
 }
