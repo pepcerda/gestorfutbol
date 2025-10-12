@@ -2,9 +2,12 @@ package com.jcerdar.gestorfutbol.service;
 
 
 import com.jcerdar.gestorfutbol.persistence.dao.CaixaFixaDao;
+import com.jcerdar.gestorfutbol.persistence.dao.NominaDao;
 import com.jcerdar.gestorfutbol.persistence.dao.PatrocinadorDao;
 import com.jcerdar.gestorfutbol.persistence.dao.SociDao;
+import com.jcerdar.gestorfutbol.persistence.model.type.EstatPagament;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioNominesDTO;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
 
     @Autowired
     private CaixaFixaDao caixaFixaDao;
+
+    @Autowired
+    private NominaDao nominaDao;
 
 
     @Override
@@ -78,5 +84,14 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         explotacioFacturesDTO.setPendentPagar(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "D"));
         explotacioFacturesDTO.setTotalFactures(caixaFixaDao.sumaFacturesPerCampanya(idCampanya));
         return explotacioFacturesDTO;
+    }
+
+    @Override
+    public ExplotacioNominesDTO getDadesExplotacioNomines(Long idCampanya) {
+        ExplotacioNominesDTO explotacioNominesDTO = new ExplotacioNominesDTO();
+        explotacioNominesDTO.setTotalNominesPagades(nominaDao.sumaNominesPagadesPerCampanya(idCampanya, EstatPagament.PAGADA));
+        explotacioNominesDTO.setTotalNominesPendents(nominaDao.sumaNominesPagadesPerCampanya(idCampanya, EstatPagament.PENDENT));
+        return explotacioNominesDTO;
+        
     }
 }

@@ -2,6 +2,7 @@ package com.jcerdar.gestorfutbol.apirest.v1.model;
 
 import com.jcerdar.gestorfutbol.service.ExplotacioDadesService;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
+import com.jcerdar.gestorfutbol.service.model.ExplotacioNominesDTO;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,11 @@ public class ExplotacioDadesController extends BaseController {
     @GetMapping("/explotacio-factures/{idCampanya}")
     ResponseEntity<ExplotacioFacturesDTO> getDadesExplotacioFactures(@PathVariable Long idCampanya) {
         return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioFactures(idCampanya));
+    }
+
+    @GetMapping("/explotacio-nomines/{idCampanya}")
+    ResponseEntity<ExplotacioNominesDTO> getDadesExplotacioNomines(@PathVariable Long idCampanya) {
+        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioNomines(idCampanya));
     }
 
 }
