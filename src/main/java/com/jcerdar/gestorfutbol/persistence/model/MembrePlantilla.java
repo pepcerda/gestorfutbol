@@ -29,6 +29,10 @@ public abstract class MembrePlantilla {
     @JoinColumn(name = "MEM_CAM", nullable = false)
     private Campanya campanya;
 
+    @ManyToOne
+    @JoinColumn(name = "MEM_CAT", nullable = false)
+    private Categoria categoria;
+
     @Column(name = "MEM_NOM", nullable = false)
     private String nom;
 
@@ -55,6 +59,14 @@ public abstract class MembrePlantilla {
 
     public void setCampanya(Campanya campanya) {
         this.campanya = campanya;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     public String getNom() {

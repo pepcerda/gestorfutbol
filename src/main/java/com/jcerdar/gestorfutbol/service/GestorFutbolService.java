@@ -2,27 +2,10 @@ package com.jcerdar.gestorfutbol.service;
 
 import java.util.List;
 
+import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
-import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
-import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
-import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
-import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
-import com.jcerdar.gestorfutbol.service.model.ConfiguracioDTO;
-import com.jcerdar.gestorfutbol.service.model.ConfiguracioGeneralDTO;
-import com.jcerdar.gestorfutbol.service.model.DelegatDTO;
-import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
-import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
-import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
-import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
-import com.jcerdar.gestorfutbol.service.model.MensualitatDTO;
-import com.jcerdar.gestorfutbol.service.model.NominaDTO;
-import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
-import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
-import com.jcerdar.gestorfutbol.service.model.RolDirectiuDTO;
-import com.jcerdar.gestorfutbol.service.model.SociDTO;
-import com.jcerdar.gestorfutbol.service.model.TipoSociDTO;
 
 public interface GestorFutbolService {
 
@@ -121,5 +104,13 @@ public interface GestorFutbolService {
     void deleteMensualitat(Long id);
 
     List<MensualitatDTO> listAllMensualitats(Filtre filtre);
+
+    PaginaDTO<List<CategoriaDTO>> listCategoria(Filtre filtre);
+
+    List<CategoriaDTO> listAllCategoria(Filtre filtre);
+
+    Long saveCategoria(CategoriaDTO categoriaDTO);
+
+    void deleteCategoria(Long id);
     
 }

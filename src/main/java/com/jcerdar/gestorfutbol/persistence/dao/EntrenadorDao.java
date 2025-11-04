@@ -11,4 +11,7 @@ public interface EntrenadorDao extends JpaRepository<Entrenador, Long> {
 
     @Query("select c from Entrenador c where c.campanya.id = :idCampanya")
     List<Entrenador> findAllByCampanya(@Param("idCampanya") Long idCampanya);
+
+    @Query("select c from Entrenador c where c.campanya.id = :idCampanya and c.categoria.id = :idCategoria")
+    List<Entrenador> findAllByCampanyaAndCategoria(@Param("idCampanya") Long idCampanya, @Param("idCategoria") Long idCategoria);
 }

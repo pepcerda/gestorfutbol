@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,27 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jcerdar.gestorfutbol.persistence.model.type.EstatPagament;
-import com.jcerdar.gestorfutbol.service.model.MembrePlantillaDTO;
 import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.GestorFutbolService;
 import com.jcerdar.gestorfutbol.service.MediaService;
-import com.jcerdar.gestorfutbol.service.model.BaixaDTO;
-import com.jcerdar.gestorfutbol.service.model.CaixaFixaDTO;
-import com.jcerdar.gestorfutbol.service.model.CampanyaDTO;
-import com.jcerdar.gestorfutbol.service.model.ConfiguracioDTO;
-import com.jcerdar.gestorfutbol.service.model.ConfiguracioGeneralDTO;
-import com.jcerdar.gestorfutbol.service.model.DelegatDTO;
-import com.jcerdar.gestorfutbol.service.model.DirectiuDTO;
-import com.jcerdar.gestorfutbol.service.model.DirectivaDTO;
-import com.jcerdar.gestorfutbol.service.model.EntrenadorDTO;
-import com.jcerdar.gestorfutbol.service.model.JugadorDTO;
-import com.jcerdar.gestorfutbol.service.model.MensualitatDTO;
-import com.jcerdar.gestorfutbol.service.model.NominaDTO;
-import com.jcerdar.gestorfutbol.service.model.PaginaDTO;
-import com.jcerdar.gestorfutbol.service.model.PatrocinadorDTO;
-import com.jcerdar.gestorfutbol.service.model.RolDirectiuDTO;
-import com.jcerdar.gestorfutbol.service.model.SociDTO;
-import com.jcerdar.gestorfutbol.service.model.TipoSociDTO;
 
 
 @RestController
@@ -370,6 +353,33 @@ public class GestorFutbolController extends BaseController{
             return ResponseEntity.ok("Eliminat correctament");
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/categories")
+    public ResponseEntity<PaginaDTO<List<CategoriaDTO>>> listCategories(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listCategoria(filtre));
+    }
+
+    @GetMapping("/categories/{idCampanya}")
+    public ResponseEntity<List<CategoriaDTO>> listAllCategories(@PathVariable Long idCampanya) {
+        Filtre filtre = new Filtre();
+        filtre.setCampanyaActiva(idCampanya);
+        return ResponseEntity.ok(gestorFutbolService.listAllCategoria(filtre));
+    }
+
+    @PostMapping("/categoria")
+    public ResponseEntity<Long> saveCategoria(@RequestBody CategoriaDTO categoriaDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveCategoria(categoriaDTO));
+    }
+
+    @DeleteMapping("/categoria/{id}")
+    public ResponseEntity<String> deleteCategoria(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteCategoria(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
         }
     }
 

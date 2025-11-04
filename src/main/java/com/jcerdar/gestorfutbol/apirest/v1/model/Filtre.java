@@ -15,6 +15,8 @@ public class Filtre {
 
     private Long campanyaActiva;
 
+    private Long categoriaActiva;
+
     private String sortField;
 
     private Integer sortOrder;
@@ -61,6 +63,14 @@ public class Filtre {
 
     public void setCampanyaActiva(Long campanyaActiva) {
         this.campanyaActiva = campanyaActiva;
+    }
+
+    public Long getCategoriaActiva() {
+        return categoriaActiva;
+    }
+
+    public void setCategoriaActiva(Long categoriaActiva) {
+        this.categoriaActiva = categoriaActiva;
     }
 
     public String getSortField() {

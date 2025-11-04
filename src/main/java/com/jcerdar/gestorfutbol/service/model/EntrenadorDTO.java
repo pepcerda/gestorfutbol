@@ -8,6 +8,7 @@ import java.util.Objects;
 public class EntrenadorDTO implements Serializable {
     private  Long id;
     private  Long campanya;
+    private  Long categoria;
     private  String nom;
     private  String llinatge1;
     private  String llinatge2;
@@ -18,9 +19,10 @@ public class EntrenadorDTO implements Serializable {
 
     }
 
-    public EntrenadorDTO(Long id, Long campanya, String nom, String llinatge1, String llinatge2, Date dataNaixement, String carrec) {
+    public EntrenadorDTO(Long id, Long campanya, Long categoria, String nom, String llinatge1, String llinatge2, Date dataNaixement, String carrec) {
         this.id = id;
         this.campanya = campanya;
+        this.categoria = categoria;
         this.nom = nom;
         this.llinatge1 = llinatge1;
         this.llinatge2 = llinatge2;
@@ -42,6 +44,14 @@ public class EntrenadorDTO implements Serializable {
 
     public void setCampanya(Long campanya) {
         this.campanya = campanya;
+    }
+
+    public Long getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Long categoria) {
+        this.categoria = categoria;
     }
 
     public String getNom() {
