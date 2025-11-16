@@ -38,13 +38,14 @@ public class Nomina {
     @JoinColumn(name = "NOM_MEM", nullable = false)
     private MembrePlantilla membre;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "NOM_QUAN", nullable = false, precision = 10, scale = 2)
     private BigDecimal quantitat;
 
+    @Column(name = "NOM_DATA", nullable = false)
     private Date dataPagament;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(name = "NOM_ESTAT", nullable = false, length = 20)
     private EstatPagament estatPagament;
 
     public Long getId() {

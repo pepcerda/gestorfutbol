@@ -5,6 +5,8 @@ import com.jcerdar.gestorfutbol.service.model.ExplotacioNominesDTO;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
 import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
 
+import java.math.BigDecimal;
+
 public interface ExplotacioDadesService {
 
     Long totalImportSocisPerCampanya(Long idCampanya);

@@ -61,12 +61,6 @@ public interface GestorFutbolService {
 
     Long saveConfiguracio(ConfiguracioDTO configuracioDTO);
 
-    PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre);
-
-    Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO, MultipartFile fitxer);
-
-    void deleteCaixaFixa(Long id);
-
     PaginaDTO<List<TipoSociDTO>> listTipoSocis(Filtre filtre);
 
     List<TipoSociDTO> listAllTipoSocis(Filtre filtre);
@@ -94,16 +88,6 @@ public interface GestorFutbolService {
     Long saveDelegat(DelegatDTO delegatDTO);
 
     void deleteDelegat(Long id);
-
-    Long saveNomina(NominaDTO nominaDTO);
-
-    void deleteNomina(Long id);
-
-    Long saveMensualitat(MensualitatDTO mensualitatDTO);
-
-    void deleteMensualitat(Long id);
-
-    List<MensualitatDTO> listAllMensualitats(Filtre filtre);
 
     PaginaDTO<List<CategoriaDTO>> listCategoria(Filtre filtre);
 

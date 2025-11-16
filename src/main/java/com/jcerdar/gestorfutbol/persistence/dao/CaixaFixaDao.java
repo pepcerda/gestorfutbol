@@ -14,14 +14,14 @@ public interface CaixaFixaDao extends JpaRepository<CaixaFixa, Long>, CaixaFixaC
     @Query("select c from CaixaFixa c where c.campanya.id = :idCampanya order by c.id asc")
     Page<CaixaFixa> findAllByCampanyaOrderById(@Param("idCampanya") Long idCampanya, Pageable pageable);
 
-    @Query("SELECT SUM(p.despesa) FROM CaixaFixa p WHERE p.estat = :estat AND p.campanya.id = :campanyaId")
+    @Query("SELECT COALESCE(SUM(p.despesa), 0) FROM CaixaFixa p WHERE p.estat = :estat AND p.campanya.id = :campanyaId")
     BigDecimal sumaFacturesPerEstatICampanya(@Param("campanyaId") Long campanyaId, @Param("estat") String estat);
 
 
-    @Query("SELECT SUM(p.despesa) FROM CaixaFixa p WHERE p.campanya.id = :campanyaId")
+    @Query("SELECT COALESCE(SUM(p.despesa), 0) FROM CaixaFixa p WHERE p.campanya.id = :campanyaId")
     BigDecimal sumaFacturesPerCampanya(@Param("campanyaId") Long campanyaId);
 
-    @Query("SELECT COUNT(p) FROM CaixaFixa p WHERE p.campanya.id = :campanyaId")
+    @Query("SELECT COALESCE(COUNT(p), 0) FROM CaixaFixa p WHERE p.campanya.id = :campanyaId")
     Long countFacturesByCampanya(@Param("campanyaId") Long campanyaId);
 
 

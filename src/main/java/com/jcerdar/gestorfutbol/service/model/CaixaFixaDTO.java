@@ -3,6 +3,7 @@ package com.jcerdar.gestorfutbol.service.model;
 import com.jcerdar.gestorfutbol.persistence.model.Campanya;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 
 public class CaixaFixaDTO {
@@ -18,6 +19,8 @@ public class CaixaFixaDTO {
     private String llinatge2;
 
     private BigDecimal despesa;
+
+    private Date dataFactura;
 
     private String observacio;
 
@@ -95,5 +98,13 @@ public class CaixaFixaDTO {
 
     public void setEstat(String estat) {
         this.estat = estat;
+    }
+
+    public Date getDataFactura() {
+        return dataFactura;
+    }
+
+    public void setDataFactura(Date dataFactura) {
+        this.dataFactura = dataFactura;
     }
 }

@@ -21,7 +21,7 @@ public interface SociDao extends JpaRepository<Soci, Long>, SociCustomDao {
 
 
     @Query("""
-        SELECT SUM(ts.cuota)
+        SELECT COALESCE(SUM(ts.cuota), 0)
         FROM Soci s
         JOIN s.tipoSoci ts
         WHERE s.campanya.id = :campanyaId
@@ -31,14 +31,14 @@ public interface SociDao extends JpaRepository<Soci, Long>, SociCustomDao {
                                           @Param("estatPagament") String estatPagament);
 
     @Query("""
-        SELECT SUM(ts.cuota)
+        SELECT COALESCE(SUM(ts.cuota), 0)
         FROM Soci s
         JOIN s.tipoSoci ts
         WHERE s.campanya.id = :campanyaId
     """)
     Long totalRecaudacioPerCampanya(@Param("campanyaId") Long campanyaId);
 
-    @Query("SELECT COUNT(s) FROM Soci s WHERE s.campanya.id = :campanyaId")
+    @Query("SELECT COALESCE(COUNT(s), 0) FROM Soci s WHERE s.campanya.id = :campanyaId")
     Long countSocisByCampanya(@Param("campanyaId") Long campanyaId);
 
 }

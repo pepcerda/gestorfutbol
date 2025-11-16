@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.jcerdar.gestorfutbol.service.DespesaService;
 import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ public class GestorFutbolController extends BaseController{
 
     @Autowired
     private GestorFutbolService gestorFutbolService;
+
+    @Autowired
+    private DespesaService despesaService;
 
     @Autowired
     private MediaService mediaService; 
@@ -189,20 +193,20 @@ public class GestorFutbolController extends BaseController{
         return  ResponseEntity.ok(gestorFutbolService.saveConfiguracio(configuracioDTO));
     }
 
-    @PostMapping("/factures")
+    @PostMapping("/caixes-fixes")
     public ResponseEntity<PaginaDTO<List<CaixaFixaDTO>>> listCaixaFixa(@RequestBody Filtre filtre) {
-        return ResponseEntity.ok(gestorFutbolService.listFactures(filtre));
+        return ResponseEntity.ok(despesaService.listCaixaFixa(filtre));
     }
 
-    @PostMapping("/factura")
-    public ResponseEntity<Long> saveFactura(@RequestPart("caixaFixa") CaixaFixaDTO caixaFixaDTO, @RequestPart(value = "file", required = false) MultipartFile file) {
-        return ResponseEntity.ok(gestorFutbolService.saveCaixaFixa(caixaFixaDTO, file));
+    @PostMapping("/caixa-fixa")
+    public ResponseEntity<Long> saveCaixaFixa(@RequestPart("caixaFixa") CaixaFixaDTO caixaFixaDTO, @RequestPart(value = "file", required = false) MultipartFile file) {
+        return ResponseEntity.ok(despesaService.saveCaixaFixa(caixaFixaDTO, file));
     }
 
-    @DeleteMapping("/factura/{id}")
-    public ResponseEntity<String> deleteFactura(@PathVariable Long id) {
+    @DeleteMapping("/caixa-fixa/{id}")
+    public ResponseEntity<String> deleteCaixaFixa(@PathVariable Long id) {
         try {
-            gestorFutbolService.deleteCaixaFixa(id);
+            despesaService.deleteCaixaFixa(id);
             return ResponseEntity.ok("Eliminada correctament");
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
@@ -323,18 +327,18 @@ public class GestorFutbolController extends BaseController{
 
     @PostMapping("/mensualitats")
     public ResponseEntity<List<MensualitatDTO>> listAllMensualitats(@RequestBody Filtre filtre) {
-        return ResponseEntity.ok(gestorFutbolService.listAllMensualitats(filtre));
+        return ResponseEntity.ok(despesaService.listAllMensualitats(filtre));
     }
 
     @PostMapping("/mensualitat")
     public ResponseEntity<Long> saveMensualitat(@RequestBody MensualitatDTO mensualitatDTO) {
-        return ResponseEntity.ok(gestorFutbolService.saveMensualitat(mensualitatDTO));
+        return ResponseEntity.ok(despesaService.saveMensualitat(mensualitatDTO));
     }
 
     @DeleteMapping("/mensualitat/{id}")
     public ResponseEntity<String> deleteMensualitat(@PathVariable Long id) {
         try {
-            gestorFutbolService.deleteMensualitat(id);
+            despesaService.deleteMensualitat(id);
             return ResponseEntity.ok("Eliminat correctament");
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
@@ -343,13 +347,83 @@ public class GestorFutbolController extends BaseController{
 
     @PostMapping("/nomina")
     public ResponseEntity<Long> saveNomina(@RequestBody NominaDTO nominaDTO) {
-        return ResponseEntity.ok(gestorFutbolService.saveNomina(nominaDTO));
+        return ResponseEntity.ok(despesaService.saveNomina(nominaDTO));
     }
 
     @DeleteMapping("/nomina/{id}")
     public ResponseEntity<String> deleteNomina(@PathVariable Long id) {
         try {
-            gestorFutbolService.deleteNomina(id);
+            despesaService.deleteNomina(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/proveidors")
+    public ResponseEntity<List<ProveidorDTO>> getAllProveidors() {
+        return ResponseEntity.ok(despesaService.listAllProveidors());
+    }
+
+    @PostMapping("/proveidors")
+    public ResponseEntity<PaginaDTO<List<ProveidorDTO>>> listProveidors(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(despesaService.listProveidors(filtre));
+    }
+
+    @PostMapping("/proveidor")
+    public ResponseEntity<Long> saveProveidor(@RequestBody ProveidorDTO proveidorDTO) {
+        return ResponseEntity.ok(despesaService.saveProveidor(proveidorDTO));
+    }
+
+    @DeleteMapping("/proveidor/{id}")
+    public ResponseEntity<String> deleteProveidor(@PathVariable Long id) {
+        try {
+            despesaService.deleteProveidor(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/factures")
+    public ResponseEntity<PaginaDTO<List<FacturaDTO>>> listFactures(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(despesaService.listFactures(filtre));
+    }
+
+    @PostMapping("/factura")
+    public ResponseEntity<Long> saveFactura(@RequestPart(value = "facturaDTO") FacturaDTO facturaDTO, @RequestPart(value = "file", required = false) MultipartFile file) {
+        return ResponseEntity.ok(despesaService.saveFactura(facturaDTO, file));
+    }
+
+    @DeleteMapping("/factura/{id}")
+    public ResponseEntity<String> deleteFactura(@PathVariable Long id) {
+        try {
+            despesaService.deleteFactura(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/categories-despesa")
+    public ResponseEntity<List<CategoriaDespesaDTO>> getAllCategoriesDespesa() {
+        return ResponseEntity.ok(despesaService.listAllCategoriesDespesa());
+    }
+
+    @PostMapping("/categories-despesa")
+    public ResponseEntity<PaginaDTO<List<CategoriaDespesaDTO>>> listCategoriesDespesa(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(despesaService.listCategoriesDespesa(filtre));
+    }
+
+    @PostMapping("/categoria-despesa")
+    public ResponseEntity<Long> saveCategoriaDespesa(@RequestBody CategoriaDespesaDTO categoriaDespesaDTO) {
+        return ResponseEntity.ok(despesaService.saveCategoriaDespesa(categoriaDespesaDTO));
+    }
+
+    @DeleteMapping("/categoria-despesa/{id}")
+    public ResponseEntity<String> deleteCategoriaDespesa(@PathVariable Long id) {
+        try {
+            despesaService.deleteCategoriaDespesa(id);
             return ResponseEntity.ok("Eliminat correctament");
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);

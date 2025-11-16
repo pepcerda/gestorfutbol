@@ -13,6 +13,8 @@ import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
 

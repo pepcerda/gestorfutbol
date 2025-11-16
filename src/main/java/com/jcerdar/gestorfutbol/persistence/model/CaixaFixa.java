@@ -3,6 +3,7 @@ package com.jcerdar.gestorfutbol.persistence.model;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Table(name = "GF_CAIXAFIXA")
@@ -28,6 +29,9 @@ public class CaixaFixa {
 
     @Column(name = "CF_DESP", nullable = false, precision = 15, scale = 2)
     private BigDecimal despesa;
+
+    @Column(name = "CF_DATA")
+    private Date dataFactura;
 
     @Column(name = "CF_OBS", length = 1024)
     private String observacio;

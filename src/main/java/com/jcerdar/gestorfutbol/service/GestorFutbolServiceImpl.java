@@ -163,13 +163,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<ConfiguracioDTO, Configuracio> jConfiguracioMapper = modelMapper.createTypeMap(ConfiguracioDTO.class, Configuracio.class);
         jConfiguracioMapper.addMappings(mapper -> mapper.skip(Configuracio::setLogo));
 
-        TypeMap<CaixaFixa, CaixaFixaDTO> caixaFixaMapper = modelMapper.createTypeMap(CaixaFixa.class, CaixaFixaDTO.class);
-        caixaFixaMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), CaixaFixaDTO::setCampanya));
-
-        TypeMap<CaixaFixaDTO, CaixaFixa> jCaixaFixaMapper = modelMapper.createTypeMap(CaixaFixaDTO.class, CaixaFixa.class);
-        jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setFactura));
-        jCaixaFixaMapper.addMappings(mapper -> mapper.using(toCampanya).map(CaixaFixaDTO::getCampanya, CaixaFixa::setCampanya));
-
         TypeMap<JugadorDTO, Jugador> jJugadorMapper = modelMapper.createTypeMap(JugadorDTO.class, Jugador.class);
         jJugadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(JugadorDTO::getCampanya, Jugador::setCampanya));
         jJugadorMapper.addMappings(mapper -> mapper.using(toCategoria).map(JugadorDTO::getCategoria, Jugador::setCategoria));
@@ -208,20 +201,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<Delegat, DelegatDTO> delegatMapper = modelMapper.createTypeMap(Delegat.class, DelegatDTO.class);
         delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), DelegatDTO::setCampanya));
         delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), DelegatDTO::setCategoria));
-
-        TypeMap<MensualitatDTO, Mensualitat> jMensualitatMapper = modelMapper.createTypeMap(MensualitatDTO.class, Mensualitat.class);
-        jMensualitatMapper.addMappings(mapper -> mapper.using(toCampanya).map(MensualitatDTO::getCampanya, Mensualitat::setCampanya));
-
-        TypeMap<Mensualitat, MensualitatDTO> mensualitatMapper = modelMapper.createTypeMap(Mensualitat.class, MensualitatDTO.class);
-        mensualitatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MensualitatDTO::setCampanya));
-
-        TypeMap<NominaDTO, Nomina> jNominaMapper = modelMapper.createTypeMap(NominaDTO.class, Nomina.class);
-        jNominaMapper.addMappings(mapper -> mapper.using(toMembrePlantilla).map(NominaDTO::getMembre, Nomina::setMembre));
-        jNominaMapper.addMappings(mapper -> mapper.using(toMensualitat).map(NominaDTO::getMensualitat, Nomina::setMensualitat));
-
-        TypeMap<Nomina, NominaDTO> nominaMapper = modelMapper.createTypeMap(Nomina.class, NominaDTO.class);
-        nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMembre().getId(), NominaDTO::setMembre));
-        nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMensualitat().getId(), NominaDTO::setMensualitat));
 
         TypeMap<Jugador, MembrePlantillaDTO> membrePlantillaJugadorMapper = modelMapper.createTypeMap(Jugador.class, MembrePlantillaDTO.class);
         membrePlantillaJugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
@@ -540,32 +519,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public PaginaDTO<List<CaixaFixaDTO>> listFactures(Filtre filtre) {
-        Page<CaixaFixa> caixaFixas = caixaFixaDao.buscarConFiltros(filtre);
-        PaginaDTO<List<CaixaFixaDTO>> paginaDTO = new PaginaDTO<>();
-        List<CaixaFixaDTO> caixaFixaDTOS = new ArrayList<>();
-        if (caixaFixas.getTotalElements() > 0) {
-            caixaFixaDTOS = caixaFixas.map(c -> modelMapper.map(c, CaixaFixaDTO.class)).getContent();
-            paginaDTO.setTotal(caixaFixas.getTotalElements());
-            paginaDTO.setResult(caixaFixaDTOS);
-        }
-        return paginaDTO;
-    }
-
-    @Override
-    public Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO, MultipartFile fitxer) {
-        CaixaFixa caixaFixa = jCaixaFixaMapper(caixaFixaDTO, fitxer);
-        caixaFixa = caixaFixaDao.save(caixaFixa);
-        return caixaFixa.getId();
-    }
-
-    @Override
-    public void deleteCaixaFixa(Long id) {
-        caixaFixaDao.deleteById(id);
-        //TODO: No eliminamos el fichero asociado a la fila de BBDD.
-    }
-
-    @Override
     public PaginaDTO<List<TipoSociDTO>> listTipoSocis(Filtre filtre) {
         Page<TipoSoci> tipoSocis = tipoSociDao.findByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<TipoSociDTO>> paginaDTO = new PaginaDTO<>();
@@ -681,38 +634,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public Long saveNomina(NominaDTO nominaDTO) {
-        Nomina nomina = modelMapper.map(nominaDTO, Nomina.class);
-        return nominaDao.save(nomina).getId();
-    }
-
-    @Override
-    public void deleteNomina(Long id) {
-        nominaDao.deleteById(id);
-    }
-
-    @Override
-    public Long saveMensualitat(MensualitatDTO mensualitatDTO) {
-        Mensualitat mensualitat = modelMapper.map(mensualitatDTO, Mensualitat.class);
-        return mensualitatDao.save(mensualitat).getId();
-    }
-
-    @Override
-    public void deleteMensualitat(Long id) {
-        mensualitatDao.deleteById(id);
-    }
-
-    @Override
-    public List<MensualitatDTO> listAllMensualitats(Filtre filtre) {
-        List<Mensualitat> mensualitats = mensualitatDao.findAllByCampanyaId(filtre.getCampanyaActiva());
-        List<MensualitatDTO> mensualitatDTOS = new ArrayList<>();
-        if (!mensualitats.isEmpty()) {
-            mensualitatDTOS = mensualitats.stream().map(c -> modelMapper.map(c, MensualitatDTO.class)).collect(Collectors.toList());
-        }
-        return mensualitatDTOS;
-    }
-
-    @Override
     public PaginaDTO<List<CategoriaDTO>> listCategoria(Filtre filtre) {
         Page<Categoria> categorias = categoriaDao.findByCampanya(filtre.getCampanyaActiva(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<CategoriaDTO>> paginaDTO = new PaginaDTO<>();
@@ -810,22 +731,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             e.printStackTrace();
         }
         return configuracio;
-    }
-
-    private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO, MultipartFile file) {
-        CaixaFixa caixaFixa = modelMapper.map(caixaFixaDTO, CaixaFixa.class);
-
-        try {
-            if (file != null && !file.isEmpty()) {
-                String facturaUrl = mediaService.guardarDespesaMultipart(file);
-                caixaFixa.setFactura(facturaUrl);
-            } else {
-                caixaFixa.setFactura(caixaFixaDTO.getFactura());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return caixaFixa;
     }
 
     private TipoSoci jTipoSociMapper(TipoSociDTO tipoSociDTO) {
