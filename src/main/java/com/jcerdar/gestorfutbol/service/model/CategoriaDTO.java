@@ -1,5 +1,7 @@
 package com.jcerdar.gestorfutbol.service.model;
 
+import java.util.List;
+
 public class CategoriaDTO {
 
     private Long id;
@@ -7,6 +9,8 @@ public class CategoriaDTO {
     private String nom;
 
     private Long campanya;
+
+    private List<EquipDTO> equips;
 
     public Long getId() {
         return id;
@@ -30,5 +34,13 @@ public class CategoriaDTO {
 
     public void setCampanya(Long campanya) {
         this.campanya = campanya;
+    }
+
+    public List<EquipDTO> getEquips() {
+        return equips;
+    }
+
+    public void setEquips(List<EquipDTO> equips) {
+        this.equips = equips;
     }
 }

@@ -1,19 +1,11 @@
 package com.jcerdar.gestorfutbol.service;
 
 
-import com.jcerdar.gestorfutbol.persistence.dao.CaixaFixaDao;
-import com.jcerdar.gestorfutbol.persistence.dao.NominaDao;
-import com.jcerdar.gestorfutbol.persistence.dao.PatrocinadorDao;
-import com.jcerdar.gestorfutbol.persistence.dao.SociDao;
+import com.jcerdar.gestorfutbol.persistence.dao.*;
 import com.jcerdar.gestorfutbol.persistence.model.type.EstatPagament;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioNominesDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
+import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
@@ -26,6 +18,9 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
 
     @Autowired
     private CaixaFixaDao caixaFixaDao;
+
+    @Autowired
+    private FacturaDao facturaDao;
 
     @Autowired
     private NominaDao nominaDao;
@@ -80,8 +75,8 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
     }
 
     @Override
-    public ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya) {
-        ExplotacioFacturesDTO explotacioFacturesDTO = new ExplotacioFacturesDTO();
+    public ExplotacioCaixaFixaDTO getDadesExplotacioCaixaFixa(Long idCampanya) {
+        ExplotacioCaixaFixaDTO explotacioFacturesDTO = new ExplotacioCaixaFixaDTO();
         explotacioFacturesDTO.setTotalPagat(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "P"));
         explotacioFacturesDTO.setPendentPagar(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "D"));
         explotacioFacturesDTO.setTotalFactures(caixaFixaDao.sumaFacturesPerCampanya(idCampanya));
@@ -95,5 +90,14 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         explotacioNominesDTO.setTotalNominesPendents(nominaDao.sumaNominesPagadesPerCampanya(idCampanya, EstatPagament.PENDENT));
         return explotacioNominesDTO;
         
+    }
+
+    @Override
+    public ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya) {
+        ExplotacioFacturesDTO explotacioFacturesDTO = new ExplotacioFacturesDTO();
+        explotacioFacturesDTO.setTotalPagat(facturaDao.sumaFacturesPerEstatICampanya(idCampanya, EstatPagament.PAGADA));
+        explotacioFacturesDTO.setPendentPagar(facturaDao.sumaFacturesPerEstatICampanya(idCampanya, EstatPagament.PENDENT));
+        explotacioFacturesDTO.setTotalFactures(facturaDao.sumaFacturesPerCampanya(idCampanya));
+        return explotacioFacturesDTO;
     }
 }

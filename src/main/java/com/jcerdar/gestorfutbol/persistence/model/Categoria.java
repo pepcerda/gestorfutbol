@@ -3,6 +3,8 @@ package com.jcerdar.gestorfutbol.persistence.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "GF_CATEGORIA")
 public class Categoria {
@@ -18,6 +20,9 @@ public class Categoria {
 
     @Column(name = "CAT_NOM", nullable = false)
     private String nom;
+
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Equip> equips;
 
 
     public Long getId() {
@@ -44,4 +49,11 @@ public class Categoria {
         this.nom = nom;
     }
 
+    public List<Equip> getEquips() {
+        return equips;
+    }
+
+    public void setEquips(List<Equip> equips) {
+        this.equips = equips;
+    }
 }

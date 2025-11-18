@@ -1,11 +1,6 @@
 package com.jcerdar.gestorfutbol.service;
 
-import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioNominesDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
-
-import java.math.BigDecimal;
+import com.jcerdar.gestorfutbol.service.model.*;
 
 public interface ExplotacioDadesService {
 
@@ -25,8 +20,10 @@ public interface ExplotacioDadesService {
 
     ExplotacioSocisDTO getDadesExplotacioSocis(Long idCampanya);
 
-    ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya);
+    ExplotacioCaixaFixaDTO getDadesExplotacioCaixaFixa(Long idCampanya);
 
     ExplotacioNominesDTO getDadesExplotacioNomines(Long idCampanya);
+
+    ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya);
 
 }

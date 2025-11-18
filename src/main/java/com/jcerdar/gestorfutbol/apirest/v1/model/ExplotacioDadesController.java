@@ -1,18 +1,13 @@
 package com.jcerdar.gestorfutbol.apirest.v1.model;
 
 import com.jcerdar.gestorfutbol.service.ExplotacioDadesService;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioFacturesDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioNominesDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioPatrocinadorsDTO;
-import com.jcerdar.gestorfutbol.service.model.ExplotacioSocisDTO;
+import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.math.BigDecimal;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -60,6 +55,11 @@ public class ExplotacioDadesController extends BaseController {
     @GetMapping("/explotacio-socis/{idCampanya}")
     ResponseEntity<ExplotacioSocisDTO> getDadesExplotacioSocis(@PathVariable Long idCampanya) {
         return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioSocis(idCampanya));
+    }
+
+    @GetMapping("/explotacio-caixa-fixa/{idCampanya}")
+    ResponseEntity<ExplotacioCaixaFixaDTO> getDadesExplotacioCaixaFixa(@PathVariable Long idCampanya) {
+        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioCaixaFixa(idCampanya));
     }
 
     @GetMapping("/explotacio-factures/{idCampanya}")
