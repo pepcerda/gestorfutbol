@@ -4,7 +4,7 @@ import java.util.Date;
 public class JugadorDTO {
     private Long id;
     private Long campanya;
-    private Long categoria;
+    private Long equip;
     private String nom;
     private String llinatge1;
     private String llinatge2;
@@ -18,7 +18,7 @@ public class JugadorDTO {
     public JugadorDTO(Long id, Long campanya, Long categoria, String nom, String llinatge1, String llinatge2, Date dataNaixement, PosicioDTO posicio) {
         this.id = id;
         this.campanya = campanya;
-        this.categoria = categoria;
+        this.equip = categoria;
         this.nom = nom;
         this.llinatge1 = llinatge1;
         this.llinatge2 = llinatge2;
@@ -42,12 +42,12 @@ public class JugadorDTO {
         this.campanya = campanya;
     }
 
-    public Long getCategoria() {
-        return categoria;
+    public Long getEquip() {
+        return equip;
     }
 
-    public void setCategoria(Long categoria) {
-        this.categoria = categoria;
+    public void setEquip(Long equip) {
+        this.equip = equip;
     }
 
     public String getNom() {

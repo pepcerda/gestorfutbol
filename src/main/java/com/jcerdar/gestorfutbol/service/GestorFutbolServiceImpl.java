@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
@@ -79,6 +78,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private CategoriaDao categoriaDao;
 
     @Autowired
+    private EquipDao equipDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -106,6 +108,11 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         Converter<Long, Categoria> toCategoria = ctx -> {
             Categoria categoria = categoriaDao.findById(ctx.getSource()).orElse(null);
             return categoria;
+        };
+
+        Converter<Long, Equip> toEquip = ctx -> {
+            Equip equip = equipDao.findById(ctx.getSource()).orElse(null);
+            return equip;
         };
 
         Converter<Posicio, PosicioDTO> toPosicio = pos -> {
@@ -165,7 +172,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<JugadorDTO, Jugador> jJugadorMapper = modelMapper.createTypeMap(JugadorDTO.class, Jugador.class);
         jJugadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(JugadorDTO::getCampanya, Jugador::setCampanya));
-        jJugadorMapper.addMappings(mapper -> mapper.using(toCategoria).map(JugadorDTO::getCategoria, Jugador::setCategoria));
+        jJugadorMapper.addMappings(mapper -> mapper.using(toEquip).map(JugadorDTO::getEquip, Jugador::setEquip));
         jJugadorMapper.addMappings(mapper -> mapper.using(toPosicioEntity).map(JugadorDTO::getPosicio, Jugador::setPosicio));
 
         TypeMap<Jugador, JugadorDTO> jugadorMapper = modelMapper.createTypeMap(Jugador.class, JugadorDTO.class);
@@ -184,42 +191,41 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             return destination;
         });
         jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), JugadorDTO::setCampanya));
-        jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), JugadorDTO::setCategoria));
+        jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), JugadorDTO::setEquip));
 
         TypeMap<EntrenadorDTO, Entrenador> jEntrenadorMapper = modelMapper.createTypeMap(EntrenadorDTO.class, Entrenador.class);
         jEntrenadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(EntrenadorDTO::getCampanya, Entrenador::setCampanya));
-        jEntrenadorMapper.addMappings(mapper -> mapper.using(toCategoria).map(EntrenadorDTO::getCategoria, Entrenador::setCategoria));
+        jEntrenadorMapper.addMappings(mapper -> mapper.using(toEquip).map(EntrenadorDTO::getEquip, Entrenador::setEquip));
 
         TypeMap<Entrenador, EntrenadorDTO> entrenadorMapper = modelMapper.createTypeMap(Entrenador.class, EntrenadorDTO.class);
         entrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), EntrenadorDTO::setCampanya));
-        entrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), EntrenadorDTO::setCategoria));
+        entrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), EntrenadorDTO::setEquip));
 
         TypeMap<DelegatDTO, Delegat> jDelegatMapper = modelMapper.createTypeMap(DelegatDTO.class, Delegat.class);
         jDelegatMapper.addMappings(mapper -> mapper.using(toCampanya).map(DelegatDTO::getCampanya, Delegat::setCampanya));
-        jDelegatMapper.addMappings(mapper -> mapper.using(toCategoria).map(DelegatDTO::getCategoria, Delegat::setCategoria));
+        jDelegatMapper.addMappings(mapper -> mapper.using(toEquip).map(DelegatDTO::getEquip, Delegat::setEquip));
 
         TypeMap<Delegat, DelegatDTO> delegatMapper = modelMapper.createTypeMap(Delegat.class, DelegatDTO.class);
         delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), DelegatDTO::setCampanya));
-        delegatMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), DelegatDTO::setCategoria));
+        delegatMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), DelegatDTO::setEquip));
 
         TypeMap<Jugador, MembrePlantillaDTO> membrePlantillaJugadorMapper = modelMapper.createTypeMap(Jugador.class, MembrePlantillaDTO.class);
         membrePlantillaJugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
-        membrePlantillaJugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), MembrePlantillaDTO::setCategoria));
+        membrePlantillaJugadorMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), MembrePlantillaDTO::setEquip));
 
         TypeMap<Entrenador, MembrePlantillaDTO> membrePlantillaEntrenadorMapper = modelMapper.createTypeMap(Entrenador.class, MembrePlantillaDTO.class);
         membrePlantillaEntrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
-        membrePlantillaEntrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), MembrePlantillaDTO::setCategoria));
+        membrePlantillaEntrenadorMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), MembrePlantillaDTO::setEquip));
 
         TypeMap<Delegat, MembrePlantillaDTO> membrePlantillaDelegatMapper = modelMapper.createTypeMap(Delegat.class, MembrePlantillaDTO.class);
         membrePlantillaDelegatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MembrePlantillaDTO::setCampanya));
-        membrePlantillaDelegatMapper.addMappings(mapper -> mapper.map(src -> src.getCategoria().getId(), MembrePlantillaDTO::setCategoria));
+        membrePlantillaDelegatMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), MembrePlantillaDTO::setEquip));
 
         TypeMap<CategoriaDTO, Categoria> jCategoriaMapper = modelMapper.createTypeMap(CategoriaDTO.class, Categoria.class);
         jCategoriaMapper.addMappings(mapper -> mapper.using(toCampanya).map(CategoriaDTO::getCampanya, Categoria::setCampanya));
 
         TypeMap<Categoria, CategoriaDTO> categoriaMapper = modelMapper.createTypeMap(Categoria.class, CategoriaDTO.class);
         categoriaMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), CategoriaDTO::setCampanya));
-
     }
 
     @Override
@@ -559,9 +565,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         List<Long> idsFiltrats = filtre.getIds();
         List<MembrePlantilla> membres;
         if (idsFiltrats != null && !idsFiltrats.isEmpty()) {
-            membres = membrePlantillaDao.findAllByCampanyaIdAndIdInAndCategoriaId(filtre.getCampanyaActiva(), idsFiltrats, filtre.getCategoriaActiva());
+            membres = membrePlantillaDao.findAllByCampanyaIdAndIdInAndEquipId(filtre.getCampanyaActiva(), idsFiltrats, filtre.getEquipActiu());
         } else {
-            membres = membrePlantillaDao.findAllByCampanyaIdAndCategoriaId(filtre.getCampanyaActiva(), filtre.getCategoriaActiva());
+            membres = membrePlantillaDao.findAllByCampanyaIdAndEquipId(filtre.getCampanyaActiva(), filtre.getEquipActiu());
         }
         List<MembrePlantillaDTO> membreDTOS = new ArrayList<>();
         if (!membres.isEmpty()) {
@@ -583,7 +589,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<JugadorDTO> listAllJugadors(Filtre filtre) {
-        List<Jugador> jugadors = jugadorDao.findAllByCampanyaAndCategoria(filtre.getCampanyaActiva(), filtre.getCategoriaActiva());
+        List<Jugador> jugadors = jugadorDao.findAllByCampanyaAndEquip(filtre.getCampanyaActiva(), filtre.getEquipActiu());
         List<JugadorDTO> jugadorDTOS = new ArrayList<>();
         if (!jugadors.isEmpty()) {
             jugadorDTOS = jugadors.stream().map(jugador -> modelMapper.map(jugador, JugadorDTO.class)).collect(Collectors.toList());
@@ -604,7 +610,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<EntrenadorDTO> listAllEntrenadors(Filtre filtre) {
-        List<Entrenador> entrenadors = entrenadorDao.findAllByCampanyaAndCategoria(filtre.getCampanyaActiva(), filtre.getCategoriaActiva());
+        List<Entrenador> entrenadors = entrenadorDao.findAllByCampanyaAndEquip(filtre.getCampanyaActiva(), filtre.getEquipActiu());
         List<EntrenadorDTO> entrenadorDTOS = new ArrayList<>();
         if (!entrenadors.isEmpty()) {
             entrenadorDTOS = entrenadors.stream().map(c -> modelMapper.map(c, EntrenadorDTO.class)).collect(Collectors.toList());
@@ -614,7 +620,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<DelegatDTO> listAllDelegats(Filtre filtre) {
-        List<Delegat> delegats = delegatDao.findAllByCampanyaAndCategoria(filtre.getCampanyaActiva(), filtre.getCategoriaActiva());
+        List<Delegat> delegats = delegatDao.findAllByCampanyaAndEquip(filtre.getCampanyaActiva(), filtre.getEquipActiu());
         List<DelegatDTO> delegatDTOS = new ArrayList<>();
         if (!delegats.isEmpty()) {
             delegatDTOS = delegats.stream().map(c -> modelMapper.map(c, DelegatDTO.class)).collect(Collectors.toList());
@@ -666,6 +672,16 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public void deleteCategoria(Long id) {
         categoriaDao.deleteById(id);
+    }
+
+    @Override
+    public List<EquipDTO> listAllEquips(Long idCampanya) {
+        List<Equip> equips = equipDao.findAllByCampanyaId(idCampanya);
+        List<EquipDTO> equipDTOS = new ArrayList<>();
+        if(!equips.isEmpty()) {
+            equipDTOS = equips.stream().map(c -> modelMapper.map(c, EquipDTO.class)).collect(Collectors.toList());
+        }
+        return equipDTOS;
     }
 
     private Soci jSociMapper(SociDTO sociDTO) {

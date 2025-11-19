@@ -9,6 +9,8 @@ public class MensualitatDTO {
 
     private Long campanya;
 
+    private Long equip;
+
     private Integer any;
 
     private Integer mes;  // 1 = gener, 12 = desembre
@@ -29,6 +31,14 @@ public class MensualitatDTO {
 
     public void setCampanya(Long campanya) {
         this.campanya = campanya;
+    }
+
+    public Long getEquip() {
+        return equip;
+    }
+
+    public void setEquip(Long equip) {
+        this.equip = equip;
     }
 
     public Integer getAny() {

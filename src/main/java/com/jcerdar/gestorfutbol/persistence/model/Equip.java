@@ -11,10 +11,6 @@ public class Equip {
     @Column(name = "EQP_ID", nullable = false)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "EQP_CAT", nullable = false)
-    private Categoria categoria;
-
     @Column(name = "EQP_NOM", nullable = false)
     private String nom;
 
@@ -24,14 +20,6 @@ public class Equip {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
     }
 
     public String getNom() {

@@ -21,7 +21,8 @@ public class Categoria {
     @Column(name = "CAT_NOM", nullable = false)
     private String nom;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "EQP_CAT")
     private List<Equip> equips;
 
 

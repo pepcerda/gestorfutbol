@@ -17,6 +17,8 @@ public class Filtre {
 
     private Long categoriaActiva;
 
+    private Long equipActiu;
+
     private String sortField;
 
     private Integer sortOrder;
@@ -71,6 +73,14 @@ public class Filtre {
 
     public void setCategoriaActiva(Long categoriaActiva) {
         this.categoriaActiva = categoriaActiva;
+    }
+
+    public Long getEquipActiu() {
+        return equipActiu;
+    }
+
+    public void setEquipActiu(Long equipActiu) {
+        this.equipActiu = equipActiu;
     }
 
     public String getSortField() {

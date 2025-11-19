@@ -96,5 +96,7 @@ public interface GestorFutbolService {
     Long saveCategoria(CategoriaDTO categoriaDTO);
 
     void deleteCategoria(Long id);
+
+    List<EquipDTO> listAllEquips(Long idCampanya);
     
 }

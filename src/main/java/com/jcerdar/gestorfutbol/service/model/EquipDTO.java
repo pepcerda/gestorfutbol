@@ -6,8 +6,6 @@ public class EquipDTO {
 
     private String nom;
 
-    private Long categoria;
-
     public Long getId() {
         return id;
     }
@@ -22,14 +20,6 @@ public class EquipDTO {
 
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    public Long getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Long categoria) {
-        this.categoria = categoria;
     }
 
 }

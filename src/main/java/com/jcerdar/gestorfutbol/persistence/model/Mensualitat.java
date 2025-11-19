@@ -35,6 +35,10 @@ public class Mensualitat {
     @JoinColumn(name = "MEN_CAM", nullable = false)
     private Campanya campanya;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "MEN_EQP", nullable = false)
+    private Equip equip;
+
     @Column(name = "MEN_ANY", nullable = false)
     private Integer any;
 
@@ -58,6 +62,14 @@ public class Mensualitat {
 
     public void setCampanya(Campanya campanya) {
         this.campanya = campanya;
+    }
+
+    public Equip getEquip() {
+        return equip;
+    }
+
+    public void setEquip(Equip equip) {
+        this.equip = equip;
     }
 
     public Integer getAny() {

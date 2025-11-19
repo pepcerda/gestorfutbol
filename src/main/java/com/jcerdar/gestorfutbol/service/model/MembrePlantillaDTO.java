@@ -8,7 +8,7 @@ public class MembrePlantillaDTO {
 
     private Long campanya;
 
-    private Long categoria;
+    private Long equip;
 
     private String nom;
 
@@ -22,10 +22,10 @@ public class MembrePlantillaDTO {
 
     }
 
-    public MembrePlantillaDTO(Long id, Long campanya, Long categoria, String nom, String llinatge1, String llinatge2, Date dataNaixement) {
+    public MembrePlantillaDTO(Long id, Long campanya, Long equip, String nom, String llinatge1, String llinatge2, Date dataNaixement) {
         this.id = id;
         this.campanya = campanya;
-        this.categoria = categoria;
+        this.equip = equip;
         this.nom = nom;
         this.llinatge1 = llinatge1;
         this.llinatge2 = llinatge2;
@@ -48,12 +48,12 @@ public class MembrePlantillaDTO {
         this.campanya = campanya;
     }
 
-    public Long getCategoria() {
-        return categoria;
+    public Long getEquip() {
+        return equip;
     }
 
-    public void setCategoria(Long categoria) {
-        this.categoria = categoria;
+    public void setEquip(Long equip) {
+        this.equip = equip;
     }
 
     public String getNom() {

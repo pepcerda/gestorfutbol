@@ -5,9 +5,19 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.jcerdar.gestorfutbol.persistence.model.Mensualitat;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface MensualitatDao extends JpaRepository<Mensualitat, Long> {
 
-    List<Mensualitat> findAllByCampanyaId(Long idCampanya);
+    @Query("""
+                select distinct m
+                from Mensualitat m
+                left join m.nomines n
+                left join n.membre mp
+                where mp.equip.id = :equipId
+                  and m.campanya.id = :campanyaId
+            """)
+    List<Mensualitat> findMensualitatsByEquipAndCampanya(Long equipId, Long campanyaId);
 
 }

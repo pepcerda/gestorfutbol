@@ -155,7 +155,7 @@ public class DespesaServiceImpl implements DespesaService{
 
     @Override
     public List<MensualitatDTO> listAllMensualitats(Filtre filtre) {
-        List<Mensualitat> mensualitats = mensualitatDao.findAllByCampanyaId(filtre.getCampanyaActiva());
+        List<Mensualitat> mensualitats = mensualitatDao.findMensualitatsByEquipAndCampanya(filtre.getEquipActiu(), filtre.getCampanyaActiva());
         List<MensualitatDTO> mensualitatDTOS = new ArrayList<>();
         if (!mensualitats.isEmpty()) {
             mensualitatDTOS = mensualitats.stream().map(c -> modelMapper.map(c, MensualitatDTO.class)).collect(Collectors.toList());

@@ -30,8 +30,8 @@ public abstract class MembrePlantilla {
     private Campanya campanya;
 
     @ManyToOne
-    @JoinColumn(name = "MEM_CAT", nullable = false)
-    private Categoria categoria;
+    @JoinColumn(name = "MEM_EQP", nullable = false)
+    private Equip equip;
 
     @Column(name = "MEM_NOM", nullable = false)
     private String nom;
@@ -61,12 +61,12 @@ public abstract class MembrePlantilla {
         this.campanya = campanya;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public Equip getEquip() {
+        return equip;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setEquip(Equip categoria) {
+        this.equip = categoria;
     }
 
     public String getNom() {

@@ -13,6 +13,6 @@ public interface DelegatDao extends JpaRepository<Delegat, Long> {
     @Query("select c from Delegat c where c.campanya.id = :idCampanya")
     List<Delegat> findAllByCampanya(@Param("idCampanya") Long idCampanya);
 
-    @Query("select c from Delegat c where c.campanya.id = :idCampanya and c.categoria.id = :idCategoria")
-    List<Delegat> findAllByCampanyaAndCategoria(@Param("idCampanya") Long idCampanya, @Param("idCategoria") Long idCategoria);
+    @Query("select c from Delegat c where c.campanya.id = :idCampanya and c.equip.id = :idEquip")
+    List<Delegat> findAllByCampanyaAndEquip(@Param("idCampanya") Long idCampanya, @Param("idEquip") Long idEquip);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.jcerdar.gestorfutbol.persistence.model.Equip;
 import com.jcerdar.gestorfutbol.service.DespesaService;
 import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -456,5 +457,11 @@ public class GestorFutbolController extends BaseController{
             return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/equips/{idCampanya}")
+    public ResponseEntity<List<EquipDTO>> listEquips(@PathVariable Long idCampanya) {
+        return ResponseEntity.ok(gestorFutbolService.listAllEquips(idCampanya));
+    }
+
 
 }

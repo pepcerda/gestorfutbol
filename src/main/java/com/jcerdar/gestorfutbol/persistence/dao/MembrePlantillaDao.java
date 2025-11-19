@@ -8,8 +8,8 @@ import com.jcerdar.gestorfutbol.persistence.model.MembrePlantilla;
 
 public interface MembrePlantillaDao extends JpaRepository<MembrePlantilla, Long> {
 
-    List<MembrePlantilla> findAllByCampanyaIdAndCategoriaId(Long idCampanya, Long idCategoria);
+    List<MembrePlantilla> findAllByCampanyaIdAndEquipId(Long idCampanya, Long idEquip);
 
-    List<MembrePlantilla> findAllByCampanyaIdAndIdInAndCategoriaId(Long idCampanya, List<Long> ids, Long idCategoria);
+    List<MembrePlantilla> findAllByCampanyaIdAndIdInAndEquipId(Long idCampanya, List<Long> ids, Long idEquip);
 
 }
