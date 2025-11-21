@@ -256,32 +256,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         Campanya campanya = modelMapper.map(campanyaDTO, Campanya.class);
         campanya = campanyaDao.save(campanya);
 
-        // --- Generación automática de mensualidades ---
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(campanyaDTO.getAny());
-        Integer anyInici = cal.get(Calendar.YEAR);
-        Integer anyFi = anyInici + 1;
-
-        List<Mensualitat> mensualitats = new ArrayList<>();
-
-        for (int mes = 7; mes <= 12; mes++) { // De juliol a desembre
-            Mensualitat mensualitat = new Mensualitat();
-            mensualitat.setCampanya(campanya);
-            mensualitat.setAny(anyInici);
-            mensualitat.setMes(mes);
-            mensualitats.add(mensualitat);
-        }
-
-        for (int mes = 1; mes <= 6; mes++) { // De gener a juny
-            Mensualitat mensualitat = new Mensualitat();
-            mensualitat.setCampanya(campanya);
-            mensualitat.setAny(anyFi);
-            mensualitat.setMes(mes);
-            mensualitats.add(mensualitat);
-        }
-
-        mensualitatDao.saveAll(mensualitats);
-
         return campanya.getId();
     }
 
@@ -491,16 +465,14 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public ConfiguracioDTO getConfiguracio() {
-        Configuracio configuracio = configuracioDao.findById(1l)
-                .orElseThrow(() -> new IllegalStateException("No se encontró configuración con ID 1"));
+        Configuracio configuracio = configuracioDao.findById(1l).orElseThrow(() -> new IllegalStateException("No se encontró configuración con ID 1"));
         ConfiguracioDTO config = modelMapper.map(configuracio, ConfiguracioDTO.class);
         return config;
     }
 
     @Override
     public ConfiguracioGeneralDTO getConfiguracioGeneral() {
-        Configuracio configuracio = configuracioDao.findById(1l)
-                .orElse(null);
+        Configuracio configuracio = configuracioDao.findById(1l).orElse(null);
 
         if (configuracio != null) {
             ConfiguracioGeneralDTO configuracioGeneralDTO = new ConfiguracioGeneralDTO();
@@ -666,6 +638,43 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     public Long saveCategoria(CategoriaDTO categoriaDTO) {
         Categoria categoria = modelMapper.map(categoriaDTO, Categoria.class);
         categoria = categoriaDao.save(categoria);
+
+        if (categoriaDTO.getId() == null || categoriaDTO.getEquips().stream().anyMatch(e -> e.getId() == null)) {
+
+            Campanya campanya = categoria.getCampanya();
+            //En este caso hay que crear mensualidades para cada equipo de la categoria
+            // --- Generación automática de mensualidades ---
+
+            Categoria finalCategoria = categoria;
+            categoriaDTO.getEquips().stream().filter(e -> e.getId() == null).forEach(e -> {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(campanya.getAny());
+                Integer anyInici = cal.get(Calendar.YEAR);
+                Integer anyFi = anyInici + 1;
+
+                List<Mensualitat> mensualitats = new ArrayList<>();
+
+                for (int mes = 7; mes <= 12; mes++) { // De juliol a desembre
+                    Mensualitat mensualitat = new Mensualitat();
+                    mensualitat.setCampanya(campanya);
+                    mensualitat.setAny(anyInici);
+                    mensualitat.setMes(mes);
+                    mensualitat.setEquip(finalCategoria.getEquips().stream().filter(eq -> eq.getNom().equals(e.getNom())).findFirst().orElse(null));
+                    mensualitats.add(mensualitat);
+                }
+
+                for (int mes = 1; mes <= 6; mes++) { // De gener a juny
+                    Mensualitat mensualitat = new Mensualitat();
+                    mensualitat.setCampanya(campanya);
+                    mensualitat.setAny(anyFi);
+                    mensualitat.setMes(mes);
+                    mensualitat.setEquip(finalCategoria.getEquips().stream().filter(eq -> eq.getNom().equals(e.getNom())).findFirst().orElse(null));
+                    mensualitats.add(mensualitat);
+                }
+
+                mensualitatDao.saveAll(mensualitats);
+            });
+        }
         return categoria.getId();
     }
 
@@ -678,7 +687,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     public List<EquipDTO> listAllEquips(Long idCampanya) {
         List<Equip> equips = equipDao.findAllByCampanyaId(idCampanya);
         List<EquipDTO> equipDTOS = new ArrayList<>();
-        if(!equips.isEmpty()) {
+        if (!equips.isEmpty()) {
             equipDTOS = equips.stream().map(c -> modelMapper.map(c, EquipDTO.class)).collect(Collectors.toList());
         }
         return equipDTOS;

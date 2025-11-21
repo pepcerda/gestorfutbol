@@ -48,6 +48,9 @@ public class DespesaServiceImpl implements DespesaService{
     private FacturaDao facturaDao;
 
     @Autowired
+    private EquipDao equipDao;
+
+    @Autowired
     private CategoriaDespesaDao categoriaDespesaDao;
 
     @Autowired
@@ -63,6 +66,11 @@ public class DespesaServiceImpl implements DespesaService{
         Converter<Long, Campanya> toCampanya = ctx -> {
             Campanya campanya = campanyaDao.findById(ctx.getSource()).orElse(null);
             return campanya;
+        };
+
+        Converter<Long, Equip> toEquip = ctx -> {
+            Equip equip = equipDao.findById(ctx.getSource()).orElse(null);
+            return equip;
         };
 
         Converter<Long, Mensualitat> toMensualitat = ctx -> {
@@ -84,9 +92,11 @@ public class DespesaServiceImpl implements DespesaService{
 
         TypeMap<MensualitatDTO, Mensualitat> jMensualitatMapper = modelMapper.createTypeMap(MensualitatDTO.class, Mensualitat.class);
         jMensualitatMapper.addMappings(mapper -> mapper.using(toCampanya).map(MensualitatDTO::getCampanya, Mensualitat::setCampanya));
+        jMensualitatMapper.addMappings(mapper -> mapper.using(toEquip).map(MensualitatDTO::getEquip, Mensualitat::setEquip));
 
         TypeMap<Mensualitat, MensualitatDTO> mensualitatMapper = modelMapper.createTypeMap(Mensualitat.class, MensualitatDTO.class);
         mensualitatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MensualitatDTO::setCampanya));
+        mensualitatMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), MensualitatDTO::setEquip));
 
         TypeMap<NominaDTO, Nomina> jNominaMapper = modelMapper.createTypeMap(NominaDTO.class, Nomina.class);
         jNominaMapper.addMappings(mapper -> mapper.using(toMembrePlantilla).map(NominaDTO::getMembre, Nomina::setMembre));

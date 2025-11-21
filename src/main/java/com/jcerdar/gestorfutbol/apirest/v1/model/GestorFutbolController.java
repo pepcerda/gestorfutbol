@@ -431,6 +431,7 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
+
     @PostMapping("/categories")
     public ResponseEntity<PaginaDTO<List<CategoriaDTO>>> listCategories(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listCategoria(filtre));

@@ -13,10 +13,8 @@ public interface MensualitatDao extends JpaRepository<Mensualitat, Long> {
     @Query("""
                 select distinct m
                 from Mensualitat m
-                left join m.nomines n
-                left join n.membre mp
-                where mp.equip.id = :equipId
-                  and m.campanya.id = :campanyaId
+                where m.equip.id = :equipId
+                and m.campanya.id = :campanyaId
             """)
     List<Mensualitat> findMensualitatsByEquipAndCampanya(Long equipId, Long campanyaId);
 
