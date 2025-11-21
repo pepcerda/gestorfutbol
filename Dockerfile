@@ -1,5 +1,5 @@
 # Usar una imagen base de OpenJDK 17
-FROM amazoncorretto:17
+FROM eclipse-temurin:17-jdk
 
 # Install libfreetype6 and other necessary libraries
 RUN apt-get update && apt-get install -y \
