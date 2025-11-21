@@ -150,7 +150,7 @@ CREATE TABLE GF_NOMINA
     NOM_MEN   BIGINT                                  NOT NULL,
     NOM_MEM   BIGINT                                  NOT NULL,
     NOM_QUAN  DECIMAL(10, 2)                          NOT NULL,
-    NOM_DATA  TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
+    NOM_DATA  TIMESTAMP WITHOUT TIME ZONE,
     NOM_ESTAT VARCHAR(20)                             NOT NULL,
     CONSTRAINT pk_gf_nomina PRIMARY KEY (NOM_ID)
 );

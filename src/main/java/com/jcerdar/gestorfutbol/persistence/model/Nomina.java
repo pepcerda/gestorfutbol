@@ -41,7 +41,7 @@ public class Nomina {
     @Column(name = "NOM_QUAN", nullable = false, precision = 10, scale = 2)
     private BigDecimal quantitat;
 
-    @Column(name = "NOM_DATA", nullable = false)
+    @Column(name = "NOM_DATA")
     private Date dataPagament;
 
     @Enumerated(EnumType.STRING)
