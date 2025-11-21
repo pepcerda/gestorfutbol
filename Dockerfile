@@ -1,5 +1,5 @@
 # Usar una imagen base de OpenJDK 17
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jdk-slim-bullseye
 
 # Install libfreetype6 and other necessary libraries
 RUN apt-get update && apt-get install -y \
