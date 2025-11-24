@@ -90,6 +90,14 @@ public class CaixaFixa {
         this.despesa = despesa;
     }
 
+    public Date getDataFactura() {
+        return dataFactura;
+    }
+
+    public void setDataFactura(Date dataFactura) {
+        this.dataFactura = dataFactura;
+    }
+
     public String getObservacio() {
         return observacio;
     }
