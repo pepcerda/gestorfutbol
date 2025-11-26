@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class CaixaFixaCustomDaoImpl implements CaixaFixaCustomDao{
+public class CaixaFixaCustomDaoImpl implements CaixaFixaCustomDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -109,19 +109,34 @@ public class CaixaFixaCustomDaoImpl implements CaixaFixaCustomDao{
                 String matchMode = filter.getMatchMode();
 
                 if (value != null && !value.isEmpty()) {
-                    Path<String> path;
-                    if (field.contains(".")) {
-                        String[] parts = field.split("\\.");
-                        path = root.get(parts[0]).get(parts[1]);
-                    } else {
-                        path = root.get(field);
-                    }
+                    if ("nomComplet".equals(field)) {
+                        // Concatenar nombre + apellido1 + apellido2
+                        Expression<String> nomComplet = cb.concat(
+                                cb.concat(cb.lower(root.get("nom")), " "),
+                                cb.concat(cb.lower(root.get("llinatge1")), " "));
+                        nomComplet = cb.concat(nomComplet, cb.lower(root.get("llinatge2")));
 
-                    switch (matchMode) {
-                        case "contains" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase() + "%"));
-                        case "equals" -> predicates.add(cb.equal(path, value));
-                        case "startsWith" -> predicates.add(cb.like(cb.lower(path), value.toLowerCase() + "%"));
-                        case "endsWith" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase()));
+                        switch (matchMode) {
+                            case "contains" -> predicates.add(cb.like(nomComplet, "%" + value.toLowerCase() + "%"));
+                            case "startsWith" -> predicates.add(cb.like(nomComplet, value.toLowerCase() + "%"));
+                            case "endsWith" -> predicates.add(cb.like(nomComplet, "%" + value.toLowerCase()));
+                            case "equals" -> predicates.add(cb.equal(nomComplet, value.toLowerCase()));
+                        }
+                    } else {
+                        Path<String> path;
+                        if (field.contains(".")) {
+                            String[] parts = field.split("\\.");
+                            path = root.get(parts[0]).get(parts[1]);
+                        } else {
+                            path = root.get(field);
+                        }
+
+                        switch (matchMode) {
+                            case "contains" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase() + "%"));
+                            case "equals" -> predicates.add(cb.equal(path, value));
+                            case "startsWith" -> predicates.add(cb.like(cb.lower(path), value.toLowerCase() + "%"));
+                            case "endsWith" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase()));
+                        }
                     }
                 }
             }

@@ -194,6 +194,11 @@ public class GestorFutbolController extends BaseController{
         return  ResponseEntity.ok(gestorFutbolService.saveConfiguracio(configuracioDTO));
     }
 
+    @PostMapping("/caixes-fixes-all")
+    public ResponseEntity<List<CaixaFixaDTO>> listAllCaixaFixa(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(despesaService.listAllCaixaFixa(filtre));
+    }
+
     @PostMapping("/caixes-fixes")
     public ResponseEntity<PaginaDTO<List<CaixaFixaDTO>>> listCaixaFixa(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(despesaService.listCaixaFixa(filtre));
@@ -384,6 +389,11 @@ public class GestorFutbolController extends BaseController{
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/factures-all")
+    public ResponseEntity<List<FacturaDTO>> listAllFactures(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(despesaService.listAllFactura(filtre));
     }
 
     @PostMapping("/factures")

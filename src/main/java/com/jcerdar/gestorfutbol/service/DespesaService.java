@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface DespesaService {
 
+    List<CaixaFixaDTO> listAllCaixaFixa(Filtre filtre); 
+
     PaginaDTO<List<CaixaFixaDTO>> listCaixaFixa(Filtre filtre);
 
     Long saveCaixaFixa(CaixaFixaDTO caixaFixaDTO, MultipartFile fitxer);
@@ -32,6 +34,8 @@ public interface DespesaService {
 
     void deleteProveidor(Long id);
 
+    List<FacturaDTO> listAllFactura(Filtre filtre);
+    
     PaginaDTO<List<FacturaDTO>> listFactures(Filtre filtre);
 
     Long saveFactura(FacturaDTO facturaDTO, MultipartFile fitxer);

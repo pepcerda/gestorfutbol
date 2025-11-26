@@ -3,7 +3,6 @@ package com.jcerdar.gestorfutbol.persistence.dao;
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.apirest.v1.model.ValorFiltre;
 import com.jcerdar.gestorfutbol.persistence.model.Soci;
-import com.jcerdar.gestorfutbol.persistence.model.Soci;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -96,45 +95,63 @@ public class SociCustomDaoImpl implements SociCustomDao{
         return resultList;
     }
 
+
     private List<Predicate> construirPredicats(Filtre filtre, Root<Soci> root, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<>();
-
+    
         if (filtre.getCampanyaActiva() != null) {
             predicates.add(cb.equal(root.get("campanya").get("id"), filtre.getCampanyaActiva()));
         }
-
+    
         if (filtre.getFilters() != null) {
             for (Map.Entry<String, ValorFiltre> entry : filtre.getFilters().entrySet()) {
                 String field = entry.getKey();
                 ValorFiltre filter = entry.getValue();
                 String value = filter.getValue();
                 String matchMode = filter.getMatchMode();
-
+    
                 if (value != null && !value.isEmpty()) {
-                    Path<String> path;
-                    if (field.contains(".")) {
-                        String[] parts = field.split("\\.");
-                        path = root.get(parts[0]).get(parts[1]);
-                    } else {
-                        path = root.get(field);
-                    }
-
-                    switch (matchMode) {
-                        case "contains" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase() + "%"));
-                        case "equals" -> {
-                            if(field.equals("tipoSoci")) {
-                                predicates.add(cb.equal(path.get("id"), Long.valueOf(value)));
-                            } else {
-                                predicates.add(cb.equal(path, value));
-                            }
+                    if ("nomComplet".equals(field)) {
+                        // Concatenar nombre + apellido1 + apellido2
+                        Expression<String> nomComplet = cb.concat(
+                                cb.concat(cb.lower(root.get("nom")), " "),
+                                cb.concat(cb.lower(root.get("llinatge1")), " ")
+                        );
+                        nomComplet = cb.concat(nomComplet, cb.lower(root.get("llinatge2")));
+    
+                        switch (matchMode) {
+                            case "contains" -> predicates.add(cb.like(nomComplet, "%" + value.toLowerCase() + "%"));
+                            case "startsWith" -> predicates.add(cb.like(nomComplet, value.toLowerCase() + "%"));
+                            case "endsWith" -> predicates.add(cb.like(nomComplet, "%" + value.toLowerCase()));
+                            case "equals" -> predicates.add(cb.equal(nomComplet, value.toLowerCase()));
                         }
-                        case "startsWith" -> predicates.add(cb.like(cb.lower(path), value.toLowerCase() + "%"));
-                        case "endsWith" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase()));
+                    } else {
+                        Path<String> path;
+                        if (field.contains(".")) {
+                            String[] parts = field.split("\\.");
+                            path = root.get(parts[0]).get(parts[1]);
+                        } else {
+                            path = root.get(field);
+                        }
+    
+                        switch (matchMode) {
+                            case "contains" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase() + "%"));
+                            case "equals" -> {
+                                if (field.equals("tipoSoci")) {
+                                    predicates.add(cb.equal(path.get("id"), Long.valueOf(value)));
+                                } else {
+                                    predicates.add(cb.equal(path, value));
+                                }
+                            }
+                            case "startsWith" -> predicates.add(cb.like(cb.lower(path), value.toLowerCase() + "%"));
+                            case "endsWith" -> predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase()));
+                        }
                     }
                 }
             }
         }
-
+    
         return predicates;
     }
+    
 }

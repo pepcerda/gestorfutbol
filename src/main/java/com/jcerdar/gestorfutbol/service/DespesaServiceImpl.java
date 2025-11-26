@@ -4,7 +4,6 @@ package com.jcerdar.gestorfutbol.service;
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.persistence.dao.*;
 import com.jcerdar.gestorfutbol.persistence.model.*;
-import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.model.*;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.Converter;
@@ -12,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -116,6 +114,19 @@ public class DespesaServiceImpl implements DespesaService{
     }
 
     @Override
+    public List<CaixaFixaDTO> listAllCaixaFixa(Filtre filtre) {
+        List<CaixaFixa> caixaFixas = caixaFixaDao.buscarConFiltrosAll(filtre);
+        List<CaixaFixaDTO> caixaFixaDTOs = new ArrayList<>(); 
+        if(!caixaFixas.isEmpty()) {
+            caixaFixaDTOs = caixaFixas.stream().map(c -> modelMapper.map(c, CaixaFixaDTO.class)).collect(Collectors.toList());
+        }
+
+        return caixaFixaDTOs; 
+       
+    }
+
+
+    @Override
     public PaginaDTO<List<CaixaFixaDTO>> listCaixaFixa(Filtre filtre) {
         Page<CaixaFixa> caixaFixas = caixaFixaDao.buscarConFiltros(filtre);
         PaginaDTO<List<CaixaFixaDTO>> paginaDTO = new PaginaDTO<>();
@@ -209,6 +220,16 @@ public class DespesaServiceImpl implements DespesaService{
     }
 
     @Override
+    public List<FacturaDTO> listAllFactura(Filtre filtre) {
+        List<Factura> factures = facturaDao.buscarConFiltrosAll(filtre); 
+        List<FacturaDTO> facturaDTOs = new ArrayList<>();
+        if(!factures.isEmpty()) {
+            facturaDTOs = factures.stream().map(c -> modelMapper.map(c, FacturaDTO.class)).collect(Collectors.toList());
+        }
+        return facturaDTOs; 
+    }
+
+    @Override
     public PaginaDTO<List<FacturaDTO>> listFactures(Filtre filtre) {
         Page<Factura> factures = facturaDao.buscarConFiltros(filtre);
         PaginaDTO<List<FacturaDTO>> paginaDTO = new PaginaDTO<>();
@@ -299,4 +320,7 @@ public class DespesaServiceImpl implements DespesaService{
         }
         return factura;
     }
+
+
+
 }
