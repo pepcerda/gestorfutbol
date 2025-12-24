@@ -52,10 +52,10 @@ public class DespesaServiceImpl implements DespesaService{
     private CategoriaDespesaDao categoriaDespesaDao;
 
     @Autowired
-    MediaService mediaService;
+    private MediaService mediaService;
 
     @Autowired
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     @PostConstruct
     public void init() {
@@ -266,7 +266,7 @@ public class DespesaServiceImpl implements DespesaService{
 
     @Override
     public PaginaDTO<List<CategoriaDespesaDTO>> listCategoriesDespesa(Filtre filtre) {
-        Page<CategoriaDespesa> categoriaDespesas = categoriaDespesaDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<CategoriaDespesa> categoriaDespesas = categoriaDespesaDao.buscarConFiltros(filtre);
         PaginaDTO<List<CategoriaDespesaDTO>> paginaDTO = new PaginaDTO<>();
         List<CategoriaDespesaDTO> categoriaDespesaDTOS = new ArrayList<>();
         if (categoriaDespesas.getTotalElements() > 0) {
