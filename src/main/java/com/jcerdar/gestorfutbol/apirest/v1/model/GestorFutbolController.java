@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.jcerdar.gestorfutbol.persistence.model.Equip;
 import com.jcerdar.gestorfutbol.service.DespesaService;
+import com.jcerdar.gestorfutbol.service.IngressosService;
 import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,9 @@ public class GestorFutbolController extends BaseController{
     private DespesaService despesaService;
 
     @Autowired
+    private IngressosService ingressosService;
+
+    @Autowired
     private MediaService mediaService; 
 
     @GetMapping("/campanyas")
@@ -66,23 +70,23 @@ public class GestorFutbolController extends BaseController{
 
     @PostMapping("/socis")
     public ResponseEntity<PaginaDTO<List<SociDTO>>> listSocis(@RequestBody Filtre filtre) {
-        return ResponseEntity.ok(gestorFutbolService.listSocis(filtre));
+        return ResponseEntity.ok(ingressosService.listSocis(filtre));
     }
 
     @PostMapping("/all-socis")
     public ResponseEntity<List<SociDTO>> listAllSocis(@RequestBody Filtre filtre) {
-        return ResponseEntity.ok(gestorFutbolService.listAllSocis(filtre));
+        return ResponseEntity.ok(ingressosService.listAllSocis(filtre));
     }
 
     @PostMapping("/soci")
     public ResponseEntity<Long> saveSoci(@RequestBody SociDTO sociDTO) {
-        return ResponseEntity.ok(gestorFutbolService.saveSoci(sociDTO));
+        return ResponseEntity.ok(ingressosService.saveSoci(sociDTO));
     }
 
     @DeleteMapping("/soci/{id}")
     public ResponseEntity<String> deleteSoci(@PathVariable Long id) {
         try {
-            gestorFutbolService.deleteSoci(id);
+            ingressosService.deleteSoci(id);
             return ResponseEntity.ok("Eliminat correctament");
         } catch (Exception e)  {
             return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
@@ -91,23 +95,23 @@ public class GestorFutbolController extends BaseController{
 
     @PostMapping("/patrocinadors")
     public ResponseEntity<PaginaDTO<List<PatrocinadorDTO>>> listPatrocinadors(@RequestBody Filtre filtre) {
-        return ResponseEntity.ok(gestorFutbolService.listPatrocinador(filtre));
+        return ResponseEntity.ok(ingressosService.listPatrocinadors(filtre));
     }
 
     @PostMapping("/all-patrocinadors")
     public ResponseEntity<List<PatrocinadorDTO>> listAllPatrocinadors(@RequestBody Filtre filtre) {
-        return ResponseEntity.ok(gestorFutbolService.listAllPatrocinadors(filtre));
+        return ResponseEntity.ok(ingressosService.listAllPatrocinadors(filtre));
     }
 
     @PostMapping("/patrocinador")
     public ResponseEntity<Long> savePatrocinador(@RequestBody PatrocinadorDTO patrocinadorDTO) {
-        return ResponseEntity.ok(gestorFutbolService.savePatrocinador(patrocinadorDTO));
+        return ResponseEntity.ok(ingressosService.savePatrocinador(patrocinadorDTO));
     }
 
     @DeleteMapping("/patrocinador/{id}")
     public ResponseEntity<String> deletePatrocinador(@PathVariable Long id) {
         try {
-            gestorFutbolService.deletePatrocinador(id);
+            ingressosService.deletePatrocinador(id);
             return ResponseEntity.ok("Eliminat correctament");
         } catch (Exception e)  {
             return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
@@ -116,12 +120,37 @@ public class GestorFutbolController extends BaseController{
 
     @PostMapping("/duplica-patrocinador/{id}")
     public ResponseEntity<Long> duplicaPatrocinador(@PathVariable Long id, @RequestBody PatrocinadorDTO patrocinadorDTO) {
-        return ResponseEntity.ok(gestorFutbolService.duplicarPatrocinador(patrocinadorDTO, id));
+        return ResponseEntity.ok(ingressosService.duplicarPatrocinador(patrocinadorDTO, id));
     }
 
     @GetMapping("/patrocinador/rebut/{id}")
     public ResponseEntity<String> getReceipt(@PathVariable Long id) {
-        return ResponseEntity.ok(gestorFutbolService.getReceipt(id));
+        return ResponseEntity.ok(ingressosService.getReceipt(id));
+    }
+
+    @PostMapping("/quota-jugadors")
+    public ResponseEntity<PaginaDTO<List<QuotaJugadorDTO>>> listQuotaJugador(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(ingressosService.listQuotesJugador(filtre));
+    }
+
+        @PostMapping("/all-quota-jugadors")
+    public ResponseEntity<List<QuotaJugadorDTO>> listAllQuotaJugadors(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(ingressosService.listAllQuotesJugador(filtre));
+    }
+
+    @PostMapping("/quota-jugador")
+    public ResponseEntity<Long> saveQuotaJugador(@RequestBody QuotaJugadorDTO quotaJugadorDTO) {
+        return ResponseEntity.ok(ingressosService.saveQuotaJugador(quotaJugadorDTO));
+    }
+
+    @DeleteMapping("/quota-jugador/{id}")
+    public ResponseEntity<String> deleteQuotaJugador(@PathVariable Long id) {
+        try {
+            ingressosService.deleteQuotaJugador(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/rols-directius")
@@ -312,14 +341,28 @@ public class GestorFutbolController extends BaseController{
     }
 
     @GetMapping("/posicions")
-    public ResponseEntity<List<Map<String, String>>> getPosicions() {
-        return ResponseEntity.ok(List.of(Posicio.values()).stream()
-            .map(posicio -> Map.of(
-                "valor", posicio.getValor(),
-                "descripcion", posicio.getDescripcion(),
-                "name", posicio.name()
-            ))
-            .collect(Collectors.toList()));
+    public ResponseEntity<List<PosicioDTO>> getPosicions() {
+        return ResponseEntity.ok(gestorFutbolService.listAllPosicions());
+    }
+
+    @PostMapping("/posicions")
+    public ResponseEntity<PaginaDTO<List<PosicioDTO>>> listPosicions(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listPosicions(filtre));
+    }
+
+    @PostMapping("/posicio")
+    public ResponseEntity<Long> savePosicio(@RequestBody PosicioDTO posicioDTO) {
+        return ResponseEntity.ok(gestorFutbolService.savePosicio(posicioDTO));
+    }
+
+    @DeleteMapping("/posicio/{id}")
+    public ResponseEntity<String> deletePosicio(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deletePosicio(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e) {
+            return new ResponseEntity<String>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/estats-pagament")

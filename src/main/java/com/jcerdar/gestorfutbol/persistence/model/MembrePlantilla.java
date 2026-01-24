@@ -1,19 +1,9 @@
 package com.jcerdar.gestorfutbol.persistence.model;
 
 import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.DiscriminatorType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "GF_MEMPLANT")
@@ -44,6 +34,10 @@ public abstract class MembrePlantilla {
 
     @Column(name = "MEM_DNAIX", nullable = false)
     private Date dataNaixement;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "CPR_MEM")
+    private List<Contacte> contactes;
 
     public Long getId() {
         return id;
@@ -101,5 +95,12 @@ public abstract class MembrePlantilla {
         this.dataNaixement = dataNaixement;
     }
 
+    public List<Contacte> getContactes() {
+        return contactes;
+    }
+
+    public void setContactes(List<Contacte> contactes) {
+        this.contactes = contactes;
+    }
 }
 

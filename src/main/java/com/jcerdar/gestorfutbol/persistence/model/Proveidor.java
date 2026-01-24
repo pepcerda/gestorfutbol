@@ -24,7 +24,7 @@ public class Proveidor {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "CPR_PROV")
-    private List<ContacteProveidor> contactes;
+    private List<Contacte> contactes;
 
     public Long getId() {
         return id;
@@ -58,11 +58,11 @@ public class Proveidor {
         this.cif = cif;
     }
 
-    public List<ContacteProveidor> getContactes() {
+    public List<Contacte> getContactes() {
         return contactes;
     }
 
-    public void setContactes(List<ContacteProveidor> contactes) {
+    public void setContactes(List<Contacte> contactes) {
         this.contactes = contactes;
     }
 }

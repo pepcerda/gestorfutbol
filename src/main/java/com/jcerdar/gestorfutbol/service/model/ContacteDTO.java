@@ -1,6 +1,6 @@
 package com.jcerdar.gestorfutbol.service.model;
 
-public class ContacteProveidorDTO {
+public class ContacteDTO {
 
     private Long id;
 

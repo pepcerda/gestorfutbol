@@ -1,6 +1,7 @@
 package com.jcerdar.gestorfutbol.service.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class MembrePlantillaDTO {
 
@@ -18,11 +19,13 @@ public class MembrePlantillaDTO {
 
     private Date dataNaixement;
 
+    private List<ContacteDTO> contactes;
+
     public MembrePlantillaDTO() {
 
     }
 
-    public MembrePlantillaDTO(Long id, Long campanya, Long equip, String nom, String llinatge1, String llinatge2, Date dataNaixement) {
+    public MembrePlantillaDTO(Long id, Long campanya, Long equip, String nom, String llinatge1, String llinatge2, Date dataNaixement, List<ContacteDTO> contactes) {
         this.id = id;
         this.campanya = campanya;
         this.equip = equip;
@@ -30,6 +33,7 @@ public class MembrePlantillaDTO {
         this.llinatge1 = llinatge1;
         this.llinatge2 = llinatge2;
         this.dataNaixement = dataNaixement;
+        this.contactes = contactes;
     }
 
     public Long getId() {
@@ -88,5 +92,11 @@ public class MembrePlantillaDTO {
         this.dataNaixement = dataNaixement;
     }
 
+    public List<ContacteDTO> getContactes() {
+        return contactes;
+    }
 
+    public void setContactes(List<ContacteDTO> contactes) {
+        this.contactes = contactes;
+    }
 }

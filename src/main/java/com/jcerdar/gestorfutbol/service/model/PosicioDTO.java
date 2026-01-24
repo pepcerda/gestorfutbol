@@ -1,24 +1,25 @@
 package com.jcerdar.gestorfutbol.service.model;
 
 public class PosicioDTO {
+
+    private Long id;
     private String valor;
-    private String descripcion;
-    private String name;
 
     public PosicioDTO() {}
 
-    public PosicioDTO(String valor, String descripcion, String name) {
+    public PosicioDTO(Long id, String valor) {
+        this.id = id;
         this.valor = valor;
-        this.descripcion = descripcion;
-        this.name = name;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
     public String getValor() { return valor; }
     public void setValor(String valor) { this.valor = valor; }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 }

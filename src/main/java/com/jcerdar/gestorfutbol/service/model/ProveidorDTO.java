@@ -12,7 +12,7 @@ public class ProveidorDTO {
 
     private String cif;
 
-    private List<ContacteProveidorDTO> contactes;
+    private List<ContacteDTO> contactes;
 
     public Long getId() {
         return id;
@@ -46,11 +46,11 @@ public class ProveidorDTO {
         this.cif = cif;
     }
 
-    public List<ContacteProveidorDTO> getContactes() {
+    public List<ContacteDTO> getContactes() {
         return contactes;
     }
 
-    public void setContactes(List<ContacteProveidorDTO> contactes) {
+    public void setContactes(List<ContacteDTO> contactes) {
         this.contactes = contactes;
     }
 }

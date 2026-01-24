@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
-import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.util.PdfUtil;
 
 import jakarta.annotation.PostConstruct;
@@ -81,6 +80,12 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private EquipDao equipDao;
 
     @Autowired
+    private PosicioJugadorDao posicioJugadorDao;
+
+    @Autowired
+    private QuotaJugadorDao quotaJugadorDao;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -115,22 +120,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             return equip;
         };
 
-        Converter<Posicio, PosicioDTO> toPosicio = pos -> {
-            PosicioDTO posicio = new PosicioDTO();
-            if (pos.getSource() != null) {
-                posicio.setValor(pos.getSource().getValor());
-                posicio.setDescripcion(pos.getSource().getDescripcion());
-                posicio.setName(pos.getSource().name());
-            }
-            return posicio;
-        };
-
-        Converter<PosicioDTO, Posicio> toPosicioEntity = pos -> {
-            if (pos.getSource() != null) {
-                return Posicio.valueOf(pos.getSource().getName());
-            } else {
-                return null;
-            }
+        Converter<Long, PosicioJugador> toPosicioJugador = ctx -> {
+            PosicioJugador posicioJugador = posicioJugadorDao.findById(ctx.getSource()).orElse(null);
+            return posicioJugador;
         };
 
         TypeMap<TipoSociDTO, TipoSoci> jTipoSociMapper = modelMapper.createTypeMap(TipoSociDTO.class, TipoSoci.class);
@@ -138,25 +130,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<TipoSoci, TipoSociDTO> tipoSociMapper = modelMapper.createTypeMap(TipoSoci.class, TipoSociDTO.class);
         tipoSociMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), TipoSociDTO::setCampanya));
-
-        TypeMap<SociDTO, Soci> jSociMapper = modelMapper.createTypeMap(SociDTO.class, Soci.class);
-        jSociMapper.addMappings(mapper -> {
-            mapper.using(toCampanya).map(SociDTO::getCampanya, Soci::setCampanya);
-        });
-
-        TypeMap<Soci, SociDTO> sociMapper = modelMapper.createTypeMap(Soci.class, SociDTO.class);
-        sociMapper.addMappings(mapper -> {
-            mapper.map(src -> src.getCampanya().getId(), SociDTO::setCampanya);
-        });
-
-        TypeMap<PatrocinadorDTO, Patrocinador> jPatrociniMapper = modelMapper.createTypeMap(PatrocinadorDTO.class, Patrocinador.class);
-        jPatrociniMapper.addMappings(mapper -> mapper.skip(Patrocinador::setLogo));
-        jPatrociniMapper.addMappings(mapper -> mapper.using(toCampanya).map(PatrocinadorDTO::getCampanya, Patrocinador::setCampanya));
-
-        modelMapper.typeMap(Patrocinador.class, Patrocinador.class).addMappings(mapper -> mapper.skip(Patrocinador::setId));
-
-        TypeMap<Patrocinador, PatrocinadorDTO> patrocinadorMapper = modelMapper.createTypeMap(Patrocinador.class, PatrocinadorDTO.class);
-        patrocinadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), PatrocinadorDTO::setCampanya));
 
         TypeMap<DirectiuDTO, Directiu> jDirectiuMapper = modelMapper.createTypeMap(DirectiuDTO.class, Directiu.class);
         jDirectiuMapper.addMappings(mapper -> mapper.skip(Directiu::setRol));
@@ -173,23 +146,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         TypeMap<JugadorDTO, Jugador> jJugadorMapper = modelMapper.createTypeMap(JugadorDTO.class, Jugador.class);
         jJugadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(JugadorDTO::getCampanya, Jugador::setCampanya));
         jJugadorMapper.addMappings(mapper -> mapper.using(toEquip).map(JugadorDTO::getEquip, Jugador::setEquip));
-        jJugadorMapper.addMappings(mapper -> mapper.using(toPosicioEntity).map(JugadorDTO::getPosicio, Jugador::setPosicio));
 
         TypeMap<Jugador, JugadorDTO> jugadorMapper = modelMapper.createTypeMap(Jugador.class, JugadorDTO.class);
-        jugadorMapper.setPostConverter(ctx -> {
-            Jugador source = ctx.getSource();
-            JugadorDTO destination = ctx.getDestination();
-
-            if (source.getPosicio() != null) {
-                PosicioDTO dto = new PosicioDTO();
-                dto.setValor(source.getPosicio().getValor());
-                dto.setDescripcion(source.getPosicio().getDescripcion());
-                dto.setName(source.getPosicio().name());
-                destination.setPosicio(dto);
-            }
-
-            return destination;
-        });
         jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), JugadorDTO::setCampanya));
         jugadorMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), JugadorDTO::setEquip));
 
@@ -275,116 +233,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         campanyaDao.deleteById(id);
     }
 
-    @Override
-    public PaginaDTO<List<SociDTO>> listSocis(Filtre filtre) {
-        Page<Soci> socis = sociDao.buscarConFiltros(filtre);
 
-        PaginaDTO<List<SociDTO>> paginaDTO = new PaginaDTO<>();
-        List<SociDTO> sociDTOS = new ArrayList<>();
-
-        if (socis.getTotalElements() > 0) {
-            sociDTOS = socis.map(soci -> modelMapper.map(soci, SociDTO.class)).getContent();
-            paginaDTO.setTotal(socis.getTotalElements());
-            paginaDTO.setResult(sociDTOS);
-        }
-        return paginaDTO;
-    }
-
-    @Override
-    public List<SociDTO> listAllSocis(Filtre filtre) {
-        List<Soci> socis = sociDao.buscarConFiltrosAll(filtre);
-        List<SociDTO> sociDTOS = new ArrayList<>();
-
-        if (!socis.isEmpty()) {
-            sociDTOS = socis.stream().map(soci -> modelMapper.map(soci, SociDTO.class)).collect(Collectors.toList());
-        }
-        return sociDTOS;
-    }
-
-
-    @Override
-    public Long saveSoci(SociDTO sociDTO) {
-        if (sociDTO.getId() == null) {
-            Integer lastIdSoci = sociDao.findMaxIdSociByCampanya(sociDTO.getCampanya());
-            sociDTO.setIdSoci(lastIdSoci + 1);
-        }
-        Soci soci = modelMapper.map(sociDTO, Soci.class);
-        soci = sociDao.save(soci);
-        return soci.getId();
-    }
-
-    @Override
-    public void deleteSoci(Long id) {
-        sociDao.deleteById(id);
-    }
-
-    @Override
-    public PaginaDTO<List<PatrocinadorDTO>> listPatrocinador(Filtre filtre) {
-        Page<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltros(filtre);
-        PaginaDTO<List<PatrocinadorDTO>> paginaDTO = new PaginaDTO<>();
-        List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
-        if (patrocinadors.getTotalElements() > 0) {
-            patrocinadorDTOS = patrocinadors.map(patr -> modelMapper.map(patr, PatrocinadorDTO.class)).getContent();
-            paginaDTO.setTotal(patrocinadors.getTotalElements());
-            paginaDTO.setResult(patrocinadorDTOS);
-        }
-        return paginaDTO;
-    }
-
-    @Override
-    public List<PatrocinadorDTO> listAllPatrocinadors(Filtre filtre) {
-        List<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltrosAll(filtre);
-        List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
-        if (!patrocinadors.isEmpty()) {
-            patrocinadorDTOS = patrocinadors.stream().map(patr -> modelMapper.map(patr, PatrocinadorDTO.class)).collect(Collectors.toList());
-        }
-        return patrocinadorDTOS;
-    }
-
-    public PaginaDTO<List<PatrocinadorDTO>> listPatrocinador1(Filtre filtre) {
-        Page<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltros(filtre);
-        PaginaDTO<List<PatrocinadorDTO>> paginaDTO = new PaginaDTO<>();
-        List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
-        if (patrocinadors.getTotalElements() > 0) {
-            patrocinadorDTOS = patrocinadors.map(patr -> modelMapper.map(patr, PatrocinadorDTO.class)).getContent();
-            paginaDTO.setTotal(patrocinadors.getTotalElements());
-            paginaDTO.setResult(patrocinadorDTOS);
-        }
-        return paginaDTO;
-    }
-
-    @Override
-    public Long savePatrocinador(PatrocinadorDTO patrocinadorDTO) {
-        Patrocinador patrocinador = jPatrocinadorMapper(patrocinadorDTO);
-        patrocinador = patrocinadorDao.save(patrocinador);
-        return patrocinador.getId();
-    }
-
-    @Override
-    public void deletePatrocinador(Long id) {
-        patrocinadorDao.deleteById(id);
-    }
-
-    @Override
-    public Long duplicarPatrocinador(PatrocinadorDTO patrocinadorDTO, Long idCampanya) {
-        Campanya campanya = campanyaDao.findById(idCampanya).orElseThrow(() -> new EntityNotFoundException("Campanya no trobada"));
-        Patrocinador original = patrocinadorDao.findById(patrocinadorDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Patrocinador no trobat"));
-        Patrocinador patrocinadorNou = modelMapper.map(original, Patrocinador.class);
-        patrocinadorNou.setCampanya(campanya);
-        patrocinadorNou = patrocinadorDao.save(patrocinadorNou);
-        return patrocinadorNou.getId();
-    }
-
-    @Override
-    public String getReceipt(Long id) {
-        Patrocinador patrocinador = patrocinadorDao.findById(id).orElse(null);
-        if (patrocinador != null) {
-            PatrocinadorDTO patrocinadorDTO = modelMapper.map(patrocinador, PatrocinadorDTO.class);
-            return PdfUtil.generatePdf(patrocinadorDTO, patrocinador.getCampanya().getTitol());
-        } else {
-            return "";
-        }
-    }
 
     @Override
     public List<RolDirectiuDTO> listRolsDirectiu() {
@@ -551,6 +400,10 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public Long saveJugador(JugadorDTO jugadorDTO) {
         Jugador jugador = modelMapper.map(jugadorDTO, Jugador.class);
+        QuotaJugador quotaJugador = new QuotaJugador();
+        quotaJugador.setJugador(jugador);
+        quotaJugador.setQuantitat(jugador.getEquip().getQuota());
+        quotaJugadorDao.save(quotaJugador);
         return jugadorDao.save(jugador).getId();
     }
 
@@ -561,12 +414,47 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public List<JugadorDTO> listAllJugadors(Filtre filtre) {
-        List<Jugador> jugadors = jugadorDao.findAllByCampanyaAndEquip(filtre.getCampanyaActiva(), filtre.getEquipActiu());
+        List<Jugador> jugadors = jugadorDao.buscarConFiltrosAll(filtre);
         List<JugadorDTO> jugadorDTOS = new ArrayList<>();
         if (!jugadors.isEmpty()) {
             jugadorDTOS = jugadors.stream().map(jugador -> modelMapper.map(jugador, JugadorDTO.class)).collect(Collectors.toList());
         }
         return jugadorDTOS;
+    }
+
+    @Override
+    public List<PosicioDTO> listAllPosicions() {
+        List<PosicioJugador> posicions = posicioJugadorDao.findAll();
+        List<PosicioDTO> posicioDTOS = new ArrayList<>();
+        if (!posicions.isEmpty()) {
+            posicioDTOS = posicions.stream().map(p -> modelMapper.map(p, PosicioDTO.class)).collect(Collectors.toList());
+        }
+        return posicioDTOS;
+    }
+
+    @Override
+    public PaginaDTO<List<PosicioDTO>> listPosicions(Filtre filtre) {
+        Page<PosicioJugador> posicions = posicioJugadorDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        PaginaDTO<List<PosicioDTO>> paginaDTO = new PaginaDTO<>();
+        List<PosicioDTO> posicioDTOS = new ArrayList<>();
+        if (posicions.getTotalElements() > 0) {
+            posicioDTOS = posicions.map(c -> modelMapper.map(c, PosicioDTO.class)).getContent();
+            paginaDTO.setTotal(posicions.getTotalElements());
+            paginaDTO.setResult(posicioDTOS);
+        }
+        return paginaDTO;
+    }
+
+    @Override
+    public Long savePosicio(PosicioDTO posicioDTO) {
+        PosicioJugador posicioJugador = modelMapper.map(posicioDTO, PosicioJugador.class);
+        posicioJugador = posicioJugadorDao.save(posicioJugador);
+        return posicioJugador.getId();
+    }
+
+    @Override
+    public void deletePosicio(Long id) {
+        posicioJugadorDao.deleteById(id);
     }
 
     @Override
@@ -691,35 +579,6 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             equipDTOS = equips.stream().map(c -> modelMapper.map(c, EquipDTO.class)).collect(Collectors.toList());
         }
         return equipDTOS;
-    }
-
-    private Soci jSociMapper(SociDTO sociDTO) {
-        Soci soci = modelMapper.map(sociDTO, Soci.class);
-
-        Campanya campanya = campanyaDao.findById(sociDTO.getCampanya()).orElse(null);
-        soci.setCampanya(campanya);
-
-        TipoSoci tipoSoci = jTipoSociMapper(sociDTO.getTipoSoci());
-        soci.setTipoSoci(tipoSoci);
-
-        return soci;
-    }
-
-    private Patrocinador jPatrocinadorMapper(PatrocinadorDTO patrocinadorDTO) {
-        Patrocinador patrocinador = modelMapper.map(patrocinadorDTO, Patrocinador.class);
-
-        try {
-            if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && mediaService.checkBase64(patrocinadorDTO.getLogo())) {
-                String logoUrl = mediaService.guardarLogoBase64(patrocinadorDTO.getLogo());
-                patrocinador.setLogo(logoUrl);
-            } else if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && !mediaService.checkBase64(patrocinadorDTO.getLogo())) {
-                patrocinador.setLogo(patrocinadorDTO.getLogo());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return patrocinador;
     }
 
     private Directiu jDirectiuMapper(DirectiuDTO directiuDTO) {

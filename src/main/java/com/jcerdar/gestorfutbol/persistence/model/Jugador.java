@@ -1,6 +1,5 @@
 package com.jcerdar.gestorfutbol.persistence.model;
 
-import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,15 +7,16 @@ import jakarta.persistence.*;
 @DiscriminatorValue("GF_JUGADOR")
 public class Jugador extends MembrePlantilla{
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "JUG_POSICIO", nullable = false)
-    private Posicio posicio;
 
-    public Posicio getPosicio() {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "JUG_POSICIO", nullable = false)
+    private PosicioJugador posicio;
+
+    public PosicioJugador getPosicio() {
         return posicio;
     }
 
-    public void setPosicio(Posicio posicio) {
+    public void setPosicio(PosicioJugador posicio) {
         this.posicio = posicio;
     }
 

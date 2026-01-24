@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "GF_CONTACTEPROV")
-public class ContacteProveidor {
+public class Contacte {
 
 
     @Id

@@ -2,6 +2,7 @@ package com.jcerdar.gestorfutbol.service;
 
 import java.util.List;
 
+import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.model.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,26 +17,6 @@ public interface GestorFutbolService {
     Long saveCampanya(CampanyaDTO campanyaDTO);
 
     void deleteCampanya(Long id);
-
-    PaginaDTO<List<SociDTO>> listSocis(Filtre filtre);
-
-    List<SociDTO> listAllSocis(Filtre filtre);
-
-    Long saveSoci(SociDTO sociDTO);
-
-    void deleteSoci(Long id);
-
-    PaginaDTO<List<PatrocinadorDTO>> listPatrocinador(Filtre filtre);
-
-    List<PatrocinadorDTO> listAllPatrocinadors(Filtre filtre);
-
-    Long savePatrocinador(PatrocinadorDTO patrocinadorDTO);
-
-    void deletePatrocinador(Long id);
-
-    Long duplicarPatrocinador(PatrocinadorDTO patrocinadorDTO, Long idCampanya);
-
-    String getReceipt(Long id);
 
     List<RolDirectiuDTO> listRolsDirectiu();
 
@@ -76,6 +57,14 @@ public interface GestorFutbolService {
     void deleteJugador(Long id);
 
     List<JugadorDTO> listAllJugadors(Filtre filtre);
+
+    List<PosicioDTO> listAllPosicions();
+
+    PaginaDTO<List<PosicioDTO>> listPosicions(Filtre filtre);
+
+    Long savePosicio(PosicioDTO posicioDTO);
+
+    void deletePosicio(Long id);
 
     Long saveEntrenador(EntrenadorDTO entrenadorDTO);
 
