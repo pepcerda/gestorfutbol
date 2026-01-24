@@ -26,4 +26,6 @@ public interface ExplotacioDadesService {
 
     ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya);
 
+    ExplotacioQuotesDTO getDadesExplotacioQuotes(Long idCampanya, Long idEquip);
+
 }
