@@ -1,4 +1,5 @@
 package com.jcerdar.gestorfutbol.service.model;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -80,6 +81,14 @@ public class PatrocinadorDTO {
 
     public Date getDataDonacio() {
         return dataDonacio;
+    }
+
+    public String getDataDonacioFormatada() {
+        if (dataDonacio == null) {
+            return "";
+        }
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(dataDonacio);
     }
 
     public void setDataDonacio(Date dataDonacio) {

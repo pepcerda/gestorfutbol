@@ -57,6 +57,11 @@ public class ExplotacioDadesController extends BaseController {
         return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioSocis(idCampanya));
     }
 
+    @GetMapping("/explotacio-quotes/{idCampanya}/{idEquip}")
+    ResponseEntity<ExplotacioQuotesDTO> getDadesExplotacioQuotes(@PathVariable Long idCampanya, @PathVariable Long idEquip) {
+        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioQuotes(idCampanya, idEquip));
+    }
+
     @GetMapping("/explotacio-caixa-fixa/{idCampanya}")
     ResponseEntity<ExplotacioCaixaFixaDTO> getDadesExplotacioCaixaFixa(@PathVariable Long idCampanya) {
         return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioCaixaFixa(idCampanya));

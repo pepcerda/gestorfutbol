@@ -14,4 +14,7 @@ public interface JugadorDao extends JpaRepository<Jugador, Long>, JugadorCustomD
 
     @Query("select c from Jugador c where c.campanya.id = :idCampanya and c.equip.id = :idEquip")
     List<Jugador> findAllByCampanyaAndEquip(@Param("idCampanya") Long idCampanya, @Param("idEquip") Long idEquip);
+
+    @Query("select c from Jugador c where c.equip.id = :idEquip")
+    List<Jugador> findAllByEquip(@Param("idEquip") Long idEquip);
 }

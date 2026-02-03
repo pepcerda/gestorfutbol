@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +45,9 @@ public class IngressosServiceImpl implements IngressosService {
 
     @Autowired
     private MediaService mediaService;
+
+    @Autowired
+    private PdfGeneradorService pdfGeneradorService;
 
 
     @PostConstruct
@@ -174,7 +178,15 @@ public class IngressosServiceImpl implements IngressosService {
         Patrocinador patrocinador = patrocinadorDao.findById(id).orElse(null);
         if (patrocinador != null) {
             PatrocinadorDTO patrocinadorDTO = modelMapper.map(patrocinador, PatrocinadorDTO.class);
-            return PdfUtil.generatePdf(patrocinadorDTO, patrocinador.getCampanya().getTitol());
+            Map<String, String> data = Map.of(
+                    "nom", patrocinador.getNom(),
+                    "cif", patrocinador.getCif(),
+                    "donacio", patrocinador.getDonacio().toString(),
+                    "dataDonacio", patrocinadorDTO.getDataDonacioFormatada(),
+                    "campanya", patrocinador.getCampanya().getTitol()
+            );
+
+            return pdfGeneradorService.generarPdfDesdeHtml(CodiPlantilla.REBUT_PATROCINI.name(), "ca", data);
         } else {
             return "";
         }

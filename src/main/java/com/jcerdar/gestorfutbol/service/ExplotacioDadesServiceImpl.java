@@ -25,6 +25,9 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
     @Autowired
     private NominaDao nominaDao;
 
+    @Autowired
+    private QuotaJugadorDao quotaJugadorDao;
+
 
     @Override
     public Long totalImportSocisPerCampanya(Long idCampanya) {
@@ -81,6 +84,14 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         explotacioFacturesDTO.setPendentPagar(caixaFixaDao.sumaFacturesPerEstatICampanya(idCampanya, "D"));
         explotacioFacturesDTO.setTotalFactures(caixaFixaDao.sumaFacturesPerCampanya(idCampanya));
         return explotacioFacturesDTO;
+    }
+
+    @Override
+    public ExplotacioQuotesDTO getDadesExplotacioQuotes(Long idCampanya, Long idEquip) {
+        ExplotacioQuotesDTO explotacioQuotesDTO = new ExplotacioQuotesDTO();
+        explotacioQuotesDTO.setTotalRecaptat(quotaJugadorDao.totalRecaudacioPerCampanyaIEquipIEstat(idCampanya, idEquip, EstatPagament.PAGADA));
+        explotacioQuotesDTO.setPrevisioQuotes(quotaJugadorDao.totalRecaudacioPerCampanyaIEquip(idCampanya, idEquip));
+        return explotacioQuotesDTO;
     }
 
     @Override

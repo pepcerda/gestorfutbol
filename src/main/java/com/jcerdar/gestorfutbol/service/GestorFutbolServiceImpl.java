@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.jcerdar.gestorfutbol.persistence.dao.*;
 import com.jcerdar.gestorfutbol.persistence.model.*;
 import com.jcerdar.gestorfutbol.service.model.*;
+import jakarta.transaction.Transactional;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -400,11 +401,12 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public Long saveJugador(JugadorDTO jugadorDTO) {
         Jugador jugador = modelMapper.map(jugadorDTO, Jugador.class);
+        jugador = jugadorDao.save(jugador);
         QuotaJugador quotaJugador = new QuotaJugador();
         quotaJugador.setJugador(jugador);
         quotaJugador.setQuantitat(jugador.getEquip().getQuota());
         quotaJugadorDao.save(quotaJugador);
-        return jugadorDao.save(jugador).getId();
+        return jugador.getId();
     }
 
     @Override
@@ -522,16 +524,32 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         return categoriaDTOS;
     }
 
-    @Override
     public Long saveCategoria(CategoriaDTO categoriaDTO) {
+
         Categoria categoria = modelMapper.map(categoriaDTO, Categoria.class);
+
+
+        // --- NUEVO: actualizar cuota de jugadores si la cuota del equipo cambia ---
+        categoriaDTO.getEquips().forEach(equip -> {
+
+            if (equip.getId() != null) {  // Solo si no es nuevo
+                Equip equipBD = equipDao.findById(equip.getId()).orElse(null);
+
+                if (equipBD != null && equipBD.getQuota() != null &&
+                        equip.getQuota().compareTo(equipBD.getQuota()) != 0) {
+
+                    // La quota ha cambiado → actualizar jugadores
+                    actualizarQuotaJugadors(equip, categoriaDTO.getId());
+                }
+            }
+        });
+        // ---------------------------------------------------------------------------
         categoria = categoriaDao.save(categoria);
 
+        // --- BLOQUE ORIGINAL: creación de mensualidades ---
         if (categoriaDTO.getId() == null || categoriaDTO.getEquips().stream().anyMatch(e -> e.getId() == null)) {
 
             Campanya campanya = categoria.getCampanya();
-            //En este caso hay que crear mensualidades para cada equipo de la categoria
-            // --- Generación automática de mensualidades ---
 
             Categoria finalCategoria = categoria;
             categoriaDTO.getEquips().stream().filter(e -> e.getId() == null).forEach(e -> {
@@ -542,27 +560,34 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
                 List<Mensualitat> mensualitats = new ArrayList<>();
 
-                for (int mes = 7; mes <= 12; mes++) { // De juliol a desembre
-                    Mensualitat mensualitat = new Mensualitat();
-                    mensualitat.setCampanya(campanya);
-                    mensualitat.setAny(anyInici);
-                    mensualitat.setMes(mes);
-                    mensualitat.setEquip(finalCategoria.getEquips().stream().filter(eq -> eq.getNom().equals(e.getNom())).findFirst().orElse(null));
-                    mensualitats.add(mensualitat);
+                for (int mes = 7; mes <= 12; mes++) {
+                    Mensualitat m = new Mensualitat();
+                    m.setCampanya(campanya);
+                    m.setAny(anyInici);
+                    m.setMes(mes);
+                    m.setEquip(finalCategoria.getEquips()
+                            .stream()
+                            .filter(eq -> eq.getNom().equals(e.getNom()))
+                            .findFirst().orElse(null));
+                    mensualitats.add(m);
                 }
 
-                for (int mes = 1; mes <= 6; mes++) { // De gener a juny
-                    Mensualitat mensualitat = new Mensualitat();
-                    mensualitat.setCampanya(campanya);
-                    mensualitat.setAny(anyFi);
-                    mensualitat.setMes(mes);
-                    mensualitat.setEquip(finalCategoria.getEquips().stream().filter(eq -> eq.getNom().equals(e.getNom())).findFirst().orElse(null));
-                    mensualitats.add(mensualitat);
+                for (int mes = 1; mes <= 6; mes++) {
+                    Mensualitat m = new Mensualitat();
+                    m.setCampanya(campanya);
+                    m.setAny(anyFi);
+                    m.setMes(mes);
+                    m.setEquip(finalCategoria.getEquips()
+                            .stream()
+                            .filter(eq -> eq.getNom().equals(e.getNom()))
+                            .findFirst().orElse(null));
+                    mensualitats.add(m);
                 }
 
                 mensualitatDao.saveAll(mensualitats);
             });
         }
+
         return categoria.getId();
     }
 
@@ -624,6 +649,22 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         tipoSoci.setCampanya(campanya);
 
         return tipoSoci;
+    }
+
+    @Transactional
+    private void actualizarQuotaJugadors(EquipDTO equip, Long campanyaId) {
+
+        // 1. Obtener jugadores del equipo
+        List<Jugador> jugadors = jugadorDao.findAllByEquip(equip.getId());
+
+        // 2. Actualizar su QuotaJugador si NO tienen excepción
+        jugadors.forEach(jugador -> {
+            QuotaJugador quotaJugador = quotaJugadorDao.findByJugadorAndCampanya(jugador.getId(), campanyaId);
+            if(!quotaJugador.getExepcio()) {
+                quotaJugador.setQuantitat(equip.getQuota());
+                quotaJugadorDao.save(quotaJugador);
+            }
+        });
     }
 
 

@@ -22,6 +22,8 @@ public interface ExplotacioDadesService {
 
     ExplotacioCaixaFixaDTO getDadesExplotacioCaixaFixa(Long idCampanya);
 
+    ExplotacioQuotesDTO getDadesExplotacioQuotes(Long idCampanya, Long idEquip);
+
     ExplotacioNominesDTO getDadesExplotacioNomines(Long idCampanya);
 
     ExplotacioFacturesDTO getDadesExplotacioFactures(Long idCampanya);
