@@ -111,13 +111,4 @@ public class ExplotacioDadesServiceImpl implements ExplotacioDadesService{
         explotacioFacturesDTO.setTotalFactures(facturaDao.sumaFacturesPerCampanya(idCampanya));
         return explotacioFacturesDTO;
     }
-
-    @Override
-    public ExplotacioQuotesDTO getDadesExplotacioQuotes(Long idCampanya, Long idEquip) {
-        ExplotacioQuotesDTO explotacioQuotesDTO = new ExplotacioQuotesDTO();
-        explotacioQuotesDTO.setTotalRecaptat(quotaJugadorDao.totalRecaudacioPerCampanyaIEstat(idCampanya, EstatPagament.PAGADA));
-        explotacioQuotesDTO.setTotalRecaptatPerEquip(quotaJugadorDao.totalRecaudacioPerCampanyaIEquipIEstat(idCampanya, idEquip, EstatPagament.PAGADA));
-        explotacioQuotesDTO.setPrevisioRecaptacioPerEquip(quotaJugadorDao.totalRecaudacioPerCampanyaIEquip(idCampanya, idEquip));
-        return explotacioQuotesDTO;
-    }
 }

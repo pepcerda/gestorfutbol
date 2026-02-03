@@ -78,11 +78,6 @@ public class ExplotacioDadesController extends BaseController {
     public ResponseEntity<ExplotacioNominesDTO> getDadesExplotacioNomines(@PathVariable Long idCampanya) {
         return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioNomines(idCampanya));
     }
-
-    @GetMapping("/explotacio-quotes/{idCampanya}/{idEquip}")
-    public ResponseEntity<ExplotacioQuotesDTO> getDadesExplotacioQuotes(@PathVariable Long idCampanya, @PathVariable Long idEquip) {
-        return ResponseEntity.ok(explotacioDadesService.getDadesExplotacioQuotes(idCampanya, idEquip));
-    }
     
 
 }
