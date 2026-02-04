@@ -1,6 +1,8 @@
 package com.jcerdar.gestorfutbol.persistence.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.Date;
 
@@ -22,12 +24,12 @@ public class PlantillaDocument {
     @Column(name = "PLA_IDI", nullable = false)
     private String idioma;
 
-    @Lob
-    @Column(name = "PLA_HTML", nullable = false)
+    @Column(name = "PLA_HTML", nullable = false, columnDefinition = "text")
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     private String contingutHtml;
 
-    @Lob
-    @Column(name = "PLA_CSS")
+    @Column(name = "PLA_CSS", columnDefinition = "text")
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     private String contingutCss;
 
     @Column(name = "PLA_CREA", nullable = false, updatable = false)
