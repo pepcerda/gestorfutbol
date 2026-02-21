@@ -15,6 +15,10 @@ public class PlantillaDocument {
     @Column(name = "PLA_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "PLA_TEN", nullable = false)
+    private Tenant tenant;
+
     @Column(name = "PLA_COD", nullable = false, length = 100)
     private String codi;
 
@@ -55,6 +59,14 @@ public class PlantillaDocument {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public String getCodi() {

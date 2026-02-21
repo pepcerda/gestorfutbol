@@ -3,6 +3,7 @@ package com.jcerdar.gestorfutbol.service.model;
 public class PlantillaDocumentDTO {
 
     private Long id;
+    private Long tenantId;
     private String codi;
     private String nom;
     private String idioma;
@@ -15,6 +16,14 @@ public class PlantillaDocumentDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getCodi() {

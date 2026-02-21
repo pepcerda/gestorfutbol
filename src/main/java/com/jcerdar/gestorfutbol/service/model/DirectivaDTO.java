@@ -6,6 +6,8 @@ public class DirectivaDTO {
 
     private Long id;
 
+    private Long tenantId;
+
     private Date dataAlta;
 
     private Date dataBaixa;
@@ -18,6 +20,14 @@ public class DirectivaDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public Date getDataAlta() {

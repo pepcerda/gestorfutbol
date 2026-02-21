@@ -4,6 +4,8 @@ public class CategoriaDespesaDTO {
 
     private Long id;
 
+    private Long tenantId;
+
     private String nom;
 
     public Long getId() {
@@ -12,6 +14,14 @@ public class CategoriaDespesaDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getNom() {

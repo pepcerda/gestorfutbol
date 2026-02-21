@@ -4,6 +4,8 @@ public class ConfiguracioDTO {
 
     private Long id;
 
+    private Long tenantId;
+
     private String cif;
 
     private String nom;
@@ -22,6 +24,14 @@ public class ConfiguracioDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getCif() {

@@ -13,11 +13,15 @@ public class Filtre {
 
     private String userId;
 
+    private Long tenantId;
+
     private Long campanyaActiva;
 
     private Long categoriaActiva;
 
     private Long equipActiu;
+
+    private Long directivaId;
 
     private String sortField;
 
@@ -51,6 +55,14 @@ public class Filtre {
         this.lang = lang;
     }
 
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
     public String getUserId() {
         return userId;
     }
@@ -81,6 +93,14 @@ public class Filtre {
 
     public void setEquipActiu(Long equipActiu) {
         this.equipActiu = equipActiu;
+    }
+
+    public Long getDirectivaId() {
+        return directivaId;
+    }
+
+    public void setDirectivaId(Long directivaId) {
+        this.directivaId = directivaId;
     }
 
     public String getSortField() {

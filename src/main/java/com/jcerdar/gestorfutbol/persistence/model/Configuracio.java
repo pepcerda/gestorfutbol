@@ -12,6 +12,10 @@ public class Configuracio {
     @Column(name = "CONF_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "CONF_TEN", nullable = false)
+    private Tenant tenant;
+
     @Column(name = "CONF_CIF")
     private String cif;
 
@@ -36,6 +40,14 @@ public class Configuracio {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public String getCif() {

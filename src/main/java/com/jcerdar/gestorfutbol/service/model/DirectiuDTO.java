@@ -1,7 +1,5 @@
 package com.jcerdar.gestorfutbol.service.model;
 
-import com.jcerdar.gestorfutbol.persistence.model.RolDirectiu;
-
 public class DirectiuDTO {
 
     private Long id;

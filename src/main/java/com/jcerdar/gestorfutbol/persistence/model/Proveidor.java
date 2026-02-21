@@ -13,6 +13,10 @@ public class Proveidor {
     @Column(name = "PR_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "PR_TEN", nullable = false)
+    private Tenant tenant;
+
     @Column(name = "PR_NOM", nullable = false)
     private String nom;
 
@@ -32,6 +36,14 @@ public class Proveidor {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public String getNom() {

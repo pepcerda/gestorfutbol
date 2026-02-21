@@ -12,13 +12,13 @@ public interface GestorFutbolService {
 
     PaginaDTO<List<CampanyaDTO>> listCampanyas(Filtre filtre);
 
-    List<CampanyaDTO> listAllCampanyas();
+    List<CampanyaDTO> listAllCampanyas(Filtre filtre);
 
     Long saveCampanya(CampanyaDTO campanyaDTO);
 
     void deleteCampanya(Long id);
 
-    List<RolDirectiuDTO> listRolsDirectiu();
+    List<RolDirectiuDTO> listRolsDirectiu(Filtre filtre);
 
     PaginaDTO<List<DirectiuDTO>> listDirectius(Filtre filtre);
 
@@ -30,15 +30,15 @@ public interface GestorFutbolService {
 
     Long saveDirectiva(DirectivaDTO directivaDTO);
 
-    DirectivaDTO listDirectiva();
+    DirectivaDTO listDirectiva(Filtre filtre);
 
     Boolean checkDirectiva();
 
-    List<DirectivaDTO> listHistoricDirectiva();
+    List<DirectivaDTO> listHistoricDirectiva(Filtre filtre);
 
-    ConfiguracioDTO getConfiguracio();
+    ConfiguracioDTO getConfiguracio(Filtre filtre);
 
-    ConfiguracioGeneralDTO getConfiguracioGeneral();
+    ConfiguracioGeneralDTO getConfiguracioGeneral(Filtre filtre);
 
     Long saveConfiguracio(ConfiguracioDTO configuracioDTO);
 

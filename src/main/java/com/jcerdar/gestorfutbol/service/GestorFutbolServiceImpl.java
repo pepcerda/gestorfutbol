@@ -30,6 +30,9 @@ import jakarta.persistence.EntityNotFoundException;
 public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Autowired
+    private TenantDao tenantDao;
+
+    @Autowired
     private CampanyaDao campanyaDao;
 
     @Autowired
@@ -96,6 +99,11 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     public void init() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        Converter<Long, Tenant> toTenant = ctx -> {
+            Tenant tenant = tenantDao.findById(ctx.getSource()).orElse(null);
+            return tenant;
+        };
+
         Converter<Long, Campanya> toCampanya = ctx -> {
             Campanya campanya = campanyaDao.findById(ctx.getSource()).orElse(null);
             return campanya;
@@ -126,6 +134,18 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             return posicioJugador;
         };
 
+        TypeMap<CampanyaDTO, Campanya> jCampanyaMapper = modelMapper.createTypeMap(CampanyaDTO.class, Campanya.class);
+        jCampanyaMapper.addMappings(mapper -> mapper.using(toTenant).map(CampanyaDTO::getTenantId, Campanya::setTenant));
+
+        TypeMap<Campanya, CampanyaDTO> campanyaMapper = modelMapper.createTypeMap(Campanya.class, CampanyaDTO.class);
+        campanyaMapper.addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), CampanyaDTO::setTenantId));
+
+        TypeMap<RolDirectiuDTO, RolDirectiu> jRolDirectiuMapper = modelMapper.createTypeMap(RolDirectiuDTO.class, RolDirectiu.class);
+        jRolDirectiuMapper.addMappings(mapper -> mapper.using(toTenant).map(RolDirectiuDTO::getTenantId, RolDirectiu::setTenant));
+
+        TypeMap<RolDirectiu, RolDirectiuDTO> rolDirectiuMapper = modelMapper.createTypeMap(RolDirectiu.class, RolDirectiuDTO.class);
+        rolDirectiuMapper.addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), RolDirectiuDTO::setTenantId));
+
         TypeMap<TipoSociDTO, TipoSoci> jTipoSociMapper = modelMapper.createTypeMap(TipoSociDTO.class, TipoSoci.class);
         jTipoSociMapper.addMappings(mapper -> mapper.using(toCampanya).map(TipoSociDTO::getCampanya, TipoSoci::setCampanya));
 
@@ -140,9 +160,17 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<DirectivaDTO, Directiva> jDirectivaMapper = modelMapper.createTypeMap(DirectivaDTO.class, Directiva.class);
         jDirectivaMapper.addMappings(mapper -> mapper.skip(Directiva::setDirectius));
+        jDirectivaMapper.addMappings(mapper -> mapper.using(toTenant).map(DirectivaDTO::getTenantId, Directiva::setTenant));
+
+        TypeMap<Directiva, DirectivaDTO> directivaMapper = modelMapper.createTypeMap(Directiva.class, DirectivaDTO.class);
+        directivaMapper.addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), DirectivaDTO::setTenantId));
 
         TypeMap<ConfiguracioDTO, Configuracio> jConfiguracioMapper = modelMapper.createTypeMap(ConfiguracioDTO.class, Configuracio.class);
         jConfiguracioMapper.addMappings(mapper -> mapper.skip(Configuracio::setLogo));
+        jConfiguracioMapper.addMappings(mapper -> mapper.using(toTenant).map(ConfiguracioDTO::getTenantId, Configuracio::setTenant));
+
+        TypeMap<Configuracio, ConfiguracioDTO> configuracioMapper = modelMapper.createTypeMap(Configuracio.class, ConfiguracioDTO.class);
+        configuracioMapper.addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), ConfiguracioDTO::setTenantId));
 
         TypeMap<JugadorDTO, Jugador> jJugadorMapper = modelMapper.createTypeMap(JugadorDTO.class, Jugador.class);
         jJugadorMapper.addMappings(mapper -> mapper.using(toCampanya).map(JugadorDTO::getCampanya, Jugador::setCampanya));
@@ -189,7 +217,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<CampanyaDTO>> listCampanyas(Filtre filtre) {
-        Page<Campanya> campanyas = campanyaDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize(), Sort.by("any").ascending()));
+        Page<Campanya> campanyas = campanyaDao.findAllByTenantId(filtre.getTenantId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize(), Sort.by("any").ascending()));
         PaginaDTO<List<CampanyaDTO>> paginaDTO = new PaginaDTO<>();
         List<CampanyaDTO> campanyaDTOS = new ArrayList<>();
         if (campanyas.getTotalElements() > 0) {
@@ -201,8 +229,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public List<CampanyaDTO> listAllCampanyas() {
-        List<Campanya> campanyas = campanyaDao.findAll(Sort.by("any").ascending());
+    public List<CampanyaDTO> listAllCampanyas(Filtre filtre) {
+        List<Campanya> campanyas = campanyaDao.findAllByTenantId(filtre.getTenantId(), Sort.by("any").ascending());
         List<CampanyaDTO> campanyaDTOS = new ArrayList<>();
         if (!campanyas.isEmpty()) {
             campanyaDTOS = campanyas.stream().map(campanya -> modelMapper.map(campanya, CampanyaDTO.class)).collect(Collectors.toList());
@@ -220,7 +248,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public void deleteCampanya(Long id) {
-        //Revisam previament que no tengui ni socis ni patrocinadors donats d'alta
+        //TODO: Associar deletes de totes les taules associades
         List<Soci> socis = sociDao.findAllByCampanyaId(id);
         if (socis.isEmpty()) {
             socis.forEach(s -> sociDao.deleteById(s.getId()));
@@ -235,10 +263,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
 
-
     @Override
-    public List<RolDirectiuDTO> listRolsDirectiu() {
-        List<RolDirectiu> rols = rolDirectiuDao.findAll();
+    public List<RolDirectiuDTO> listRolsDirectiu(Filtre filtre) {
+        List<RolDirectiu> rols = rolDirectiuDao.findAllByTenantId(filtre.getTenantId());
         List<RolDirectiuDTO> rolsDTO = new ArrayList<>();
         if (!rols.isEmpty()) {
             rolsDTO = rols.stream().map(r -> modelMapper.map(r, RolDirectiuDTO.class)).collect(Collectors.toList());
@@ -249,7 +276,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<DirectiuDTO>> listDirectius(Filtre filtre) {
-        Page<Directiu> directius = directiuDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Directiu> directius = directiuDao.findAllByTenantId(filtre.getTenantId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<DirectiuDTO>> paginaDTO = new PaginaDTO<>();
         List<DirectiuDTO> directiuDTOS = new ArrayList<>();
         if (directius.getTotalElements() > 0) {
@@ -274,7 +301,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public void baixaDirectiva(BaixaDTO baixaDTO) {
-        Directiva directivaActual = directivaDao.findDirectivaByDataBaixaIsNull();
+        Directiva directivaActual = directivaDao.findById(baixaDTO.getDirectivaId()).orElseThrow(() -> new RuntimeException("Directiva no trobada"));
         directivaActual.setDataBaixa(baixaDTO.getDataBaixa());
         directivaDao.save(directivaActual);
     }
@@ -290,7 +317,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public DirectivaDTO listDirectiva() {
+    public DirectivaDTO listDirectiva(Filtre filtre) {
 
         Directiva directiva = directivaDao.findDirectivaByDataBaixaIsNull();
         if (directiva != null) {
@@ -306,23 +333,23 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public List<DirectivaDTO> listHistoricDirectiva() {
-        List<Directiva> directivas = directivaDao.findAllByOrderByDataAltaAsc();
+    public List<DirectivaDTO> listHistoricDirectiva(Filtre filtre) {
+        List<Directiva> directivas = directivaDao.findAllByTenantIdOrderByDataAltaAsc(filtre.getTenantId());
         List<DirectivaDTO> directivaDTOS = new ArrayList<>();
         directivas.forEach(d -> directivaDTOS.add(modelMapper.map(d, DirectivaDTO.class)));
         return directivaDTOS;
     }
 
     @Override
-    public ConfiguracioDTO getConfiguracio() {
-        Configuracio configuracio = configuracioDao.findById(1l).orElseThrow(() -> new IllegalStateException("No se encontró configuración con ID 1"));
+    public ConfiguracioDTO getConfiguracio(Filtre filtre) {
+        Configuracio configuracio = configuracioDao.findConfiguracioByTenantId(filtre.getTenantId());
         ConfiguracioDTO config = modelMapper.map(configuracio, ConfiguracioDTO.class);
         return config;
     }
 
     @Override
-    public ConfiguracioGeneralDTO getConfiguracioGeneral() {
-        Configuracio configuracio = configuracioDao.findById(1l).orElse(null);
+    public ConfiguracioGeneralDTO getConfiguracioGeneral(Filtre filtre) {
+        Configuracio configuracio = configuracioDao.findConfiguracioByTenantId(filtre.getTenantId());
 
         if (configuracio != null) {
             ConfiguracioGeneralDTO configuracioGeneralDTO = new ConfiguracioGeneralDTO();
@@ -340,8 +367,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public Long saveConfiguracio(ConfiguracioDTO configuracioDTO) {
-        Configuracio configuracio = configuracioDao.findById(1l).orElse(null);
-        configuracio = jConfiguracioMapper(configuracioDTO);
+        Configuracio configuracio = jConfiguracioMapper(configuracioDTO);
         configuracioDao.save(configuracio);
         return configuracio.getId();
     }
@@ -660,7 +686,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         // 2. Actualizar su QuotaJugador si NO tienen excepción
         jugadors.forEach(jugador -> {
             QuotaJugador quotaJugador = quotaJugadorDao.findByJugadorAndCampanya(jugador.getId(), campanyaId);
-            if(!quotaJugador.getExepcio()) {
+            if (!quotaJugador.getExepcio()) {
                 quotaJugador.setQuantitat(equip.getQuota());
                 quotaJugadorDao.save(quotaJugador);
             }

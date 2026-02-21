@@ -11,6 +11,10 @@ public class RolDirectiu {
     @Column(name = "RDI_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "RDI_TEN", nullable = false)
+    private Tenant  tenant;
+
     @Column(name = "RDI_ROL", nullable = false)
     private String rol;
 
@@ -20,6 +24,14 @@ public class RolDirectiu {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public String getRol() {

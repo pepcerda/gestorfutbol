@@ -43,9 +43,11 @@ public class GestorFutbolController extends BaseController{
     @Autowired
     private MediaService mediaService; 
 
-    @GetMapping("/campanyas")
-    public ResponseEntity<List<CampanyaDTO>> listCampanyas() {
-        return ResponseEntity.ok(gestorFutbolService.listAllCampanyas());
+    @GetMapping("/campanyas/{tenantId}")
+    public ResponseEntity<List<CampanyaDTO>> listCampanyas(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.listAllCampanyas(filtre));
     }
 
     @PostMapping("/campanyas")
@@ -153,9 +155,11 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
-    @GetMapping("/rols-directius")
-    public ResponseEntity<List<RolDirectiuDTO>> listRolsDirectius() {
-        return ResponseEntity.ok(gestorFutbolService.listRolsDirectiu());
+    @GetMapping("/rols-directius/{tenantId}")
+    public ResponseEntity<List<RolDirectiuDTO>> listRolsDirectius(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.listRolsDirectiu(filtre));
     }
 
     @PostMapping("/directius")
@@ -183,9 +187,11 @@ public class GestorFutbolController extends BaseController{
         return ResponseEntity.ok(gestorFutbolService.checkDirectiva());
     }
 
-    @GetMapping("/directiva")
-    public ResponseEntity<DirectivaDTO> listDirectiva() {
-        return ResponseEntity.ok(gestorFutbolService.listDirectiva());
+    @GetMapping("/directiva/{tenantId}")
+    public ResponseEntity<DirectivaDTO> listDirectiva(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.listDirectiva(filtre));
     }
 
     @PostMapping("/directiva")
@@ -203,19 +209,25 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
-    @GetMapping("/directiva-historic")
-    public ResponseEntity<List<DirectivaDTO>> listHistoricDirectiva() {
-        return ResponseEntity.ok(gestorFutbolService.listHistoricDirectiva());
+    @GetMapping("/directiva-historic/{tenantId}")
+    public ResponseEntity<List<DirectivaDTO>> listHistoricDirectiva(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.listHistoricDirectiva(filtre));
     }
 
-    @GetMapping("/configuracio")
-    public ResponseEntity<ConfiguracioDTO> getConfiguracio() {
-        return ResponseEntity.ok(gestorFutbolService.getConfiguracio());
+    @GetMapping("/configuracio/{tenantId}")
+    public ResponseEntity<ConfiguracioDTO> getConfiguracio(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.getConfiguracio(filtre));
     }
 
-    @GetMapping("/config-general")
-    public ResponseEntity<ConfiguracioGeneralDTO> getLogo() {
-        return ResponseEntity.ok(gestorFutbolService.getConfiguracioGeneral());
+    @GetMapping("/config-general/{tenantId}")
+    public ResponseEntity<ConfiguracioGeneralDTO> getLogo(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.getConfiguracioGeneral(filtre));
     }
 
     @PostMapping("/configuracio")

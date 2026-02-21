@@ -14,6 +14,10 @@ public class Directiva {
     @Column(name = "DIR_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "DIR_TEN", nullable = false)
+    private Tenant tenant;
+
     @Column(name = "DIR_ALTA", nullable = false)
     private Date dataAlta;
 
@@ -29,6 +33,14 @@ public class Directiva {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public Date getDataAlta() {

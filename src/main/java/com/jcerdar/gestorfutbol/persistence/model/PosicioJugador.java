@@ -12,6 +12,10 @@ public class PosicioJugador {
     @Column(name = "POS_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "POS_TEN", nullable = false)
+    private Tenant tenant;
+
     @Column(name = "POS_NOM", nullable = false)
     private String valor;
 
@@ -21,6 +25,14 @@ public class PosicioJugador {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public String getValor() {

@@ -5,6 +5,8 @@ public class RolDirectiuDTO {
 
     private Long id;
 
+    private Long tenantId;
+
     private String rol;
 
     public Long getId() {
@@ -13,6 +15,14 @@ public class RolDirectiuDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getRol() {

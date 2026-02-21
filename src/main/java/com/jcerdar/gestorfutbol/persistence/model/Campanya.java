@@ -2,12 +2,7 @@ package com.jcerdar.gestorfutbol.persistence.model;
 
 import java.util.Date;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "GF_CAMPANYA")
@@ -17,6 +12,10 @@ public class Campanya {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CAM_ID", nullable = false)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "CAM_TEN", nullable = false)
+    private Tenant tenant;
 
     @Column(name = "CAM_ANY", nullable = false)
     private Date any;
@@ -30,6 +29,14 @@ public class Campanya {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public Date getAny() {
@@ -48,6 +55,5 @@ public class Campanya {
         this.titol = titol;
     }
 
-    
 
 }

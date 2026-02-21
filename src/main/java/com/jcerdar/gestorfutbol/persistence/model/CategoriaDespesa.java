@@ -12,6 +12,10 @@ public class CategoriaDespesa {
     @Column(name = "CDE_ID", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "CDE_TEN", nullable = false)
+    private Tenant tenant;
+
     @Column(name = "CDE_NOM", nullable = false, length = 100)
     private String nom;
 
@@ -21,6 +25,14 @@ public class CategoriaDespesa {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
+    }
+
+    public void setTenant(Tenant tenant) {
+        this.tenant = tenant;
     }
 
     public String getNom() {

@@ -6,6 +6,8 @@ public class ProveidorDTO {
 
     private Long id;
 
+    private Long tenantId;
+
     private String nom;
 
     private String nomComercial;
@@ -20,6 +22,14 @@ public class ProveidorDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getNom() {
