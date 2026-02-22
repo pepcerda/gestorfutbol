@@ -9,7 +9,5 @@ import java.util.List;
 
 public interface DirectiuDao extends JpaRepository<Directiu, Long> {
 
-    List<Directiu> findAllByDirectiva(Long directivaId);
-
-    Page<Directiu> findAllByTenantId(Long tenantId, Pageable pageable);
+    Page<Directiu> findAllByDirectiva(Long directivaId, Pageable pageable);
 }

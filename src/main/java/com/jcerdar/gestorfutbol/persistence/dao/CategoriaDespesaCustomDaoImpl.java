@@ -97,6 +97,10 @@ public class CategoriaDespesaCustomDaoImpl implements CategoriaDespesaCustomDao{
 
     private List<Predicate> construirPredicats(Filtre filtre, Root<CategoriaDespesa> root, CriteriaBuilder cb) {
         List<Predicate> predicates = new ArrayList<>();
+        
+        if(filtre.getTenantId() != null) {
+            predicates.add(cb.equal(root.get("tenant").get("id"), filtre.getTenantId()));
+        }   
 
         if (filtre.getCampanyaActiva() != null) {
             predicates.add(cb.equal(root.get("campanya").get("id"), filtre.getCampanyaActiva()));

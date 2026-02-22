@@ -26,7 +26,7 @@ public interface DespesaService {
 
     List<MensualitatDTO> listAllMensualitats(Filtre filtre);
 
-    List<ProveidorDTO> listAllProveidors();
+    List<ProveidorDTO> listAllProveidors(Filtre filtre);
 
     PaginaDTO<List<ProveidorDTO>> listProveidors(Filtre filtre);
 
@@ -42,7 +42,7 @@ public interface DespesaService {
 
     void deleteFactura(Long id);
 
-    List<CategoriaDespesaDTO> listAllCategoriesDespesa();
+    List<CategoriaDespesaDTO> listAllCategoriesDespesa(Filtre filtre);
 
     PaginaDTO<List<CategoriaDespesaDTO>> listCategoriesDespesa(Filtre filtre);
 

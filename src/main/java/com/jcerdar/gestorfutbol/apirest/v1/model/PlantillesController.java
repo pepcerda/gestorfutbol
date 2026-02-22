@@ -4,6 +4,7 @@ import com.jcerdar.gestorfutbol.service.PdfGeneradorService;
 import com.jcerdar.gestorfutbol.service.model.PlantillaDocumentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,14 +14,16 @@ public class PlantillesController extends BaseController {
     @Autowired
     private PdfGeneradorService pdfGeneradorService;
 
-    @GetMapping("/plantilles")
-    public ResponseEntity<?> getAllPlantillesDocuments() {
-        return ResponseEntity.ok(pdfGeneradorService.getAllPlantillesDocuments());
+    @GetMapping("/plantilles/{tenantId}")
+    public ResponseEntity<?> getAllPlantillesDocuments(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(pdfGeneradorService.getAllPlantillesDocuments(filtre));
     }
 
-    @GetMapping("/plantilla/{codi}")
-    public ResponseEntity<?> getPlantillaDocumentByCodi(@PathVariable String codi) {
-        return ResponseEntity.ok(pdfGeneradorService.getPlantillaDocumentByCodi(codi));
+    @PostMapping("/obtenir-plantilla")
+    public ResponseEntity<PlantillaDocumentDTO> getPlantillaDocumentByCodi(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(pdfGeneradorService.getPlantillaDocumentByCodi(filtre));
     }
 
     @PostMapping("/plantilla")

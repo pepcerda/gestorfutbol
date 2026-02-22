@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class IngressosServiceImpl implements IngressosService {
 
-
     @Autowired
     private CampanyaDao campanyaDao;
 
@@ -49,7 +48,6 @@ public class IngressosServiceImpl implements IngressosService {
     @Autowired
     private PdfGeneradorService pdfGeneradorService;
 
-
     @PostConstruct
     public void init() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -69,20 +67,26 @@ public class IngressosServiceImpl implements IngressosService {
             mapper.map(src -> src.getCampanya().getId(), SociDTO::setCampanya);
         });
 
-        TypeMap<PatrocinadorDTO, Patrocinador> jPatrociniMapper = modelMapper.createTypeMap(PatrocinadorDTO.class, Patrocinador.class);
+        TypeMap<PatrocinadorDTO, Patrocinador> jPatrociniMapper = modelMapper.createTypeMap(PatrocinadorDTO.class,
+                Patrocinador.class);
         jPatrociniMapper.addMappings(mapper -> mapper.skip(Patrocinador::setLogo));
-        jPatrociniMapper.addMappings(mapper -> mapper.using(toCampanya).map(PatrocinadorDTO::getCampanya, Patrocinador::setCampanya));
+        jPatrociniMapper.addMappings(
+                mapper -> mapper.using(toCampanya).map(PatrocinadorDTO::getCampanya, Patrocinador::setCampanya));
 
-        modelMapper.typeMap(Patrocinador.class, Patrocinador.class).addMappings(mapper -> mapper.skip(Patrocinador::setId));
+        modelMapper.typeMap(Patrocinador.class, Patrocinador.class)
+                .addMappings(mapper -> mapper.skip(Patrocinador::setId));
 
-        TypeMap<Patrocinador, PatrocinadorDTO> patrocinadorMapper = modelMapper.createTypeMap(Patrocinador.class, PatrocinadorDTO.class);
-        patrocinadorMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), PatrocinadorDTO::setCampanya));
+        TypeMap<Patrocinador, PatrocinadorDTO> patrocinadorMapper = modelMapper.createTypeMap(Patrocinador.class,
+                PatrocinadorDTO.class);
+        patrocinadorMapper
+                .addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), PatrocinadorDTO::setCampanya));
 
-        TypeMap<QuotaJugadorDTO, QuotaJugador> jQuotaJugadorMapper = modelMapper.createTypeMap(QuotaJugadorDTO.class, QuotaJugador.class);
+        TypeMap<QuotaJugadorDTO, QuotaJugador> jQuotaJugadorMapper = modelMapper.createTypeMap(QuotaJugadorDTO.class,
+                QuotaJugador.class);
 
-        TypeMap<QuotaJugador, QuotaJugadorDTO> quotaJugadorMapper = modelMapper.createTypeMap(QuotaJugador.class, QuotaJugadorDTO.class);
+        TypeMap<QuotaJugador, QuotaJugadorDTO> quotaJugadorMapper = modelMapper.createTypeMap(QuotaJugador.class,
+                QuotaJugadorDTO.class);
     }
-
 
     @Override
     public PaginaDTO<List<SociDTO>> listSocis(Filtre filtre) {
@@ -109,7 +113,6 @@ public class IngressosServiceImpl implements IngressosService {
         }
         return sociDTOS;
     }
-
 
     @Override
     public Long saveSoci(SociDTO sociDTO) {
@@ -145,11 +148,11 @@ public class IngressosServiceImpl implements IngressosService {
         List<Patrocinador> patrocinadors = patrocinadorDao.buscarConFiltrosAll(filtre);
         List<PatrocinadorDTO> patrocinadorDTOS = new ArrayList<>();
         if (!patrocinadors.isEmpty()) {
-            patrocinadorDTOS = patrocinadors.stream().map(patr -> modelMapper.map(patr, PatrocinadorDTO.class)).collect(Collectors.toList());
+            patrocinadorDTOS = patrocinadors.stream().map(patr -> modelMapper.map(patr, PatrocinadorDTO.class))
+                    .collect(Collectors.toList());
         }
         return patrocinadorDTOS;
     }
-
 
     @Override
     public Long savePatrocinador(PatrocinadorDTO patrocinadorDTO) {
@@ -165,8 +168,10 @@ public class IngressosServiceImpl implements IngressosService {
 
     @Override
     public Long duplicarPatrocinador(PatrocinadorDTO patrocinadorDTO, Long idCampanya) {
-        Campanya campanya = campanyaDao.findById(idCampanya).orElseThrow(() -> new EntityNotFoundException("Campanya no trobada"));
-        Patrocinador original = patrocinadorDao.findById(patrocinadorDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Patrocinador no trobat"));
+        Campanya campanya = campanyaDao.findById(idCampanya)
+                .orElseThrow(() -> new EntityNotFoundException("Campanya no trobada"));
+        Patrocinador original = patrocinadorDao.findById(patrocinadorDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Patrocinador no trobat"));
         Patrocinador patrocinadorNou = modelMapper.map(original, Patrocinador.class);
         patrocinadorNou.setCampanya(campanya);
         patrocinadorNou = patrocinadorDao.save(patrocinadorNou);
@@ -183,10 +188,10 @@ public class IngressosServiceImpl implements IngressosService {
                     "cif", patrocinador.getCif(),
                     "donacio", patrocinador.getDonacio().toString(),
                     "dataDonacio", patrocinadorDTO.getDataDonacioFormatada(),
-                    "campanya", patrocinador.getCampanya().getTitol()
-            );
+                    "campanya", patrocinador.getCampanya().getTitol());
 
-            return pdfGeneradorService.generarPdfDesdeHtml(CodiPlantilla.REBUT_PATROCINI.name(), "ca", data);
+            return pdfGeneradorService.generarPdfDesdeHtml(CodiPlantilla.REBUT_PATROCINI.name(),
+                    patrocinador.getCampanya().getTenant().getId(), "ca", data);
         } else {
             return "";
         }
@@ -210,7 +215,8 @@ public class IngressosServiceImpl implements IngressosService {
         List<QuotaJugador> quotaJugadors = quotaJugadorDao.buscarConFiltrosAll(filtre);
         List<QuotaJugadorDTO> quotaJugadorDTOS = new ArrayList<>();
         if (!quotaJugadors.isEmpty()) {
-            quotaJugadorDTOS = quotaJugadors.stream().map(quot -> modelMapper.map(quot, QuotaJugadorDTO.class)).collect(Collectors.toList());
+            quotaJugadorDTOS = quotaJugadors.stream().map(quot -> modelMapper.map(quot, QuotaJugadorDTO.class))
+                    .collect(Collectors.toList());
         }
         return quotaJugadorDTOS;
     }
@@ -227,15 +233,16 @@ public class IngressosServiceImpl implements IngressosService {
         quotaJugadorDao.deleteById(id);
     }
 
-
     private Patrocinador jPatrocinadorMapper(PatrocinadorDTO patrocinadorDTO) {
         Patrocinador patrocinador = modelMapper.map(patrocinadorDTO, Patrocinador.class);
 
         try {
-            if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && mediaService.checkBase64(patrocinadorDTO.getLogo())) {
+            if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty()
+                    && mediaService.checkBase64(patrocinadorDTO.getLogo())) {
                 String logoUrl = mediaService.guardarLogoBase64(patrocinadorDTO.getLogo());
                 patrocinador.setLogo(logoUrl);
-            } else if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty() && !mediaService.checkBase64(patrocinadorDTO.getLogo())) {
+            } else if (patrocinadorDTO.getLogo() != null && !patrocinadorDTO.getLogo().isEmpty()
+                    && !mediaService.checkBase64(patrocinadorDTO.getLogo())) {
                 patrocinador.setLogo(patrocinadorDTO.getLogo());
             }
         } catch (IOException e) {

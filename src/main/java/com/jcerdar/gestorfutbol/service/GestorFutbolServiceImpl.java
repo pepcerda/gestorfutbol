@@ -90,6 +90,9 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     private QuotaJugadorDao quotaJugadorDao;
 
     @Autowired
+    private GestioUsuarisService gestioUsuarisService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Autowired
@@ -216,6 +219,50 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
+    public PaginaDTO<List<TenantDTO>> listTenants(Filtre filtre) {
+        Page<Tenant> tenants = tenantDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize(), Sort.by("dataCreacio").descending()));
+        PaginaDTO<List<TenantDTO>> paginaDTO = new PaginaDTO<>();
+        List<TenantDTO> tenantDTOS = new ArrayList<>();
+        if (tenants.getTotalElements() > 0) {
+            tenantDTOS = tenants.map(t -> modelMapper.map(t, TenantDTO.class)).getContent();
+            paginaDTO.setTotal(tenants.getTotalElements());
+            paginaDTO.setResult(tenantDTOS);
+        }
+        return paginaDTO;
+    }
+
+    @Override
+    public List<TenantDTO> listAllTenants() {
+        List<Tenant> tenants = tenantDao.findAll();
+        List<TenantDTO> tenantDTOS = new ArrayList<>();
+        if (!tenants.isEmpty()) {
+            tenantDTOS = tenants.stream().map(t -> modelMapper.map(t, TenantDTO.class)).collect(Collectors.toList());
+        }
+        return tenantDTOS;
+    }
+
+    @Override
+    public Long saveTenant(TenantDTO tenantDTO) {
+        //1. Crear tenant
+        Tenant tenant = modelMapper.map(tenantDTO, Tenant.class);
+        tenant = tenantDao.save(tenant);
+
+        //2. Crear usuari administrador del tenant
+        if(tenantDTO.getUsuariAdmin() != null && tenantDTO.getUsuariAdmin().getRol() == null) {
+            tenantDTO.getUsuariAdmin().setRol("ADMIN");
+        }
+        gestioUsuarisService.saveUsuari(tenantDTO.getUsuariAdmin()); 
+
+
+        return tenant.getId();
+    }
+
+    @Override
+    public void deleteTenant(Long id) {
+        tenantDao.deleteById(id);
+    }
+
+    @Override
     public PaginaDTO<List<CampanyaDTO>> listCampanyas(Filtre filtre) {
         Page<Campanya> campanyas = campanyaDao.findAllByTenantId(filtre.getTenantId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize(), Sort.by("any").ascending()));
         PaginaDTO<List<CampanyaDTO>> paginaDTO = new PaginaDTO<>();
@@ -276,7 +323,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<DirectiuDTO>> listDirectius(Filtre filtre) {
-        Page<Directiu> directius = directiuDao.findAllByTenantId(filtre.getTenantId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Directiu> directius = directiuDao.findAllByDirectiva(filtre.getDirectivaId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize(), Sort.by("nom").ascending()));
         PaginaDTO<List<DirectiuDTO>> paginaDTO = new PaginaDTO<>();
         List<DirectiuDTO> directiuDTOS = new ArrayList<>();
         if (directius.getTotalElements() > 0) {
@@ -319,7 +366,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public DirectivaDTO listDirectiva(Filtre filtre) {
 
-        Directiva directiva = directivaDao.findDirectivaByDataBaixaIsNull();
+        Directiva directiva = directivaDao.findDirectivaByDataBaixaIsNullAndTenantId(filtre.getTenantId());
         if (directiva != null) {
             DirectivaDTO directivaDTO = modelMapper.map(directiva, DirectivaDTO.class);
             return directivaDTO;
@@ -328,8 +375,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         return null;
     }
 
-    public Boolean checkDirectiva() {
-        return directivaDao.count() > 0;
+    public Boolean checkDirectiva(Filtre filtre) {
+        return directivaDao.countByTenantId(filtre.getTenantId()) > 0;
     }
 
     @Override

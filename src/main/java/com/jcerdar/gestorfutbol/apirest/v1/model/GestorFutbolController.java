@@ -182,9 +182,11 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
-    @GetMapping("/check-directiva")
-    public ResponseEntity<Boolean> checkDirectiva() {
-        return ResponseEntity.ok(gestorFutbolService.checkDirectiva());
+    @GetMapping("/check-directiva/{tenantId}")
+    public ResponseEntity<Boolean> checkDirectiva(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.checkDirectiva(filtre));
     }
 
     @GetMapping("/directiva/{tenantId}")
@@ -421,9 +423,11 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
-    @GetMapping("/proveidors")
-    public ResponseEntity<List<ProveidorDTO>> getAllProveidors() {
-        return ResponseEntity.ok(despesaService.listAllProveidors());
+    @GetMapping("/proveidors/{tenantId}")
+    public ResponseEntity<List<ProveidorDTO>> getAllProveidors(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(despesaService.listAllProveidors(filtre));
     }
 
     @PostMapping("/proveidors")
@@ -471,9 +475,11 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
-    @GetMapping("/categories-despesa")
-    public ResponseEntity<List<CategoriaDespesaDTO>> getAllCategoriesDespesa() {
-        return ResponseEntity.ok(despesaService.listAllCategoriesDespesa());
+    @GetMapping("/categories-despesa/{tenantId}")
+    public ResponseEntity<List<CategoriaDespesaDTO>> getAllCategoriesDespesa(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(despesaService.listAllCategoriesDespesa(filtre));
     }
 
     @PostMapping("/categories-despesa")

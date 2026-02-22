@@ -31,6 +31,8 @@ public class Filtre {
 
     private List<Long> ids;
 
+    private String codiDocument; 
+
     public int getPageNum() {
         return pageNum;
     }
@@ -134,4 +136,12 @@ public class Filtre {
     public void setIds(List<Long> ids) {
         this.ids = ids;
     }   
+
+    public String getCodiDocument() {
+        return codiDocument;
+    }
+
+    public void setCodiDocument(String codiDocument) {
+        this.codiDocument = codiDocument;
+    }
 }

@@ -10,6 +10,10 @@ public interface DirectivaDao extends JpaRepository<Directiva, Long> {
 
     Directiva findDirectivaByDataBaixaIsNull();
 
+    Directiva findDirectivaByDataBaixaIsNullAndTenantId(Long tenantId);
+
+    Long countByTenantId(Long tenantId);
+
     List<Directiva> findAllByOrderByDataAltaAsc();
 
     @Query("SELECT d FROM Directiva d WHERE d.tenant.id = :tenantId ORDER BY d.dataAlta ASC")

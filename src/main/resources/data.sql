@@ -1,278 +1,1288 @@
-INSERT INTO GF_ROLDIR (RDI_ROL)
-VALUES ('President');
-INSERT INTO GF_ROLDIR (RDI_ROL)
-VALUES ('Vicepresident I');
-INSERT INTO GF_ROLDIR (RDI_ROL)
-VALUES ('Secretari');
-INSERT INTO GF_ROLDIR (RDI_ROL)
-VALUES ('Tresorer');
-INSERT INTO GF_ROLDIR (RDI_ROL)
-VALUES ('Vocal');
+INSERT INTO
+    GF_PLA_SUSCRIPCIO (PLA_TIPUS, PLA_CUOTA)
+VALUES ('BASIC', 9.99);
 
-INSERT INTO GF_CONFIG (CONF_ID, CONF_CIF, CONF_NOM, CONF_COL, CONF_CLF1, CONF_CLF2)
-VALUES (1, 'G57861692', 'Athletic Club Montuiri', '#000000', '#ee4f4f', '#e8d1d1');
+INSERT INTO
+    GF_PLA_SUSCRIPCIO (PLA_TIPUS, PLA_CUOTA)
+VALUES ('PREMIUM', 19.99);
 
-INSERT INTO GF_CAMPANYA (CAM_ANY, CAM_TITOL)
-VALUES ('2025-01-01', 'Temporada 2025-2026');
+INSERT INTO
+    GF_PLA_SUSCRIPCIO (PLA_TIPUS, PLA_CUOTA)
+VALUES ('ENTERPRISE', 49.90);
 
-INSERT INTO GF_TIPSOCI (TIS_CAM, TIS_NOM, TIS_IMP)
+INSERT INTO
+    GF_TENANT (
+        TEN_PLA,
+        TEN_NOM,
+        TEN_ESTAT,
+        TEN_FCREA
+    )
+VALUES (
+        1,
+        'Athletic Club Tenant',
+        'ACTIU',
+        CURRENT_TIMESTAMP
+    );
+
+-- SUPERADMIN
+INSERT INTO
+    GF_USUARI (
+        USU_PROVID,
+        USU_SUPERADMIN,
+        USU_NOM,
+        USU_EMAIL
+    )
+VALUES (
+        'kp_601dc5f9ec944428aa3708faf30c3dfe',
+        true,
+        'Josep Cerda',
+        'josep.cerda.roscar@gmail.com'
+    );
+
+INSERT INTO
+    GF_USUARI_TENANT (
+        UT_USU_ID,
+        UT_TEN_ID,
+        UT_ROL,
+        UT_ACTIU
+    )
+VALUES (1, 1, 'ADMINISTRADOR', true);
+
+INSERT INTO GF_ROLDIR (RDI_TEN, RDI_ROL) VALUES (1, 'President');
+
+INSERT INTO
+    GF_ROLDIR (RDI_TEN, RDI_ROL)
+VALUES (1, 'Vicepresident I');
+
+INSERT INTO GF_ROLDIR (RDI_TEN, RDI_ROL) VALUES (1, 'Secretari');
+
+INSERT INTO GF_ROLDIR (RDI_TEN, RDI_ROL) VALUES (1, 'Tresorer');
+
+INSERT INTO GF_ROLDIR (RDI_TEN, RDI_ROL) VALUES (1, 'Vocal');
+
+INSERT INTO
+    GF_CONFIG (
+        CONF_ID,
+        CONF_TEN,
+        CONF_CIF,
+        CONF_NOM,
+        CONF_COL,
+        CONF_CLF1,
+        CONF_CLF2
+    )
+VALUES (
+        1,
+        1,
+        'G57861692',
+        'Athletic Club Montuiri',
+        '#000000',
+        '#ee4f4f',
+        '#e8d1d1'
+    );
+
+INSERT INTO
+    GF_CAMPANYA (CAM_TEN, CAM_ANY, CAM_TITOL)
+VALUES (
+        1,
+        '2025-01-01',
+        'Temporada 2025-2026'
+    );
+
+INSERT INTO
+    GF_TIPSOCI (TIS_CAM, TIS_NOM, TIS_IMP)
 VALUES (1, 'Tipo Soci 1', 50);
-INSERT INTO GF_TIPSOCI (TIS_CAM, TIS_NOM, TIS_IMP)
+
+INSERT INTO
+    GF_TIPSOCI (TIS_CAM, TIS_NOM, TIS_IMP)
 VALUES (1, 'Tipo Soci 2', 75);
 
-INSERT INTO GF_CATEGORIA (CAT_CAM, CAT_NOM)
-VALUES (1, 'PREFERENTE REGIONAL MALLORCA');
-INSERT INTO GF_EQUIP (EQP_CAT, EQP_NOM, EQP_QUOTA)
-VALUES (1, 'ATHLETIC CLUB MONTUIRI', 0);
+INSERT INTO
+    GF_CATEGORIA (CAT_CAM, CAT_NOM)
+VALUES (
+        1,
+        'PREFERENTE REGIONAL MALLORCA'
+    );
 
+INSERT INTO
+    GF_EQUIP (EQP_CAT, EQP_NOM, EQP_QUOTA)
+VALUES (
+        1,
+        'ATHLETIC CLUB MONTUIRI',
+        0
+    );
 
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2025, 12, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2025, 11, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2025, 10, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2025, 9, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2025, 8, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2026, 6, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2025, 7, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2026, 5, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2026, 4, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2026, 3, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2026, 2, 1, 1);
-INSERT INTO GF_MENSUALITAT (MEN_ANY, MEN_MES, MEN_CAM, MEN_EQP)
+
+INSERT INTO
+    GF_MENSUALITAT (
+        MEN_ANY,
+        MEN_MES,
+        MEN_CAM,
+        MEN_EQP
+    )
 VALUES (2026, 1, 1, 1);
 -- Script de inserción de jugadores con licencia tipo A compatible con H2
 -- Generado automáticamente el 2025-09-09
 -- Inserciones en GF_MEMPLANT y GF_JUGADOR respetando la herencia
 -- MEM_ID se autogenera, se usa subconsulta para obtener el último ID
 
-INSERT INTO GF_POS_JUGADOR (POS_NOM)
-VALUES ('PORTER');
-INSERT INTO GF_POS_JUGADOR (POS_NOM)
-VALUES ('DEFENSA');
-INSERT INTO GF_POS_JUGADOR (POS_NOM)
-VALUES ('MIGCAMPISTA');
-INSERT INTO GF_POS_JUGADOR (POS_NOM)
-VALUES ('DAVANTER');
+INSERT INTO GF_POS_JUGADOR (POS_TEN, POS_NOM) VALUES (1, 'PORTER');
+
+INSERT INTO GF_POS_JUGADOR (POS_TEN, POS_NOM) VALUES (1, 'DEFENSA');
+
+INSERT INTO GF_POS_JUGADOR (POS_TEN, POS_NOM) VALUES (1, 'MIGCAMPISTA');
+
+INSERT INTO GF_POS_JUGADOR (POS_TEN, POS_NOM) VALUES (1, 'DAVANTER');
 
 -- Inicio de inserciones
 
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'ANTONI', 'LLULL', 'PLOMER', '2002-07-19', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 4);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'RAFEL', 'MAGRO', 'PERELLO', '2002-01-31', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 4);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'JOAN', 'MANERA', 'GARAU', '2002-07-15', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'JOSE LUIS', 'PUIGSERVER', 'TOLENTINO', '2006-09-29', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MARC', 'SANSÓ', 'SANCHEZ', '2005-09-25', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'DIDAC', 'FARRERAS', 'SERRAT', '1998-09-16', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MIGUEL A', 'ALVAREZ', 'GONZALEZ', '1985-12-06', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MIQUEL', 'BAUZA', 'BARCELO', '1998-02-19', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'JOSEP', 'BAUZA', 'POCOVI', '2002-05-28', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'JOSE', 'CASTIZO', 'GIL', '1993-01-14', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'SERGIO', 'CAVA', 'MATIES', '2005-09-26', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 4);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'BALTASAR', 'CERDA', 'GARCIAS', '2000-01-31', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MIQUEL', 'FLORIT', 'RIGO', '2000-02-09', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 4);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MIQUEL', 'GINARD', 'FIOL', '1994-11-05', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 4);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MIQUEL', 'MARTORELL', 'BAUZA', '2001-05-09', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'PERE J', 'MARTORELL', 'BAUZA', '1997-01-23', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'GUILLERMO', 'MAS', 'JAUME', '2001-06-10', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'ANTONI', 'MAYOL', 'ARBONA', '1992-02-27', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'BENET RAMON', 'MOLL', 'CAMPINS', '2000-10-06', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 1);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'MIQUEL', 'SAMANIEGO', 'ANDREU', '2004-02-23', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 2);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'BARTOMEU', 'SASTRE', 'MULET', '1994-09-27', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 3);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
-
-
-INSERT INTO GF_MEMPLANT (MEM_CAM, MEM_EQP, MEM_NOM, MEM_LLIN1, MEM_LLIN2, MEM_DNAIX, MEM_ROL)
-VALUES (1, 1, 'RACHID', 'ZOUGGAGHI', 'ZOUGGAGH', '1997-08-24', 'GF_JUGADOR');
-
-INSERT INTO GF_JUGADOR (MEM_ID, JUG_POSICIO)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 1);
-
-INSERT INTO GF_QUOTA_JUGADOR (QUO_JUG, QUO_ESTAT, QUO_EXEP, QUO_QUANT)
-VALUES ((SELECT MAX(MEM_ID) FROM GF_MEMPLANT), 'PENDENT', false, 0);
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'ANTONI',
+        'LLULL',
+        'PLOMER',
+        '2002-07-19',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        4
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'RAFEL',
+        'MAGRO',
+        'PERELLO',
+        '2002-01-31',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        4
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'JOAN',
+        'MANERA',
+        'GARAU',
+        '2002-07-15',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'JOSE LUIS',
+        'PUIGSERVER',
+        'TOLENTINO',
+        '2006-09-29',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MARC',
+        'SANSÓ',
+        'SANCHEZ',
+        '2005-09-25',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'DIDAC',
+        'FARRERAS',
+        'SERRAT',
+        '1998-09-16',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MIGUEL A',
+        'ALVAREZ',
+        'GONZALEZ',
+        '1985-12-06',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MIQUEL',
+        'BAUZA',
+        'BARCELO',
+        '1998-02-19',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'JOSEP',
+        'BAUZA',
+        'POCOVI',
+        '2002-05-28',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'JOSE',
+        'CASTIZO',
+        'GIL',
+        '1993-01-14',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'SERGIO',
+        'CAVA',
+        'MATIES',
+        '2005-09-26',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        4
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'BALTASAR',
+        'CERDA',
+        'GARCIAS',
+        '2000-01-31',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MIQUEL',
+        'FLORIT',
+        'RIGO',
+        '2000-02-09',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        4
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MIQUEL',
+        'GINARD',
+        'FIOL',
+        '1994-11-05',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        4
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MIQUEL',
+        'MARTORELL',
+        'BAUZA',
+        '2001-05-09',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'PERE J',
+        'MARTORELL',
+        'BAUZA',
+        '1997-01-23',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'GUILLERMO',
+        'MAS',
+        'JAUME',
+        '2001-06-10',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'ANTONI',
+        'MAYOL',
+        'ARBONA',
+        '1992-02-27',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'BENET RAMON',
+        'MOLL',
+        'CAMPINS',
+        '2000-10-06',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        1
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'MIQUEL',
+        'SAMANIEGO',
+        'ANDREU',
+        '2004-02-23',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        2
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'BARTOMEU',
+        'SASTRE',
+        'MULET',
+        '1994-09-27',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        3
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
+
+INSERT INTO
+    GF_MEMPLANT (
+        MEM_CAM,
+        MEM_EQP,
+        MEM_NOM,
+        MEM_LLIN1,
+        MEM_LLIN2,
+        MEM_DNAIX,
+        MEM_ROL
+    )
+VALUES (
+        1,
+        1,
+        'RACHID',
+        'ZOUGGAGHI',
+        'ZOUGGAGH',
+        '1997-08-24',
+        'GF_JUGADOR'
+    );
+
+INSERT INTO
+    GF_JUGADOR (MEM_ID, JUG_POSICIO)
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        1
+    );
+
+INSERT INTO
+    GF_QUOTA_JUGADOR (
+        QUO_JUG,
+        QUO_ESTAT,
+        QUO_EXEP,
+        QUO_QUANT
+    )
+VALUES (
+        (
+            SELECT MAX(MEM_ID)
+            FROM GF_MEMPLANT
+        ),
+        'PENDENT',
+        false,
+        0
+    );
 
 -- Fin del script
 
 -- Plantilla HTML
-INSERT INTO GF_PLANTILLA_DOCUMENTO
-    (PLA_COD, PLA_NOM, PLA_IDI, PLA_HTML, PLA_CREA, PLA_ACT)
-VALUES ('REBUT_PATROCINI',
+INSERT INTO
+    GF_PLANTILLA_DOCUMENTO (
+        PLA_TEN,
+        PLA_COD,
+        PLA_NOM,
+        PLA_IDI,
+        PLA_HTML,
+        PLA_CREA,
+        PLA_ACT
+    )
+VALUES (
+        1,
+        'REBUT_PATROCINI',
         'Rebut de donatiu',
         'ca',
         '
@@ -351,4 +1361,7 @@ VALUES ('REBUT_PATROCINI',
 </section>
 <footer class="footer">
 <div>&nbsp;</div>
-</footer>', NOW(), NOW());
+</footer>',
+        NOW(),
+        NOW()
+    );

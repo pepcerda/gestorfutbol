@@ -1,6 +1,8 @@
 package com.jcerdar.gestorfutbol.service;
 
+import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.persistence.dao.PlantillaDocumentDao;
+import com.jcerdar.gestorfutbol.persistence.dao.TenantDao;
 import com.jcerdar.gestorfutbol.persistence.model.PlantillaDocument;
 import com.jcerdar.gestorfutbol.service.model.PlantillaDocumentDTO;
 import com.jcerdar.gestorfutbol.service.util.HtmlCleaner;
@@ -23,44 +25,39 @@ public class PdfGeneradorServiceImpl implements PdfGeneradorService {
     @Autowired
     private ModelMapper modelMapper;
 
-
     @Override
-    public List<PlantillaDocumentDTO> getAllPlantillesDocuments() {
-        List<PlantillaDocument> plantilles = plantillaDocumentDao.findAll();
+    public List<PlantillaDocumentDTO> getAllPlantillesDocuments(Filtre filtre) {
+        List<PlantillaDocument> plantilles = plantillaDocumentDao.findAllByTenantId(filtre.getTenantId());
         return plantilles.stream()
                 .map(plantilla -> modelMapper.map(plantilla, PlantillaDocumentDTO.class))
                 .toList();
     }
 
     @Override
-    public PlantillaDocumentDTO getPlantillaDocumentByCodi(String codi) {
+    public PlantillaDocumentDTO getPlantillaDocumentByCodi(Filtre filtre) {
         PlantillaDocument plantillaDocument = plantillaDocumentDao
-                .findByCodi(codi)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "No existe plantilla activa para el código: " + codi
-                        )
-                );
+                .findByCodiAndTenantId(filtre.getCodiDocument(), filtre.getTenantId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No existe plantilla activa para el código: " + filtre.getCodiDocument()));
         return modelMapper.map(plantillaDocument, PlantillaDocumentDTO.class);
     }
 
     @Override
     public Long savePlantillaDocument(PlantillaDocumentDTO plantillaDocumentDTO) {
-        PlantillaDocument plantillaDocument = plantillaDocumentDao.findByCodi(plantillaDocumentDTO.getCodi()).orElse(new PlantillaDocument());
+        PlantillaDocument plantillaDocument = plantillaDocumentDao
+                .findByCodiAndTenantId(plantillaDocumentDTO.getCodi(), plantillaDocumentDTO.getTenantId())
+                .orElse(new PlantillaDocument());
         plantillaDocument.setContingutHtml(plantillaDocumentDTO.getContingutHtml());
         plantillaDocument = plantillaDocumentDao.save(plantillaDocument);
         return plantillaDocument.getId();
     }
 
     @Override
-    public String generarPdfDesdeHtml(String codi, String lang, Map<String, String> data) {
+    public String generarPdfDesdeHtml(String codi, Long tenantId, String lang, Map<String, String> data) {
         PlantillaDocument plantilla = plantillaDocumentDao
-                .findByCodi(codi)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "No existe plantilla activa para el código: " + codi
-                        )
-                );
+                .findByCodiAndTenantId(codi, tenantId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No existe plantilla activa para el código: " + codi));
 
         String htmlFinal = buildHtml(plantilla, data);
 
@@ -76,8 +73,7 @@ public class PdfGeneradorServiceImpl implements PdfGeneradorService {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             html = html.replace(
                     "{{" + entry.getKey() + "}}",
-                    entry.getValue() != null ? entry.getValue() : ""
-            );
+                    entry.getValue() != null ? entry.getValue() : "");
         }
 
         return """
@@ -96,8 +92,7 @@ public class PdfGeneradorServiceImpl implements PdfGeneradorService {
                 </html>
                 """.formatted(
                 plantilla.getContingutCss() != null ? plantilla.getContingutCss() : "",
-                html
-        );
+                html);
     }
 
     private byte[] generatePdf(String htmlContent) {

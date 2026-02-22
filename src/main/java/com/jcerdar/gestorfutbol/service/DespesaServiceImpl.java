@@ -1,6 +1,5 @@
 package com.jcerdar.gestorfutbol.service;
 
-
 import com.jcerdar.gestorfutbol.apirest.v1.model.Filtre;
 import com.jcerdar.gestorfutbol.persistence.dao.*;
 import com.jcerdar.gestorfutbol.persistence.model.*;
@@ -22,7 +21,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class DespesaServiceImpl implements DespesaService{
+public class DespesaServiceImpl implements DespesaService {
+
+    @Autowired
+    private TenantDao tenantDao;
 
     @Autowired
     private CampanyaDao campanyaDao;
@@ -61,6 +63,11 @@ public class DespesaServiceImpl implements DespesaService{
     public void init() {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 
+        Converter<Long, Tenant> toTenant = ctx -> {
+            Tenant tenant = tenantDao.findById(ctx.getSource()).orElse(null);
+            return tenant;
+        };
+
         Converter<Long, Campanya> toCampanya = ctx -> {
             Campanya campanya = campanyaDao.findById(ctx.getSource()).orElse(null);
             return campanya;
@@ -81,24 +88,34 @@ public class DespesaServiceImpl implements DespesaService{
             return membrePlantilla;
         };
 
-        TypeMap<CaixaFixa, CaixaFixaDTO> caixaFixaMapper = modelMapper.createTypeMap(CaixaFixa.class, CaixaFixaDTO.class);
+        TypeMap<CaixaFixa, CaixaFixaDTO> caixaFixaMapper = modelMapper.createTypeMap(CaixaFixa.class,
+                CaixaFixaDTO.class);
         caixaFixaMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), CaixaFixaDTO::setCampanya));
 
-        TypeMap<CaixaFixaDTO, CaixaFixa> jCaixaFixaMapper = modelMapper.createTypeMap(CaixaFixaDTO.class, CaixaFixa.class);
+        TypeMap<CaixaFixaDTO, CaixaFixa> jCaixaFixaMapper = modelMapper.createTypeMap(CaixaFixaDTO.class,
+                CaixaFixa.class);
         jCaixaFixaMapper.addMappings(mapper -> mapper.skip(CaixaFixa::setFactura));
-        jCaixaFixaMapper.addMappings(mapper -> mapper.using(toCampanya).map(CaixaFixaDTO::getCampanya, CaixaFixa::setCampanya));
+        jCaixaFixaMapper
+                .addMappings(mapper -> mapper.using(toCampanya).map(CaixaFixaDTO::getCampanya, CaixaFixa::setCampanya));
 
-        TypeMap<MensualitatDTO, Mensualitat> jMensualitatMapper = modelMapper.createTypeMap(MensualitatDTO.class, Mensualitat.class);
-        jMensualitatMapper.addMappings(mapper -> mapper.using(toCampanya).map(MensualitatDTO::getCampanya, Mensualitat::setCampanya));
-        jMensualitatMapper.addMappings(mapper -> mapper.using(toEquip).map(MensualitatDTO::getEquip, Mensualitat::setEquip));
+        TypeMap<MensualitatDTO, Mensualitat> jMensualitatMapper = modelMapper.createTypeMap(MensualitatDTO.class,
+                Mensualitat.class);
+        jMensualitatMapper.addMappings(
+                mapper -> mapper.using(toCampanya).map(MensualitatDTO::getCampanya, Mensualitat::setCampanya));
+        jMensualitatMapper
+                .addMappings(mapper -> mapper.using(toEquip).map(MensualitatDTO::getEquip, Mensualitat::setEquip));
 
-        TypeMap<Mensualitat, MensualitatDTO> mensualitatMapper = modelMapper.createTypeMap(Mensualitat.class, MensualitatDTO.class);
-        mensualitatMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MensualitatDTO::setCampanya));
+        TypeMap<Mensualitat, MensualitatDTO> mensualitatMapper = modelMapper.createTypeMap(Mensualitat.class,
+                MensualitatDTO.class);
+        mensualitatMapper
+                .addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), MensualitatDTO::setCampanya));
         mensualitatMapper.addMappings(mapper -> mapper.map(src -> src.getEquip().getId(), MensualitatDTO::setEquip));
 
         TypeMap<NominaDTO, Nomina> jNominaMapper = modelMapper.createTypeMap(NominaDTO.class, Nomina.class);
-        jNominaMapper.addMappings(mapper -> mapper.using(toMembrePlantilla).map(NominaDTO::getMembre, Nomina::setMembre));
-        jNominaMapper.addMappings(mapper -> mapper.using(toMensualitat).map(NominaDTO::getMensualitat, Nomina::setMensualitat));
+        jNominaMapper
+                .addMappings(mapper -> mapper.using(toMembrePlantilla).map(NominaDTO::getMembre, Nomina::setMembre));
+        jNominaMapper.addMappings(
+                mapper -> mapper.using(toMensualitat).map(NominaDTO::getMensualitat, Nomina::setMensualitat));
 
         TypeMap<Nomina, NominaDTO> nominaMapper = modelMapper.createTypeMap(Nomina.class, NominaDTO.class);
         nominaMapper.addMappings(mapper -> mapper.map(src -> src.getMembre().getId(), NominaDTO::setMembre));
@@ -109,22 +126,42 @@ public class DespesaServiceImpl implements DespesaService{
 
         TypeMap<FacturaDTO, Factura> jFacturaMapper = modelMapper.createTypeMap(FacturaDTO.class, Factura.class);
         jFacturaMapper.addMappings(mapper -> mapper.skip(Factura::setDocument));
-        jFacturaMapper.addMappings(mapper -> mapper.using(toCampanya).map(FacturaDTO::getCampanya, Factura::setCampanya));
+        jFacturaMapper
+                .addMappings(mapper -> mapper.using(toCampanya).map(FacturaDTO::getCampanya, Factura::setCampanya));
+
+        TypeMap<Proveidor, ProveidorDTO> proveidorMapper = modelMapper.createTypeMap(Proveidor.class,
+                ProveidorDTO.class);
+        proveidorMapper.addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), ProveidorDTO::setTenantId));
+
+        TypeMap<ProveidorDTO, Proveidor> jProveidorMapper = modelMapper.createTypeMap(ProveidorDTO.class,
+                Proveidor.class);
+        jProveidorMapper
+                .addMappings(mapper -> mapper.using(toTenant).map(ProveidorDTO::getTenantId, Proveidor::setTenant));
+
+        TypeMap<CategoriaDespesa, CategoriaDespesaDTO> categoriaDespesaMapper = modelMapper
+                .createTypeMap(CategoriaDespesa.class, CategoriaDespesaDTO.class);
+        categoriaDespesaMapper
+                .addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), CategoriaDespesaDTO::setTenantId));
+
+        TypeMap<CategoriaDespesaDTO, CategoriaDespesa> jCategoriaDespesaMapper = modelMapper
+                .createTypeMap(CategoriaDespesaDTO.class, CategoriaDespesa.class);
+        jCategoriaDespesaMapper.addMappings(
+                mapper -> mapper.using(toTenant).map(CategoriaDespesaDTO::getTenantId, CategoriaDespesa::setTenant));
 
     }
 
     @Override
     public List<CaixaFixaDTO> listAllCaixaFixa(Filtre filtre) {
         List<CaixaFixa> caixaFixas = caixaFixaDao.buscarConFiltrosAll(filtre);
-        List<CaixaFixaDTO> caixaFixaDTOs = new ArrayList<>(); 
-        if(!caixaFixas.isEmpty()) {
-            caixaFixaDTOs = caixaFixas.stream().map(c -> modelMapper.map(c, CaixaFixaDTO.class)).collect(Collectors.toList());
+        List<CaixaFixaDTO> caixaFixaDTOs = new ArrayList<>();
+        if (!caixaFixas.isEmpty()) {
+            caixaFixaDTOs = caixaFixas.stream().map(c -> modelMapper.map(c, CaixaFixaDTO.class))
+                    .collect(Collectors.toList());
         }
 
-        return caixaFixaDTOs; 
-       
-    }
+        return caixaFixaDTOs;
 
+    }
 
     @Override
     public PaginaDTO<List<CaixaFixaDTO>> listCaixaFixa(Filtre filtre) {
@@ -149,7 +186,7 @@ public class DespesaServiceImpl implements DespesaService{
     @Override
     public void deleteCaixaFixa(Long id) {
         caixaFixaDao.deleteById(id);
-        //TODO: No eliminamos el fichero asociado a la fila de BBDD.
+        // TODO: No eliminamos el fichero asociado a la fila de BBDD.
     }
 
     @Override
@@ -176,20 +213,23 @@ public class DespesaServiceImpl implements DespesaService{
 
     @Override
     public List<MensualitatDTO> listAllMensualitats(Filtre filtre) {
-        List<Mensualitat> mensualitats = mensualitatDao.findMensualitatsByEquipAndCampanya(filtre.getEquipActiu(), filtre.getCampanyaActiva());
+        List<Mensualitat> mensualitats = mensualitatDao.findMensualitatsByEquipAndCampanya(filtre.getEquipActiu(),
+                filtre.getCampanyaActiva());
         List<MensualitatDTO> mensualitatDTOS = new ArrayList<>();
         if (!mensualitats.isEmpty()) {
-            mensualitatDTOS = mensualitats.stream().map(c -> modelMapper.map(c, MensualitatDTO.class)).collect(Collectors.toList());
+            mensualitatDTOS = mensualitats.stream().map(c -> modelMapper.map(c, MensualitatDTO.class))
+                    .collect(Collectors.toList());
         }
         return mensualitatDTOS;
     }
 
     @Override
-    public List<ProveidorDTO> listAllProveidors() {
-        List<Proveidor> proveidors = proveidorDao.findAll();
+    public List<ProveidorDTO> listAllProveidors(Filtre filtre) {
+        List<Proveidor> proveidors = proveidorDao.findAllByTenantId(filtre.getTenantId());
         List<ProveidorDTO> proveidorDTOS = new ArrayList<>();
         if (!proveidors.isEmpty()) {
-            proveidorDTOS = proveidors.stream().map(c -> modelMapper.map(c, ProveidorDTO.class)).collect(Collectors.toList());
+            proveidorDTOS = proveidors.stream().map(c -> modelMapper.map(c, ProveidorDTO.class))
+                    .collect(Collectors.toList());
         }
         return proveidorDTOS;
 
@@ -197,7 +237,8 @@ public class DespesaServiceImpl implements DespesaService{
 
     @Override
     public PaginaDTO<List<ProveidorDTO>> listProveidors(Filtre filtre) {
-        Page<Proveidor> proveidors = proveidorDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<Proveidor> proveidors = proveidorDao.findAllByTenantId(filtre.getTenantId(),
+                PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<ProveidorDTO>> paginaDTO = new PaginaDTO<>();
         List<ProveidorDTO> proveidorDTOS = new ArrayList<>();
         if (proveidors.getTotalElements() > 0) {
@@ -221,12 +262,12 @@ public class DespesaServiceImpl implements DespesaService{
 
     @Override
     public List<FacturaDTO> listAllFactura(Filtre filtre) {
-        List<Factura> factures = facturaDao.buscarConFiltrosAll(filtre); 
+        List<Factura> factures = facturaDao.buscarConFiltrosAll(filtre);
         List<FacturaDTO> facturaDTOs = new ArrayList<>();
-        if(!factures.isEmpty()) {
+        if (!factures.isEmpty()) {
             facturaDTOs = factures.stream().map(c -> modelMapper.map(c, FacturaDTO.class)).collect(Collectors.toList());
         }
-        return facturaDTOs; 
+        return facturaDTOs;
     }
 
     @Override
@@ -255,11 +296,12 @@ public class DespesaServiceImpl implements DespesaService{
     }
 
     @Override
-    public List<CategoriaDespesaDTO> listAllCategoriesDespesa() {
-        List<CategoriaDespesa> categoriaDespesas = categoriaDespesaDao.findAll();
+    public List<CategoriaDespesaDTO> listAllCategoriesDespesa(Filtre filtre) {
+        List<CategoriaDespesa> categoriaDespesas = categoriaDespesaDao.findAllByTenantId(filtre.getTenantId());
         List<CategoriaDespesaDTO> categoriaDespesaDTOS = new ArrayList<>();
         if (!categoriaDespesas.isEmpty()) {
-            categoriaDespesaDTOS = categoriaDespesas.stream().map(c -> modelMapper.map(c, CategoriaDespesaDTO.class)).collect(Collectors.toList());
+            categoriaDespesaDTOS = categoriaDespesas.stream().map(c -> modelMapper.map(c, CategoriaDespesaDTO.class))
+                    .collect(Collectors.toList());
         }
         return categoriaDespesaDTOS;
     }
@@ -270,7 +312,8 @@ public class DespesaServiceImpl implements DespesaService{
         PaginaDTO<List<CategoriaDespesaDTO>> paginaDTO = new PaginaDTO<>();
         List<CategoriaDespesaDTO> categoriaDespesaDTOS = new ArrayList<>();
         if (categoriaDespesas.getTotalElements() > 0) {
-            categoriaDespesaDTOS = categoriaDespesas.map(c -> modelMapper.map(c, CategoriaDespesaDTO.class)).getContent();
+            categoriaDespesaDTOS = categoriaDespesas.map(c -> modelMapper.map(c, CategoriaDespesaDTO.class))
+                    .getContent();
             paginaDTO.setTotal(categoriaDespesas.getTotalElements());
             paginaDTO.setResult(categoriaDespesaDTOS);
         }
@@ -287,7 +330,6 @@ public class DespesaServiceImpl implements DespesaService{
     public void deleteCategoriaDespesa(Long id) {
         categoriaDespesaDao.deleteById(id);
     }
-
 
     private CaixaFixa jCaixaFixaMapper(CaixaFixaDTO caixaFixaDTO, MultipartFile file) {
         CaixaFixa caixaFixa = modelMapper.map(caixaFixaDTO, CaixaFixa.class);
@@ -320,7 +362,5 @@ public class DespesaServiceImpl implements DespesaService{
         }
         return factura;
     }
-
-
 
 }
