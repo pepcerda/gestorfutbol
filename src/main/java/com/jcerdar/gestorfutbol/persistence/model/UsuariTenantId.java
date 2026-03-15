@@ -9,6 +9,14 @@ public class UsuariTenantId implements Serializable {
 
     private Long tenant;
 
+    public UsuariTenantId() {
+    }
+
+    public UsuariTenantId(Long usuari, Long tenant) {
+        this.usuari = usuari;
+        this.tenant = tenant;
+    }
+
     public Long getUsuari() {
         return usuari;
     }

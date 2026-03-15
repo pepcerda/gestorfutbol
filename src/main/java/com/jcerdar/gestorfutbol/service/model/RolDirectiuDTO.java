@@ -2,7 +2,6 @@ package com.jcerdar.gestorfutbol.service.model;
 
 public class RolDirectiuDTO {
 
-
     private Long id;
 
     private Long tenantId;

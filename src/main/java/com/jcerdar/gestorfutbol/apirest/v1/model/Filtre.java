@@ -5,13 +5,15 @@ import java.util.Map;
 
 public class Filtre {
 
-    private int pageNum = 1;
+    private int pageNum = 0;
 
     private int pageSize = 10;
 
     private String lang = "es";
 
-    private String userId;
+    private Long userId;
+
+    private String providerId;
 
     private Long tenantId;
 
@@ -65,12 +67,20 @@ public class Filtre {
         this.tenantId = tenantId;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
     }
 
     public Long getCampanyaActiva() {

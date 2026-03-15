@@ -8,13 +8,15 @@ public class UsuariTenantDTO {
 
     private String providerId;
 
-    private Boolean isSuperAdmin;
+    private Boolean superAdmin;
 
     private String nom;
 
+    private String cognoms;
+
     private String email;
 
-    private String rol; 
+    private RolDTO rol;
 
     private Boolean actiu; 
 
@@ -43,11 +45,11 @@ public class UsuariTenantDTO {
     }
 
     public Boolean getSuperAdmin() {
-        return isSuperAdmin;
+        return superAdmin;
     }
 
     public void setSuperAdmin(Boolean superAdmin) {
-        isSuperAdmin = superAdmin;
+        this.superAdmin = superAdmin;
     }
 
     public String getNom() {
@@ -58,6 +60,14 @@ public class UsuariTenantDTO {
         this.nom = nom;
     }
 
+    public String getCognoms() {
+        return cognoms;
+    }
+
+    public void setCognoms(String cognoms) {
+        this.cognoms = cognoms;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -66,11 +76,11 @@ public class UsuariTenantDTO {
         this.email = email;
     }
 
-    public String getRol() {
+    public RolDTO getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(RolDTO rol) {
         this.rol = rol;
     }
 

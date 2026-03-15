@@ -17,6 +17,8 @@ public interface GestorFutbolService {
 
     void deleteTenant(Long id);
 
+    List<PlaSuscripcioDTO> listPlaSuscripcio();
+
     PaginaDTO<List<CampanyaDTO>> listCampanyas(Filtre filtre);
 
     List<CampanyaDTO> listAllCampanyas(Filtre filtre);
@@ -25,9 +27,15 @@ public interface GestorFutbolService {
 
     void deleteCampanya(Long id);
 
-    List<RolDirectiuDTO> listRolsDirectiu(Filtre filtre);
+    PaginaDTO<List<RolDirectiuDTO>> listRolsDirectius(Filtre filtre);
+
+    List<RolDirectiuDTO> listAllRolsDirectiu(Filtre filtre);
 
     PaginaDTO<List<DirectiuDTO>> listDirectius(Filtre filtre);
+
+    Long saveRolDirectiu(RolDirectiuDTO rolDirectiuDTO);
+
+    void deleteRolDirectiu(Long id);
 
     Long saveDirectiu(DirectiuDTO directiuDTO);
 
@@ -65,7 +73,7 @@ public interface GestorFutbolService {
 
     List<JugadorDTO> listAllJugadors(Filtre filtre);
 
-    List<PosicioDTO> listAllPosicions();
+    List<PosicioDTO> listAllPosicions(Filtre filtre);
 
     PaginaDTO<List<PosicioDTO>> listPosicions(Filtre filtre);
 

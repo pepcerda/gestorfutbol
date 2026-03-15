@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.jcerdar.gestorfutbol.persistence.dao.*;
 import com.jcerdar.gestorfutbol.persistence.model.*;
+import com.jcerdar.gestorfutbol.persistence.model.type.Posicio;
 import com.jcerdar.gestorfutbol.service.model.*;
 import jakarta.transaction.Transactional;
 import org.modelmapper.Converter;
@@ -91,6 +92,12 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Autowired
     private GestioUsuarisService gestioUsuarisService;
+
+    @Autowired
+    private PlaSuscripcioDao plaSuscripcioDao;
+
+    @Autowired
+    private PlantillaDocumentDao plantillaDocumentDao;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -216,6 +223,12 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
         TypeMap<Categoria, CategoriaDTO> categoriaMapper = modelMapper.createTypeMap(Categoria.class, CategoriaDTO.class);
         categoriaMapper.addMappings(mapper -> mapper.map(src -> src.getCampanya().getId(), CategoriaDTO::setCampanya));
+
+        TypeMap<PosicioJugador, PosicioDTO> posicioMapper = modelMapper.createTypeMap(PosicioJugador.class, PosicioDTO.class);
+        posicioMapper.addMappings(mapper -> mapper.map(src -> src.getTenant().getId(), PosicioDTO::setTenantId));
+
+        TypeMap<PosicioDTO, PosicioJugador> jPosicioMapper = modelMapper.createTypeMap(PosicioDTO.class, PosicioJugador.class);
+        jPosicioMapper.addMappings(mapper -> mapper.using(toTenant).map(PosicioDTO::getTenantId, PosicioJugador::setTenant));
     }
 
     @Override
@@ -244,22 +257,52 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     @Override
     public Long saveTenant(TenantDTO tenantDTO) {
         //1. Crear tenant
-        Tenant tenant = modelMapper.map(tenantDTO, Tenant.class);
-        tenant = tenantDao.save(tenant);
+        if(tenantDTO.getId() == null) {
+            Tenant tenant = modelMapper.map(tenantDTO, Tenant.class);
+            tenant = tenantDao.save(tenant);
 
-        //2. Crear usuari administrador del tenant
-        if(tenantDTO.getUsuariAdmin() != null && tenantDTO.getUsuariAdmin().getRol() == null) {
-            tenantDTO.getUsuariAdmin().setRol("ADMIN");
+            UsuariTenantDTO usuariTenantDTO = tenantDTO.getUsuariAdmin();
+            usuariTenantDTO.setTenantId(tenant.getId());
+            gestioUsuarisService.saveUsuari(usuariTenantDTO);
+
+            //2. Generar plantilla document buida
+            PlantillaDocument plantillaDocument = new PlantillaDocument();
+            plantillaDocument.setTenant(tenant);
+            plantillaDocument.setCodi("REBUT_PATROCINI");
+            plantillaDocument.setNom("Rebut patrocinador");
+            plantillaDocument.setIdioma("ca");
+            plantillaDocument.setContingutHtml("<html><body><p>Rebut patrocinador</p></body></html>");
+            plantillaDocumentDao.save(plantillaDocument);
+
+            //3. Generar configuracio per defecte
+            Configuracio configuracio = new Configuracio();
+            configuracio.setTenant(tenant);
+            configuracio.setColorPrincipal("#003274");
+            configuracio.setColorFons1("#00adff");
+            configuracio.setColorFons2("#5aceeb");
+            configuracioDao.save(configuracio);
+
+            return tenant.getId();
+        } else {
+            Tenant tenant = modelMapper.map(tenantDTO, Tenant.class);
+            tenantDao.save(tenant);
+            return tenant.getId();
         }
-        gestioUsuarisService.saveUsuari(tenantDTO.getUsuariAdmin()); 
-
-
-        return tenant.getId();
     }
 
     @Override
     public void deleteTenant(Long id) {
         tenantDao.deleteById(id);
+    }
+
+    @Override
+    public List<PlaSuscripcioDTO> listPlaSuscripcio() {
+        List<PlaSuscripcio> plaSuscripcions = plaSuscripcioDao.findAll();
+        List<PlaSuscripcioDTO> plaSuscripcioDTOS = new ArrayList<>();
+        if (!plaSuscripcions.isEmpty()) {
+            plaSuscripcioDTOS = plaSuscripcions.stream().map(p -> modelMapper.map(p, PlaSuscripcioDTO.class)).collect(Collectors.toList());
+        }
+        return plaSuscripcioDTOS;
     }
 
     @Override
@@ -309,9 +352,22 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
         campanyaDao.deleteById(id);
     }
 
+    @Override
+    public PaginaDTO<List<RolDirectiuDTO>> listRolsDirectius(Filtre filtre) {
+        Page<RolDirectiu> rols = rolDirectiuDao.findAllByTenantId(filtre.getTenantId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        PaginaDTO<List<RolDirectiuDTO>> paginaDTO = new PaginaDTO<>();
+        List<RolDirectiuDTO> rolsDTO = new ArrayList<>();
+        if (rols.getTotalElements() > 0) {
+            rolsDTO = rols.stream().map(r -> modelMapper.map(r, RolDirectiuDTO.class)).collect(Collectors.toList());
+            paginaDTO.setResult(rolsDTO);
+            paginaDTO.setTotal(rols.getTotalElements());
+        }
+        return paginaDTO;
+    }
+
 
     @Override
-    public List<RolDirectiuDTO> listRolsDirectiu(Filtre filtre) {
+    public List<RolDirectiuDTO> listAllRolsDirectiu(Filtre filtre) {
         List<RolDirectiu> rols = rolDirectiuDao.findAllByTenantId(filtre.getTenantId());
         List<RolDirectiuDTO> rolsDTO = new ArrayList<>();
         if (!rols.isEmpty()) {
@@ -332,6 +388,18 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
             paginaDTO.setResult(directiuDTOS);
         }
         return paginaDTO;
+    }
+
+    @Override
+    public Long saveRolDirectiu(RolDirectiuDTO rolDirectiuDTO) {
+        RolDirectiu rolDirectiu = modelMapper.map(rolDirectiuDTO, RolDirectiu.class);
+        rolDirectiu = rolDirectiuDao.save(rolDirectiu);
+        return rolDirectiu.getId();
+    }
+
+    @Override
+    public void deleteRolDirectiu(Long id) {
+        rolDirectiuDao.deleteById(id);
     }
 
     @Override
@@ -498,8 +566,8 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
     }
 
     @Override
-    public List<PosicioDTO> listAllPosicions() {
-        List<PosicioJugador> posicions = posicioJugadorDao.findAll();
+    public List<PosicioDTO> listAllPosicions(Filtre filtre) {
+        List<PosicioJugador> posicions = posicioJugadorDao.findAllByTenantId(filtre.getTenantId());
         List<PosicioDTO> posicioDTOS = new ArrayList<>();
         if (!posicions.isEmpty()) {
             posicioDTOS = posicions.stream().map(p -> modelMapper.map(p, PosicioDTO.class)).collect(Collectors.toList());
@@ -509,7 +577,7 @@ public class GestorFutbolServiceImpl implements GestorFutbolService {
 
     @Override
     public PaginaDTO<List<PosicioDTO>> listPosicions(Filtre filtre) {
-        Page<PosicioJugador> posicions = posicioJugadorDao.findAll(PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
+        Page<PosicioJugador> posicions = posicioJugadorDao.findByTenantId(filtre.getTenantId(), PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<PosicioDTO>> paginaDTO = new PaginaDTO<>();
         List<PosicioDTO> posicioDTOS = new ArrayList<>();
         if (posicions.getTotalElements() > 0) {

@@ -1,5 +1,6 @@
 package com.jcerdar.gestorfutbol.service;
 
+import com.jcerdar.gestorfutbol.service.model.ProveidorResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -27,17 +28,18 @@ public class KindeAdminClientImpl implements ProveidorUsuarisAdminClient {
 
 
     @Override
-    public void crearUsuari(CreacioUsuariRequestDTO creacioUsuariRequestDTO) {
+    public ProveidorResponseDTO crearUsuari(CreacioUsuariRequestDTO creacioUsuariRequestDTO) {
        String token = oAuthClientService.getAccessToken();
 
-        webClient.post()
-                .uri(audience + "/v1/users")
+        return webClient.post()
+                .uri(audience + "/v1/user")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(creacioUsuariRequestDTO)
                 .retrieve()
-                .toBodilessEntity()
-                .block();
+                // Aquí especificamos que queremos el cuerpo mapeado a nuestra clase
+                .bodyToMono(ProveidorResponseDTO.class)
+                .block(); // Bloqueamos para obtener el resultado de forma síncrona
     }
 
     @Override
@@ -49,6 +51,18 @@ public class KindeAdminClientImpl implements ProveidorUsuarisAdminClient {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .retrieve()
                 .bodyToMono(String.class)
+                .block();
+    }
+
+    @Override
+    public void eliminarUsuari(String userId) {
+        String token = oAuthClientService.getAccessToken();
+
+        webClient.delete()
+                .uri(audience + "/v1/user?id=" + userId)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .retrieve()
+                .toBodilessEntity()
                 .block();
     }
 

@@ -10,9 +10,11 @@ public class TenantDTO {
 
     private String nom;
 
-    private String estat;
+    private Boolean actiu;
 
     private Date dataCreacio;
+
+    private Date dataBaixa;
 
     private UsuariTenantDTO usuariAdmin;
 
@@ -40,12 +42,12 @@ public class TenantDTO {
         this.nom = nom;
     }
 
-    public String getEstat() {
-        return estat;
+    public Boolean getActiu() {
+        return actiu;
     }
 
-    public void setEstat(String estat) {
-        this.estat = estat;
+    public void setActiu(Boolean actiu) {
+        this.actiu = actiu;
     }
 
     public Date getDataCreacio() {
@@ -54,6 +56,14 @@ public class TenantDTO {
 
     public void setDataCreacio(Date dataCreacio) {
         this.dataCreacio = dataCreacio;
+    }
+
+    public Date getDataBaixa() {
+        return dataBaixa;
+    }
+
+    public void setDataBaixa(Date dataBaixa) {
+        this.dataBaixa = dataBaixa;
     }
 
     public UsuariTenantDTO getUsuariAdmin() {

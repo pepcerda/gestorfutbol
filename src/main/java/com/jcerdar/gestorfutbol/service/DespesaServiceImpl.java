@@ -237,7 +237,7 @@ public class DespesaServiceImpl implements DespesaService {
 
     @Override
     public PaginaDTO<List<ProveidorDTO>> listProveidors(Filtre filtre) {
-        Page<Proveidor> proveidors = proveidorDao.findAllByTenantId(filtre.getTenantId(),
+            Page<Proveidor> proveidors = proveidorDao.findAllByTenantId(filtre.getTenantId(),
                 PageRequest.of(filtre.getPageNum(), filtre.getPageSize()));
         PaginaDTO<List<ProveidorDTO>> paginaDTO = new PaginaDTO<>();
         List<ProveidorDTO> proveidorDTOS = new ArrayList<>();

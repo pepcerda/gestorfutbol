@@ -17,9 +17,9 @@ public class UsuariTenant {
     @JoinColumn(name = "UT_TEN_ID", nullable = false)
     private Tenant tenant;
 
-
-    @Column(name = "UT_ROL", nullable = false)
-    private String rol;
+    @ManyToOne
+    @JoinColumn(name = "UT_ROL", nullable = false)
+    private RolUsuariTenant rol;
 
     @Column(name = "UT_ACTIU", nullable = false)
     private Boolean actiu;
@@ -40,11 +40,11 @@ public class UsuariTenant {
         this.tenant = tenant;
     }
 
-    public String getRol() {
+    public RolUsuariTenant getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(RolUsuariTenant rol) {
         this.rol = rol;
     }
 

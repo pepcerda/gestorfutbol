@@ -40,9 +40,6 @@ public class GestorFutbolController extends BaseController{
     @Autowired
     private IngressosService ingressosService;
 
-    @Autowired
-    private MediaService mediaService; 
-
     @GetMapping("/campanyas/{tenantId}")
     public ResponseEntity<List<CampanyaDTO>> listCampanyas(@PathVariable Long tenantId) {
         Filtre filtre = new Filtre();
@@ -159,13 +156,35 @@ public class GestorFutbolController extends BaseController{
     public ResponseEntity<List<RolDirectiuDTO>> listRolsDirectius(@PathVariable Long tenantId) {
         Filtre filtre = new Filtre();
         filtre.setTenantId(tenantId);
-        return ResponseEntity.ok(gestorFutbolService.listRolsDirectiu(filtre));
+        return ResponseEntity.ok(gestorFutbolService.listAllRolsDirectiu(filtre));
     }
+
+    @PostMapping("/rols-directius")
+    public ResponseEntity<PaginaDTO<List<RolDirectiuDTO>>> listRolsDirectius(@RequestBody Filtre filtre) {
+        return ResponseEntity.ok(gestorFutbolService.listRolsDirectius(filtre));
+    }
+
+    @PostMapping("/rol-directiu")
+    public ResponseEntity<Long> saveRolDirectiu(@RequestBody RolDirectiuDTO rolDirectiuDTO) {
+        return ResponseEntity.ok(gestorFutbolService.saveRolDirectiu(rolDirectiuDTO));
+    }
+
+    @DeleteMapping("/rol-directiu/{id}")
+    public ResponseEntity<String> deleteRolDirectiu(@PathVariable Long id) {
+        try {
+            gestorFutbolService.deleteRolDirectiu(id);
+            return ResponseEntity.ok("Eliminat correctament");
+        } catch (Exception e)  {
+            return new ResponseEntity<>("No s'ha trobat element amb identificador", HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     @PostMapping("/directius")
     public ResponseEntity<PaginaDTO<List<DirectiuDTO>>> listDirectius(@RequestBody Filtre filtre) {
         return ResponseEntity.ok(gestorFutbolService.listDirectius(filtre));
     }
+
 
     @PostMapping("/directiu")
     public ResponseEntity<Long> saveDirectiu(@RequestBody DirectiuDTO directiuDTO) {
@@ -354,9 +373,11 @@ public class GestorFutbolController extends BaseController{
         }
     }
 
-    @GetMapping("/posicions")
-    public ResponseEntity<List<PosicioDTO>> getPosicions() {
-        return ResponseEntity.ok(gestorFutbolService.listAllPosicions());
+    @GetMapping("/posicions/{tenantId}")
+    public ResponseEntity<List<PosicioDTO>> getPosicions(@PathVariable Long tenantId) {
+        Filtre filtre = new Filtre();
+        filtre.setTenantId(tenantId);
+        return ResponseEntity.ok(gestorFutbolService.listAllPosicions(filtre));
     }
 
     @PostMapping("/posicions")

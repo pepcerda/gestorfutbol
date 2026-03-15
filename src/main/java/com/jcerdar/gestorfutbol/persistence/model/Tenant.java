@@ -21,12 +21,15 @@ public class Tenant {
     @Column(name = "TEN_NOM", nullable = false)
     private String nom;
 
-    @Column(name = "TEN_ESTAT", nullable = false)
-    private String estat;
+    @Column(name = "TEN_ACTIU", nullable = false)
+    private Boolean actiu;
 
     @CreationTimestamp
     @Column(name = "TEN_FCREA", nullable = false)
     private Date dataCreacio;
+
+    @Column(name = "TEN_FBAIXA")
+    private Date dataBaixa;
 
     public Long getId() {
         return id;
@@ -52,12 +55,12 @@ public class Tenant {
         this.nom = nom;
     }
 
-    public String getEstat() {
-        return estat;
+    public Boolean getActiu() {
+        return actiu;
     }
 
-    public void setEstat(String estat) {
-        this.estat = estat;
+    public void setActiu(Boolean actiu) {
+        this.actiu = actiu;
     }
 
     public Date getDataCreacio() {
@@ -66,5 +69,13 @@ public class Tenant {
 
     public void setDataCreacio(Date dataCreacio) {
         this.dataCreacio = dataCreacio;
+    }
+
+    public Date getDataBaixa() {
+        return dataBaixa;
+    }
+
+    public void setDataBaixa(Date dataBaixa) {
+        this.dataBaixa = dataBaixa;
     }
 }

@@ -15,13 +15,26 @@ public class Usuari {
     private String providerId;
 
     @Column(name = "USU_SUPERADMIN", nullable = false)
-    private Boolean isSuperAdmin = false;
+    private Boolean superAdmin;
 
     @Column(name = "USU_NOM", nullable = false)
     private String nom;
 
+    @Column(name = "USU_COGNOMS", nullable = false)
+    private String cognoms;
+
     @Column(name = "USU_EMAIL", nullable = false)
     private String email;
+
+    @PrePersist
+    public void prePersist() {
+        if (superAdmin == null) superAdmin = false;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        if (superAdmin == null) superAdmin = false;
+    }
 
     public Long getId() {
         return id;
@@ -40,11 +53,11 @@ public class Usuari {
     }
 
     public Boolean getSuperAdmin() {
-        return isSuperAdmin;
+        return superAdmin;
     }
 
     public void setSuperAdmin(Boolean superAdmin) {
-        isSuperAdmin = superAdmin;
+        this.superAdmin = superAdmin;
     }
 
     public String getNom() {
@@ -53,6 +66,14 @@ public class Usuari {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    public String getCognoms() {
+        return cognoms;
+    }
+
+    public void setCognoms(String cognoms) {
+        this.cognoms = cognoms;
     }
 
     public String getEmail() {
